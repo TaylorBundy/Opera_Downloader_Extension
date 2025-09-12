@@ -1,17 +1,5 @@
 (() => {
   if (document.getElementById("mi-popup-extension")) return;
-    // if (domain.includes('pornhub')) {
-    //     //logo = document.querySelector("#headerContainer > div:nth-child(1) > div > div > a > img").src;
-    //     logo = "https://ei.phncdn.com/www-static/images/pornhub_logo_straight.svg";
-    // } else if (domain.includes('redgifs')) {
-    //     logo = "https://www.redgifs.com/static/logo-full-red-C9X7m0yF.svg";
-    // } else if (domain.includes('twpornstars')) {
-    //     logo = "https://www.twpornstars.com/favicon.ico";
-    // } else if (fullUrl.includes('fapello.com') && !fullUrl.includes('fapello.com/content')) {
-    //     logo = document.querySelector("#wrapper > div.sidebar > div.sidebar_header.border-b.border-gray-200.from-gray-100.to-gray-50.bg-gradient-to-t.uk-visible\\@s > a > img").src;
-    // } else if (fullUrl.includes('fapello.com/content')) {
-    //     logo = "https://fapello.com/assets/images/logo.png";
-    // }
 
   const popup = document.createElement("div");
   popup.id = "mi-popup-extension";

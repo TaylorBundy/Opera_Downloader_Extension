@@ -23,18 +23,6 @@ chrome.runtime.onMessage.addListener((msg, sender) => {
   }
 });
 
-// chrome.runtime.onMessage.addListener((msg, sender) => {
-//   if (msg.action === "inject_main_script2" && sender.tab) {
-//     chrome.scripting.executeScript({
-//       target: { tabId: sender.tab.id },
-//       files: ["content.js"]
-//     }, () => {
-//       // Después de inyectar el script, envía la URL a ese content script
-//       chrome.tabs.sendMessage(sender.tab.id, { action: "procesar_url", url: msg.url });
-//     });
-//   }
-// });
-
 chrome.runtime.onMessage.addListener((msg, sender) => {
   if (msg.action === "inject_main_script" && sender.tab) {
     chrome.scripting.executeScript(
@@ -52,13 +40,3 @@ chrome.runtime.onMessage.addListener((msg, sender) => {
     );
   }
 });
-
-
-//chrome.runtime.onMessage.addListener((msg, sender) => {
-  //if (msg.action === "inject_button" && sender.tab) {
-    //chrome.scripting.executeScript({
-      //target: { tabId: sender.tab.id },
-      //files: ["inject_button.js"]
-    //});
-  //}
-//});
