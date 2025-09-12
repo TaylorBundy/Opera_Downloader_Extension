@@ -1,3 +1,17 @@
+// Sobrescribimos console.log para guardar también en storage
+(function() {
+    const originalLog = console.log;
+    console.log = function(...args) {
+      // Mostramos en la consola como siempre
+      originalLog.apply(console, args);
+  
+      // Guardamos en storage
+      let logs = JSON.parse(localStorage.getItem("misLogs") || "[]");
+      logs.push(args.map(a => typeof a === "object" ? JSON.stringify(a) : a.toString()).join(" "));
+      localStorage.setItem("misLogs", JSON.stringify(logs));
+    };
+  })();
+
 const obtenerNombre = (src, opciones = {}) => {
     limpio = src.split("?")[0]; // quitar parámetros
     if (opciones.remover) {
@@ -27,6 +41,7 @@ function crearBotonFlotante(contenedor, urlImg) {
     boton.onmouseover = function() {boton.title = `Click para descargar: ${urlImg}.!`;};
   
     boton.onclick = () => {
+        //alert(`ando linea 30: ${urlImg}`);
       chrome.runtime.sendMessage({ action: "inject_main_script", url: "" });
       boton.remove();
     };    
@@ -66,6 +81,9 @@ function crearBotonFlotantePorImagen(contenedor) {
             selector = document.querySelector(`body > div.block.block-thumbs.js-thumbs > div:nth-child(${index + 1}) > div.thumb__inner > a`)?.href;
         } else if (fullUrl.includes('pornhub.com/gifs/')) {
             selector = img.href;
+            //const linkssss = img.querySelector("video");
+            //selector = img.querySelector("video").dataset.webm;
+            console.log(selector);
         }
         // Evita inyectar varias veces en la misma imagen
         if (img.parentElement.querySelector(".mi-boton-flotante")) return;
@@ -109,9 +127,15 @@ function crearBotonFlotantePorImagen(contenedor) {
                     enlace = await ObtenemosLinkTwpornstar(urlImagen);
                     chrome.runtime.sendMessage({ action: "inject_main_script", url: enlace });
                 })();
+            //} else if (fullUrl.includes('pornhub.com/gifs/')) {
+                //enlace = img.querySelector("video").dataset.webm;
+                //enlace = urlImagen;
+                //alert(`enlace linea 118: ${enlace}`);
+                //chrome.runtime.sendMessage({ action: "inject_main_script", url: enlace });
             } else {
                 enlace = urlImagen;
                 chrome.runtime.sendMessage({ action: "inject_main_script", url: enlace });
+                //alert(`enlace linea 124: ${enlace}`);
             }
         });
         
@@ -173,3 +197,43 @@ async function ObtenemosLinkTwpornstar (enlace){
         console.error(err);
     }
 }
+
+const descargarArchivoSimple = (url, nombre) => {
+    console.log('linea 202 descargarArchivosimple');
+    let segundos = 5;
+  
+    const modal = document.createElement("div");
+    modal.style = `
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: white; padding: 20px;
+      border: 2px solid black; border-radius: 10px;
+      font-size: 18px; text-align: center;
+      color: black; z-index: 9999;
+    `;
+  
+    const mensaje = document.createElement("p");
+    mensaje.textContent = `La descarga de: ${url} comienza en ${segundos} segundos...`;
+    modal.appendChild(mensaje);
+    document.body.appendChild(modal);
+  
+    const intervalo = setInterval(() => {
+      segundos--;
+      if (segundos > 0) {
+        mensaje.textContent = `La descarga de: ${url} comienza en ${segundos} segundos...`;
+      } else {
+        clearInterval(intervalo);
+        // Crear enlace y descargar
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = nombre;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+  
+        mensaje.textContent = "Descarga iniciada...";
+        setTimeout(() => modal.remove(), 2000);
+      }
+    }, 1000);
+  };
+  

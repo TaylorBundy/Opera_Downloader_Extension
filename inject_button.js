@@ -41,6 +41,9 @@ observer.observe(document.body, { childList: true, subtree: true });
     
 if (domain.includes('pornhub')) {
     setTimeout(() => {
+      if (fullUrl.includes('pornhub.com/gifs/')) {
+        tiempo = 3000;
+      } else {
       selector = document.querySelector("#js-playWebM");
       if (selector) {
         enlace = document.querySelector('#gifWebmPlayer > source').src;
@@ -49,6 +52,7 @@ if (domain.includes('pornhub')) {
       } else {
         tiempo = 5000;
       }
+    }
     }, 1000);
 } else if (domain.includes('redgifs')) {
     setTimeout(() => {
@@ -101,7 +105,8 @@ function esperarTiempo() {
   });
 }
 
-(async () => {
+//(async () => {
+(async function BuscaContenedores (){
   const valorTiempo = await esperarTiempo();
   setTimeout(() => {
     const url = window.location.toString();
@@ -149,8 +154,13 @@ function esperarTiempo() {
     );
     if (contenedor) {
       crearBotonFlotante(contenedor, enlace);
+    } else if (intentos < 3) {
+      console.warn(`No se encontró el contenedor todavía, reintentando: ${intentos + 1}`);
+      BuscaContenedores();
+      intentos =+ 1;
     } else {
-      console.warn("No se encontró el contenedor todavía.");
-    }  
+      console.warn(`No se encontró el contenedor despues de ${intentos}.`);
+    }
   }, valorTiempo); // espera 5 segundos
 })();
+//BuscaContenedores();

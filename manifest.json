@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Descarga_Multi_Sitio",
   "version": "1.1",
-  "permissions": ["cookies", "scripting", "activeTab", "tabs"],
+  "permissions": ["cookies", "scripting", "activeTab", "tabs", "storage"],
   "background": {
     "service_worker": "background.js"
   },
@@ -16,7 +16,7 @@
     },
     "default_title": "Descargador de multiples paginas"
   },
-  "host_permissions": ["*://*.redgifs.com/watch/*", "*://*.pornhub.com/gif/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*"],
+  "host_permissions": ["*://*.redgifs.com/watch/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/gifs/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*"],
   "content_scripts": [
     {
       "matches": ["*://*.redgifs.com/watch/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/gifs/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*"],

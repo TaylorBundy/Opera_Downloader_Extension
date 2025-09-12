@@ -29,6 +29,8 @@ if (!window.listenerProcesarUrl) {
       nombreRecibido = nomTemp.substring(nomTemp.lastIndexOf("/") + 1);
 
       console.log("URL recibida:", urlRecibida);
+      //alert(`urlRecibida: ${urlRecibida}`);
+      //alert(`nombreRecibido: ${nombreRecibido}`);
       console.log("NOMBRE recibido:", nombreRecibido);
 
       if (typeof window.procesarUrl === "function") {
@@ -424,6 +426,7 @@ if (!window.listenerProcesarUrl) {
         if (descargarArchivo(enlace, nombre)) {
           urlRecibida = null;
         }
+        delete window.procesarUrl;
       };
     }
   } else if (/media\.redgifs\.com/.test(url)) {
@@ -538,8 +541,9 @@ if (!window.listenerProcesarUrl) {
       const imgs = ids.querySelector("img").src;
       descargar(imgs);
     }
-  } else if (/video\.twimg\.com|twpornstars\.com|el\.phncdn\.com|packaged-media\.redd\.it/.test(url)) {
+  } else if (/video\.twimg\.com|twpornstars\.com|packaged-media\.redd\.it/.test(url)) {
     if (/twpornstars.com|twpornstars.com\/videos/.test(fullUrl)) {
+      console.log('???');      
     //if (fullUrl.includes('twpornstars.com') && fullUrl.includes('/videos')) {
       if (fullUrl.match(/\d/) && !fullUrl.includes("?page=")) {
         elemento = document.querySelector("source");
@@ -554,6 +558,7 @@ if (!window.listenerProcesarUrl) {
           if (descargarArchivo(enlace, nombre)) {
             urlRecibida = null;
           }
+          delete window.procesarUrl;
         };
       }
     } else {
@@ -562,7 +567,7 @@ if (!window.listenerProcesarUrl) {
       console.log('estamos aca linea 544');
       nombre = obtenerNombre(enlace);
       console.log('estamos aca linea 546');
-    }
+    }    
   } else if (/manyvids\.com/.test(url)) {
     const hayImagen = document.querySelector('video') !== null;
     const hayVideo = document.querySelector('source') !== null;
@@ -573,10 +578,46 @@ if (!window.listenerProcesarUrl) {
     }
     enlace = elemento?.src;
     nombre = url.substring(url.lastIndexOf("/") +1);
-  } else if (/es\.pornhub\.com\/gif/.test(url)) {
-    elemento = document.querySelectorAll("video")[4]?.children[0];
-    enlace = elemento?.src;
-    nombre = obtenerNombre(enlace);
+  } else if (/pornhub\.com/.test(url)) {
+    if (fullUrl.match(/\d/) && !fullUrl.includes("?page=")) {
+      elemento = document.querySelectorAll("video")[4]?.children[0];
+      enlace = elemento?.src;
+      nombre = obtenerNombre(enlace);
+      console.log(`enlace: ${enlace} - nombre: ${nombre} linea 586`);
+    } else if (fullUrl.includes('/gifs/')) {
+      window.procesarUrl = (urlre) => {
+        enlace = urlre;
+        nombre = nombreRecibido;
+        //alert(`enlace linea 588: ${enlace}, nombre: ${nombre}`);
+        //descargarArchivo(enlace, nombre);
+        //window.open(enlace, "_blank");
+        //descargarArchivoSimple(enlace, nombre);
+        console.log('sisi');
+        urlRecibida = null;
+        
+        console.log(`enlace: ${enlace} - nombre: ${nombre} linea 598`);
+        delete window.procesarUrl;
+        return
+        // if (descargarArchivo(enlace, nombre)) {
+        //   urlRecibida = null;
+        // }
+      };
+      console.trace("procesarUrl llamado");
+      return;
+
+      //return
+      // window.procesarUrl = (urlre) => {
+      //   enlace = urlre;
+      //   nombre = nombreRecibido;
+      //   alert(`enlace linea 585: ${enlace}`);
+      //   console.log(`enlace: ${enlace}: linea 584`);
+      //   return
+
+      //   if (descargarArchivo(enlace, nombre)) {
+      //     urlRecibida = null;
+      //   }
+      //};
+    }
   } else {
     console.log("Página no reconocida");
     return;
@@ -593,22 +634,42 @@ if (!window.listenerProcesarUrl) {
   //   //chrome.runtime.sendMessage({ action: "descargar_imagen", url: urlImagen });
   // };
   //elboton.remove();
+  function laDescarga(enlace, nombre) {
+    const link = Object.assign(document.createElement("a"), {
+      href: enlace,
+      download: nombre
+    });
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  };
   // Dependiendo de que pagina, ejecuta cierta funcion para descargar
-  if (enlace && nombre) {    
+  if (enlace && nombre) {
     imprime(enlace);
-    if (enlace.includes('video.twimg.com') || enlace.includes('el.phncdn.com') || enlace.includes('manyvids.com') || enlace.includes('pbs.twimg')){
+    if (enlace.includes('video.twimg.com') || enlace.includes('manyvids.com') || enlace.includes('pbs.twimg')){
       descargarArchivo(enlace, nombre);
     } else if (enlace.includes('fapello.com/content/')) {      
       descargarArchivo(enlace, nombre);
     } else if (enlace.includes('redgifs.com/watch')) {
       return;
+    } else if (enlace.includes('phncdn') || enlace.includes('pornhub.com')) {
+      if (fullUrl.includes('gifs')) {
+        console.log('linea 657');
+        //window.open(enlace, "_blank");
+        return;
+      } else {
+        console.log('linea 660');
+        descargarArchivo(enlace, nombre);
+      }
     } else {
+      console.log('linea 663');
       const link = Object.assign(document.createElement("a"), {
         href: enlace,
+        //target: "_blank",
         download: nombre
       });
       document.body.appendChild(link);
-      link.click();
+      link.click();      
       link.remove();
     }
   } else {

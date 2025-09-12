@@ -14,6 +14,7 @@ let limpio;
 let enlaces;
 let cantidadInicial = null;
 let totalImagenes = null;
+let intentos = null;
 const img = new Image();
 
 if (domain.includes('pornhub')) {
