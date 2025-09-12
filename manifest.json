@@ -1,0 +1,57 @@
+{
+  "manifest_version": 3,
+  "name": "Descarga_Multi_Sitio",
+  "version": "1.1",
+  "permissions": ["cookies", "scripting", "activeTab", "tabs"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "browser_style": true,
+    "default_icon": {
+      "16": "icons/download16.png",
+      "48": "icons/download48.png",
+      "64": "icons/download64.png",
+      "128": "icons/download128.png"
+    },
+    "default_title": "Descargador de multiples paginas"
+  },
+  "host_permissions": ["*://*.redgifs.com/watch/*", "*://*.pornhub.com/gif/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["*://*.redgifs.com/watch/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/gifs/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*"],
+      "js": ["variables_globales.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://*.redgifs.com/watch/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/gifs/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*"],
+      "js": ["popup.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://*.redgifs.com/watch/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/gifs/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*"],
+      "js": ["funciones.js", "inject_button.js"],
+      "run_at": "document_idle"
+    }
+   ],
+  "commands": {
+    "inject_button": {
+      "description": "Colocar Boton"
+    }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "icons/logo_redgifs.avif",
+        "icons/save.avif",
+        "icons/cookie.avif",
+        "icons/del.avif"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "icons": {
+    "16": "icons/download16.png",
+    "48": "icons/download48.png"
+  }
+}
