@@ -67,9 +67,13 @@ if (domain.includes('pornhub')) {
   tiempo = 3000;
 } else if (domain.includes('twpornstars')) {
     tiempo = 3000;
-} else if (domain.includes('fapello')) {
+} else if (domain.includes('fapello')) {  
+  userId = fullUrl.split("/")[3];
+  const local = new URL(fullUrl);
+  const partido = local.pathname.split("/");
   if (fullUrl.includes('fapello.com') && !fullUrl.includes('fapello.com/content')) {
-    if (fullUrl.match(/\d/)) {
+    if (partido.length === 4) {
+    //if (fullUrl.match(/\d/) && !userId.match(/\d/)) {
       selector = document.querySelector("#wrapper > div.main_content > div > div:nth-child(2) > div > div:nth-child(2) > a > img");
       img.src = selector.src;
       img.onload = () => {
@@ -79,8 +83,8 @@ if (domain.includes('pornhub')) {
       img.onerror = () => {
         console.error('Error al cargar la imagen');
       };
-    } else {
-      tiempo = 3000;
+    } else if (partido.length === 3){
+      tiempo = 2000;
     }
   } else if (fullUrl.includes('fapello.com/content')) {
       selector = document.querySelector("body > img");
@@ -108,6 +112,7 @@ function esperarTiempo() {
 //(async () => {
 (async function BuscaContenedores (){
   const valorTiempo = await esperarTiempo();
+  console.log(valorTiempo);
   setTimeout(() => {
     const url = window.location.toString();
     const nombreTemporal = obtenerNombre(url);
@@ -116,8 +121,9 @@ function esperarTiempo() {
     if (fullUrl.includes('pornhub.com/gif/')) {
         selector = "#js-gifWebMWrapper > gif-video-element > div";
     } else if (fullUrl.includes('pornhub.com/gifs/')) {
-      const todos = document.querySelectorAll("body > div.wrapper > div.container > div.nf-videos > div > div.gifsWrapper.hideLastItemLarge > ul > li > a");
-      crearBotonFlotantePorImagen(todos);
+      const todos = document.querySelectorAll("body > div.wrapper > div.container > div.nf-videos > div > div.gifsWrapper.hideLastItemLarge > ul > li");
+      crearBotonFlotantePorImagen([...todos].slice(1));
+      //crearBotonFlotantePorImagen(todos);
       return
     } else if (domain.includes('redgifs')) {
         selector = `#gif_${nombre}`;
@@ -133,16 +139,40 @@ function esperarTiempo() {
       }
     } else if (fullUrl.includes('manyvids.com/Video')) {
       const id = fullUrl.match(/\/Video\/(\d+)\//)[1];
-      selector = `#mv-video-player-vid-${id} > div.rmp-content`;
+      //selector = `#mv-video-player-vid-${id} > div.rmp-content`;
+      selector = `#mv-video-player-vid-${id}`;
       enlace = document.querySelector(`#mv-video-player-vid-${id} > div.rmp-content > video`).src;
     } else if (fullUrl.includes('fapello.com') && !fullUrl.includes('fapello.com/content')) {
-      if (fullUrl.match(/\d/)) {
-        selector = "#wrapper > div.main_content > div > div:nth-child(2) > div > div.flex.justify-between.items-center.p-5.border-b";
+      //console.log(fullUrl);
+      if (tieneExtra(fullUrl)) {
+        userId = fullUrl.split("/")[3];
+        if (/\d/.test(userId)) {
+          //console.log(userId);
+          const local = new URL(fullUrl);
+          const partido = local.pathname.split("/");
+          //console.log(partido.length);
+          if (partido.length === 3) {//if (fullUrl.includes(`fapello.com/${userId}/`) && tieneExtra(fullUrl)) {
+            //console.log('estamos aca');
+            const todos = document.querySelectorAll("#content > div");
+            cantidadInicial = todos.length;
+            crearBotonFlotantePorImagen(todos);
+            return
+          } else if (partido.length === 4) { //(fullUrl.match(/\d/) && userId.match(/\d/)) {
+            selector = "#wrapper > div.main_content > div > div:nth-child(2) > div > div.flex.justify-between.items-center.p-5.border-b";
+            enlace = document.querySelector("#wrapper > div.main_content > div > div:nth-child(2) > div > div:nth-child(2) > a > img")?.src;
+          }
+        } else {
+          if (fullUrl.match(/\d/)){ //&& !userId.match(/\d/)) {
+            selector = "#wrapper > div.main_content > div > div:nth-child(2) > div > div.flex.justify-between.items-center.p-5.border-b";
+          } else {
+            const todos = document.querySelectorAll("#content > div");
+            cantidadInicial = todos.length;
+            crearBotonFlotantePorImagen(todos);
+            return
+          }      
+        }
       } else {
-        const todos = document.querySelectorAll("#content > div");
-        cantidadInicial = todos.length;
-        crearBotonFlotantePorImagen(todos);
-        return
+        return;
       }
     } else if (fullUrl.includes('fapello.com/content')) {
         cantidadInicial = 1;

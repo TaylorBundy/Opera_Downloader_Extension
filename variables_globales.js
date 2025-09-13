@@ -15,7 +15,16 @@ let enlaces;
 let cantidadInicial = null;
 let totalImagenes = null;
 let intentos = null;
+let Directorio = null;
+let carpeta = null;
+let userId;
+let host;
 const img = new Image();
+var data2 = new Date();
+data2.setTime(data2.getTime() + 365 * 24 * 60 * 60 * 1000);
+var expira = data2.toUTCString();
+let nombre_cookie = '';
+let valorCookie = '';
 
 if (domain.includes('pornhub')) {
     logo = document.querySelector("#headerContainer > div:nth-child(1) > div > div > a > img").src;    
@@ -27,4 +36,6 @@ if (domain.includes('pornhub')) {
     logo = "https://www.twpornstars.com/favicon.ico";    
 } else if (domain.includes('fapello')) {
   logo = "https://fapello.com/assets/images/logo.png";
+} else if (domain.includes('fansly')) {
+  logo = "https://fansly.com/assets/images/fansly_dark_v3.webp";
 }

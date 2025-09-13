@@ -1,16 +1,8 @@
-// Sobrescribimos console.log para guardar también en storage
-(function() {
-    const originalLog = console.log;
-    console.log = function(...args) {
-      // Mostramos en la consola como siempre
-      originalLog.apply(console, args);
-  
-      // Guardamos en storage
-      let logs = JSON.parse(localStorage.getItem("misLogs") || "[]");
-      logs.push(args.map(a => typeof a === "object" ? JSON.stringify(a) : a.toString()).join(" "));
-      localStorage.setItem("misLogs", JSON.stringify(logs));
-    };
-  })();
+//Funcion para verificar si existe algo mas al final de la url BASE
+function tieneExtra(algo) {
+  const url = new URL(algo);
+  return url.pathname !== "/" || url.search !== "" || url.hash !== "";
+}
 
 const obtenerNombre = (src, opciones = {}) => {
     limpio = src.split("?")[0]; // quitar parámetros
@@ -39,11 +31,13 @@ function crearBotonFlotante(contenedor, urlImg) {
     boton.innerHTML = '<img src="' + logo + '" style="width:100%;vertical-align:middle;opacity:0.5;margin:0"> ⬇ Descargar';
     //boton.onmouseover = function() {boton.title = `Click para descargar: ${urlObj}.!`;};
     boton.onmouseover = function() {boton.title = `Click para descargar: ${urlImg}.!`;};
+    boton.dataset.url = urlImg;
   
     boton.onclick = () => {
         //alert(`ando linea 30: ${urlImg}`);
-      chrome.runtime.sendMessage({ action: "inject_main_script", url: "" });
+      chrome.runtime.sendMessage({ action: "inject_main_script" });
       boton.remove();
+      //browser.downloads.showDefaultFolder();
     };    
     contenedor.appendChild(boton);
     if (domain.includes('pornhub')) {
@@ -80,10 +74,8 @@ function crearBotonFlotantePorImagen(contenedor) {
         } else if (fullUrl.includes('twpornstars.com')) {
             selector = document.querySelector(`body > div.block.block-thumbs.js-thumbs > div:nth-child(${index + 1}) > div.thumb__inner > a`)?.href;
         } else if (fullUrl.includes('pornhub.com/gifs/')) {
-            selector = img.href;
-            //const linkssss = img.querySelector("video");
-            //selector = img.querySelector("video").dataset.webm;
-            console.log(selector);
+            const linkssss = document.querySelectorAll(`body > div.wrapper > div.container > div.nf-videos > div > div.gifsWrapper.hideLastItemLarge > ul > li > a`);
+            selector = linkssss[index]?.querySelector('video').dataset.webm;
         }
         // Evita inyectar varias veces en la misma imagen
         if (img.parentElement.querySelector(".mi-boton-flotante")) return;
@@ -93,7 +85,7 @@ function crearBotonFlotantePorImagen(contenedor) {
         const contenedor2 = img;      
         contenedor2.style.position = "relative";
         
-        const boton = document.createElement("button");      
+        const boton = document.createElement("button");
         boton.id = `mi-boton-flotante-${index}`;
         boton.style.display = "inline-grid";
         boton.style.width = "100px";
@@ -127,11 +119,6 @@ function crearBotonFlotantePorImagen(contenedor) {
                     enlace = await ObtenemosLinkTwpornstar(urlImagen);
                     chrome.runtime.sendMessage({ action: "inject_main_script", url: enlace });
                 })();
-            //} else if (fullUrl.includes('pornhub.com/gifs/')) {
-                //enlace = img.querySelector("video").dataset.webm;
-                //enlace = urlImagen;
-                //alert(`enlace linea 118: ${enlace}`);
-                //chrome.runtime.sendMessage({ action: "inject_main_script", url: enlace });
             } else {
                 enlace = urlImagen;
                 chrome.runtime.sendMessage({ action: "inject_main_script", url: enlace });
@@ -198,10 +185,193 @@ async function ObtenemosLinkTwpornstar (enlace){
     }
 }
 
-const descargarArchivoSimple = (url, nombre) => {
-    console.log('linea 202 descargarArchivosimple');
-    let segundos = 5;
+// const descargarArchivoSimple = (url, nombre) => {
+//     //console.log('linea 202 descargarArchivosimple');
+//     let segundos = 5;
   
+//     const modal = document.createElement("div");
+//     modal.style = `
+//       position: fixed; top: 50%; left: 50%;
+//       transform: translate(-50%, -50%);
+//       background: white; padding: 20px;
+//       border: 2px solid black; border-radius: 10px;
+//       font-size: 18px; text-align: center;
+//       color: black; z-index: 9999;
+//     `;
+  
+//     const mensaje = document.createElement("p");
+//     mensaje.textContent = `La descarga de: ${url} comienza en ${segundos} segundos...`;
+//     modal.appendChild(mensaje);
+//     document.body.appendChild(modal);
+  
+//     const intervalo = setInterval(() => {
+//       segundos--;
+//       if (segundos > 0) {
+//         mensaje.textContent = `La descarga de: ${url} comienza en ${segundos} segundos...`;
+//       } else {
+//         clearInterval(intervalo);
+//         // Crear enlace y descargar
+//         const link = document.createElement("a");
+//         link.href = url;
+//         link.download = nombre;
+//         document.body.appendChild(link);
+//         link.click();
+//         link.remove();
+  
+//         mensaje.textContent = "Descarga iniciada...";
+//         setTimeout(() => modal.remove(), 2000);
+//       }
+//     }, 1000);
+//   };
+  
+// let datos = new Map();
+// function CallChrome2 (host, urlssss, nombre) {
+//   chrome.runtime.sendMessage({
+//     action: "descargar",
+//     url: urlssss,
+//     nombre: nombre
+//   }, function (response) {
+//     //console.log(response);
+//     let id = response.id;
+//     let nom = response.nombre;
+//     let ulti = response.last;
+//     datos.set(id, { id, nom, ulti });
+//     //console.log(Array.from(datos.values()));
+//     setTimeout(() => {
+//       chrome.runtime.sendMessage({ action:"updateCookie", cookieName: "lastdir", cookieValue: ulti, url: location.href });
+//     }, 500); // medio segundo de retraso para asegurar que se registre
+//   });
+// }
+
+// Funcion para descargar archivos
+// const descargarArchivo3 = async (url, nombre) => {
+//   try {
+//     let segundos = 5;
+//     let intervalo;
+//     let descargando = false;
+
+//     // Crear modal
+//     const modal = document.createElement("div");
+//     modal.style = `
+//       position: fixed; top: 50%; left: 50%;
+//       transform: translate(-50%, -50%);
+//       background: white; padding: 20px;
+//       border: 2px solid black; border-radius: 10px;
+//       font-size: 18px; text-align: center;
+//       color: black;
+//       z-index: 9999;
+//     `;
+
+//     const mensaje = document.createElement("p");
+//     mensaje.textContent = `La descarga de: ${url} comienza en ${segundos} segundos...`;
+
+//     const btnAceptar = document.createElement("button");
+//     btnAceptar.textContent = "Aceptar";
+//     btnAceptar.style.margin = "5px";
+
+//     const btnEsperar = document.createElement("button");
+//     btnEsperar.textContent = "Esperar";
+//     btnEsperar.style.margin = "5px";
+
+//     const btnCancelar = document.createElement("button");
+//     btnCancelar.textContent = "Cancelar";
+//     btnCancelar.style.margin = "5px";
+//     btnCancelar.style.background = "red";
+//     btnCancelar.style.color = "white";
+
+//     modal.appendChild(mensaje);
+//     modal.appendChild(btnAceptar);
+//     modal.appendChild(btnEsperar);
+//     modal.appendChild(btnCancelar);
+//     document.body.appendChild(modal);
+
+//     // Función de descarga
+//     const iniciarDescarga = async () => {
+//       if (descargando) return;
+//       descargando = true;
+//       clearInterval(intervalo);
+//       mensaje.textContent = "Descargando...";
+//       btnAceptar.disabled = true;
+//       btnEsperar.disabled = true;
+//       btnCancelar.disabled = true;
+
+//       try {
+//         const respuesta = await fetch(url);          
+//         const blob = await respuesta.blob();
+//         const blobUrl = URL.createObjectURL(blob);
+
+//         const link = Object.assign(document.createElement("a"), {
+//           href: blobUrl,
+//           download: nombre
+//         });
+
+//         document.body.appendChild(link);
+//         link.click();
+//         link.remove();
+//         URL.revokeObjectURL(blobUrl);
+
+//         mensaje.textContent = "Descarga completa ?";
+//       } catch (err) {
+//         mensaje.textContent = "Error en la descarga ?";
+//         console.error(err);
+//       }
+
+//       setTimeout(() => modal.remove(), 2000);
+//     };
+
+//     // Eventos de botones
+//     btnAceptar.onclick = iniciarDescarga;
+//     btnEsperar.onclick = () => {
+//       clearInterval(intervalo);
+//       modal.remove();
+//       iniciarDescarga();
+//     };
+//     btnCancelar.onclick = () => {
+//       clearInterval(intervalo);
+//       limpiarListener();
+//       modal.remove();
+//     };
+
+//     // Activar Enter para aceptar
+//     const teclaEnterListener = (e) => {
+//       if (e.key === "Enter") {
+//         e.preventDefault();
+//         btnAceptar.click();
+//       }
+//     };
+//     document.addEventListener("keydown", teclaEnterListener);
+    
+//     // Limpiar listener al cerrar modal
+//     const limpiarListener = () => {
+//       document.removeEventListener("keydown", teclaEnterListener);
+//     };
+//     btnAceptar.addEventListener("click", limpiarListener);
+//     btnEsperar.addEventListener("click", limpiarListener);
+//     btnCancelar.addEventListener("click", limpiarListener);
+
+//     // Cuenta regresiva
+//     intervalo = setInterval(() => {
+//       segundos--;
+//       if (segundos > 0) {
+//         mensaje.textContent = `La descarga de: ${url} comienza en ${segundos} segundos...`;
+//       } else {
+//         clearInterval(intervalo);
+//         iniciarDescarga();
+//       }
+//     }, 1000);
+
+//   } catch (err) {
+//     console.error("Error al descargar:", err);
+//   }
+// };
+
+const CallChrome = (host, urlssss, nombre) => {
+//const descargarArchivo = (urlssss, nombre) => {
+  try {
+    let segundos = 5;
+    let intervalo;
+
+    // Crear modal
     const modal = document.createElement("div");
     modal.style = `
       position: fixed; top: 50%; left: 50%;
@@ -209,31 +379,108 @@ const descargarArchivoSimple = (url, nombre) => {
       background: white; padding: 20px;
       border: 2px solid black; border-radius: 10px;
       font-size: 18px; text-align: center;
-      color: black; z-index: 9999;
+      color: black;
+      z-index: 9999;
     `;
-  
+
     const mensaje = document.createElement("p");
-    mensaje.textContent = `La descarga de: ${url} comienza en ${segundos} segundos...`;
+    mensaje.textContent = `La descarga de: ${urlssss} comienza en ${segundos} segundos...`;
+
+    const btnAceptar = document.createElement("button");
+    btnAceptar.textContent = "Aceptar";
+    btnAceptar.style.margin = "5px";
+
+    const btnEsperar = document.createElement("button");
+    btnEsperar.textContent = "Esperar";
+    btnEsperar.style.margin = "5px";
+
+    const btnCancelar = document.createElement("button");
+    btnCancelar.textContent = "Cancelar";
+    btnCancelar.style.margin = "5px";
+    btnCancelar.style.background = "red";
+    btnCancelar.style.color = "white";
+
     modal.appendChild(mensaje);
+    modal.appendChild(btnAceptar);
+    modal.appendChild(btnEsperar);
+    modal.appendChild(btnCancelar);
     document.body.appendChild(modal);
-  
-    const intervalo = setInterval(() => {
+
+    // Lanza la descarga vía mensaje a la extensión
+    const iniciarDescarga = () => {
+      clearInterval(intervalo);
+      mensaje.textContent = "Enviando a la extensión...";
+      btnAceptar.disabled = true;
+      btnEsperar.disabled = true;
+      btnCancelar.disabled = true;
+
+      chrome.runtime.sendMessage(
+        { action: "descargar", url: urlssss, nombre: nombre },
+        function (response) {
+          //console.log(response);
+          let id = response.id;
+          let nom = response.nombre;
+          let ulti = response.last;
+
+          //datos.set(id, { id, nom, ulti });
+          //console.log(Array.from(datos.values()));
+
+          setTimeout(() => {
+            chrome.runtime.sendMessage({
+              action: "updateCookie",
+              cookieName: "lastdir",
+              cookieValue: ulti,
+              url: location.href
+            });
+          }, 500);
+
+          mensaje.textContent = "Solicitud enviada ✔";
+          setTimeout(() => modal.remove(), 1500);
+        }
+      );
+    };
+
+    // Eventos de botones
+    btnAceptar.onclick = iniciarDescarga;
+    btnEsperar.onclick = () => {
+      clearInterval(intervalo);
+      modal.remove();
+      iniciarDescarga();
+    };
+    btnCancelar.onclick = () => {
+      clearInterval(intervalo);
+      limpiarListener();
+      modal.remove();
+    };
+
+    // Activar Enter para aceptar
+    const teclaEnterListener = (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        btnAceptar.click();
+      }
+    };
+    document.addEventListener("keydown", teclaEnterListener);
+
+    const limpiarListener = () => {
+      document.removeEventListener("keydown", teclaEnterListener);
+    };
+    btnAceptar.addEventListener("click", limpiarListener);
+    btnEsperar.addEventListener("click", limpiarListener);
+    btnCancelar.addEventListener("click", limpiarListener);
+
+    // Cuenta regresiva de 5 segundos
+    intervalo = setInterval(() => {
       segundos--;
       if (segundos > 0) {
-        mensaje.textContent = `La descarga de: ${url} comienza en ${segundos} segundos...`;
+        mensaje.textContent = `La descarga de: ${urlssss} comienza en ${segundos} segundos...`;
       } else {
         clearInterval(intervalo);
-        // Crear enlace y descargar
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = nombre;
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-  
-        mensaje.textContent = "Descarga iniciada...";
-        setTimeout(() => modal.remove(), 2000);
+        iniciarDescarga();
       }
     }, 1000);
-  };
-  
+
+  } catch (err) {
+    console.error("Error al iniciar descarga:", err);
+  }
+};
