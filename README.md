@@ -47,8 +47,12 @@ Selecciona el archivo que deseas descargar.
 ```bash 
 opera-downloader-extension/
 ├── icons/           # Iconos de la extensión
+├── fansly/           # Archivos para fansly separados.
 ├── manifest.json    # Configuración de la extensión
 ├── background.js    # Lógica de fondo
 ├── content.js       # Inyección en páginas compatibles
+├── funciones.js       # funciones
+├── popup.js       # ventana popup
+├── inject_button.js       # Inyección de botones
 └── README.md        # Este archivo
 ```
