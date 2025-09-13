@@ -54,7 +54,7 @@ function PopUp() {
 
   // Hacer que desaparezca después de 5 segundos
   setTimeout(() => {
-    //popup.remove();
+    popup.remove();
   }, 8000);
 })();
 };
