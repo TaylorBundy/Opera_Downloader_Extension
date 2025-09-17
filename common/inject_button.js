@@ -9,7 +9,7 @@ function esperarElemento(selector, callback) {
         callback(elem);
       }
     });
-    console.log(elem);
+    //console.log(elem);
   
     observer.observe(document.body, { childList: true, subtree: true });
   }
@@ -31,18 +31,65 @@ function procesarImagenes(){
     observer.disconnect();
   }
 }
+
+
+function procesarVideos() {
+  const todos = document.querySelectorAll("#profileContent > div > section > div > div.profileVids > div.gifsWrapperProfile > ul > li");
+  const cargarMasBtn = document.querySelector('#moreDataBtn'); // selector real
+  estilo = cargarMasBtn.getAttribute('style');
+  totalVideos = document.querySelector("#profileContent > div > section > div > div.profileVids > div.section_header.separated.first > div.float-left > div")?.textContent;
+  const numero = parseInt(totalVideos.match(/\d+/)[0], 10);
+  totalVideos = numero;
+  const todosBotones = document.querySelectorAll("#profileContent > div > section > div > div.profileVids > div.gifsWrapperProfile > ul > li > button");
+  todosBotones.forEach((botones, index) => {
+    totalBotones = index;
+  });
+  //console.log(`totalBotones: ${totalBotones}`);
+  //console.log(`totalVideos: ${totalVideos}`);
+  //console.log(cantidadInicial);
+  if (cantidadInicial == null) {
+    cantidadInicial = todos.length;
+  } else if (cantidadInicial > 1) {
+    if (todos.length >= cantidadInicial && todos.length < totalVideos){
+      crearBotonFlotantePorImagen(todos);
+    } else if (totalBotones < totalVideos && todos.length === totalVideos) {
+      crearBotonFlotantePorImagen(todos);
+    } else {
+      observer.disconnect();
+    }
+    if (estilo === 'display: none;') {
+      observer.disconnect();
+    }
+  }
+}
   
 // Observar cambios en el DOM para el scroll infinito
 const observer = new MutationObserver(() => {
-  procesarImagenes();
+  if (domain.includes('fapello')) {
+    procesarImagenes();
+  }
+  if (domain.includes(`pornhub`)) {
+    if (fullUrl.includes(`${userId}/gifs/video`)) {
+      procesarVideos();
+    }
+  }
 });
   
 observer.observe(document.body, { childList: true, subtree: true });
-    
+
+
 if (domain.includes('pornhub')) {
+  userId = fullUrl.split('/')[4];
+  //console.log(userId);
     setTimeout(() => {
       if (fullUrl.includes('pornhub.com/gifs/')) {
         tiempo = 3000;
+      } else if (fullUrl.includes(`pornhub.com/model/${userId}/gifs/video`)) {
+        selector = document.querySelector('.gifsWrapperProfile');
+        if (selector) {
+          tiempo = 2000;
+          resolverTiempo(tiempo);
+        }
       } else {
       selector = document.querySelector("#js-playWebM");
       if (selector) {
@@ -112,22 +159,41 @@ function esperarTiempo() {
 //(async () => {
 (async function BuscaContenedores (){
   const valorTiempo = await esperarTiempo();
-  console.log(valorTiempo);
+  //console.log(valorTiempo);
   setTimeout(() => {
     const url = window.location.toString();
     const nombreTemporal = obtenerNombre(url);
     const nombre = nombreTemporal.split("#")[0];    
     
-    if (fullUrl.includes('pornhub.com/gif/')) {
-        selector = "#js-gifWebMWrapper > gif-video-element > div";
-    } else if (fullUrl.includes('pornhub.com/gifs/')) {
-      const todos = document.querySelectorAll("body > div.wrapper > div.container > div.nf-videos > div > div.gifsWrapper.hideLastItemLarge > ul > li");
-      crearBotonFlotantePorImagen([...todos].slice(1));
-      //crearBotonFlotantePorImagen(todos);
-      return
+    if (domain.includes('pornhub')) {
+      userId = fullUrl.split('/')[4];
+      //console.log(userId);
+      if (fullUrl.includes('pornhub.com/gif/')) {
+          selector = "#js-gifWebMWrapper > gif-video-element > div";
+          enlace = document.querySelector('#gifWebmPlayer > source').src;
+      } else if (fullUrl.includes('pornhub.com/gifs/')) {
+        //const todos = document.querySelectorAll("#profileContent > div > section > div > div.profileVids > div.gifsWrapperProfile > ul > li");
+        const todos = document.querySelectorAll("body > div.wrapper > div.container > div.nf-videos > div > div.gifsWrapper.hideLastItemLarge > ul > li");
+        crearBotonFlotantePorImagen([...todos].slice(1));
+        //crearBotonFlotantePorImagen(todos);
+        return
+      } else if (fullUrl.includes(`model/${userId}/gifs/video`)) {
+        const todos = document.querySelectorAll("#profileContent > div > section > div > div.profileVids > div.gifsWrapperProfile > ul > li");
+        cantidadInicial = todos.length;
+        crearBotonFlotantePorImagen(todos);
+        return;
+      }
     } else if (domain.includes('redgifs')) {
+      if (fullUrl.includes('redgifs.com/watch')) {
         selector = `#gif_${nombre}`;
         enlace = `https://media.redgifs.com/${nombre}.mp4`;
+      } else if (fullUrl.includes('redgifs.com/users')) {
+        const todos = document.querySelectorAll("#root > div > div.Wrapper > div > div.skyWrapper > div > div > div.gifList.ProfileGifList.ProfileGifList-isTiles > div.tileFeed > a");
+        crearBotonFlotantePorImagen(todos);
+        return;
+      } else {
+        return;
+      }
     } else if (domain.includes('twpornstars')) {
       if (fullUrl.includes('twpornstars.com') && fullUrl.includes('/videos')) {
         const todos = document.querySelectorAll("body > div.block.block-thumbs.js-thumbs > div.thumb > div.thumb__inner");
@@ -187,7 +253,7 @@ function esperarTiempo() {
     } else if (intentos < 3) {
       console.warn(`No se encontró el contenedor todavía, reintentando: ${intentos + 1}`);
       BuscaContenedores();
-      intentos =+ 1;
+      intentos += 1;
     } else {
       console.warn(`No se encontró el contenedor despues de ${intentos}.`);
     }

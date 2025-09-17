@@ -76,6 +76,21 @@ function crearBotonFlotantePorImagen(contenedor) {
         } else if (fullUrl.includes('pornhub.com/gifs/')) {
             const linkssss = document.querySelectorAll(`body > div.wrapper > div.container > div.nf-videos > div > div.gifsWrapper.hideLastItemLarge > ul > li > a`);
             selector = linkssss[index]?.querySelector('video').dataset.webm;
+        } else if (fullUrl.includes('pornhub.com/model/')) {
+          const linkssss = document.querySelectorAll(`#profileContent > div > section > div > div.profileVids > div.gifsWrapperProfile > ul > li > a`);
+          //selector = linkssss[index]?.querySelector('video').dataset.webm;
+          let nummmm = linkssss[index]?.href.split('/')[4];
+          const str = '0' + nummmm;
+          const partes = str.match(/.{1,3}/g);
+          const ellink = `https://el.phncdn.com/pics/gifs/${partes[0]}/${partes[1]}/${partes[2]}/${nummmm}a.webm`;
+          //console.log(nummmm);
+          //console.log(partes[1]);
+          //console.log(ellink);
+          //selector = linkssss[index]?.href;
+          selector = ellink;
+
+        } else if (fullUrl.includes('redgifs.com/users')) {
+          selector = img?.href;
         }
         // Evita inyectar varias veces en la misma imagen
         if (img.parentElement.querySelector(".mi-boton-flotante")) return;
@@ -134,8 +149,18 @@ function crearBotonFlotantePorImagen(contenedor) {
             boton.style.margin = "0";
             boton.style.height = "fit-content";
             boton.innerHTML = '<img src="' + logo + '" style="width:80%;vertical-align:middle;opacity:0.5;margin:auto; position:relative"> ⬇ Descargar';
+        } else if (fullUrl.includes('pornhub.com/model/')) {
+          boton.style.width = "60px";
+          boton.style.left = "";
+          boton.style.bottom = "";
+          boton.style.color = "#ff9000";
+          boton.style.background = "rgb(0 0 0 / 43%)";
+          boton.innerHTML = '<img src="' + logo + '" style="width:80%;vertical-align:middle;opacity:0.8;margin:auto; position:relative"> ⬇ Descargar';
         } else if (domain.includes('redgifs')) {
-            contenedor2.appendChild(boton);
+          if (fullUrl.includes('redgifs.com/users')) {
+            boton.style.bottom = "";
+          }
+            //contenedor2.appendChild(boton);
         } else if (fullUrl.includes('twpornstars.com') && fullUrl.includes('/videos')) {
             boton.style.width = "fit-content";
             boton.style.height = "fit-content";

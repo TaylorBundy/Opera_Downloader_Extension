@@ -301,7 +301,7 @@
         }
 
         #mi-modal-extension thead {
-        background: #f7f7f7;
+        background: rgb(29, 242, 65);
         position: sticky;
         top: 0;
         z-index: 2;
@@ -312,6 +312,7 @@
         padding: 8px 10px;
         border-bottom: 1px solid #eee;
         text-align: left;
+        color: #2563eb;
         }
 
         #mi-modal-extension td.url-cell {
@@ -382,7 +383,11 @@
 
         const header = document.createElement("div");
         header.className = "modal-header";
-        header.innerHTML = `<h2>📋 Resultados obtenidos</h2>`;
+        header.style.position = "relative";
+        header.style.color = "blue";
+        //header.innerHTML = `<h2>📋 Resultados obtenidos ${idpostt}${value.id}</h2>`;
+        //header.innerHTML = `<img src=${logo1}`;
+        header.innerHTML = `<img src=${logo1} style="width:10%; position:absolute; right:50px" <h2>📋 Resultados obtenidos de: ${fullUrl}</h2>`;
         
         const cerrar = document.createElement("button");
         cerrar.className = "cerrar";
@@ -398,11 +403,11 @@
         tabla.innerHTML = `
             <thead>
             <tr>
-                <th>thu</th>
-                <th>ID</th>
+                <th>Miniatura</th>
+                <th>Id</th>
                 <th>Content ID</th>
                 <th>URL</th>
-                <th>Content</th>
+                <th>Tags</th>
             </tr>
             </thead>
             <tbody></tbody>
@@ -424,6 +429,13 @@
         document.body.removeChild(over);
         removeEstilosModal(); // limpia estilos
     }
+    // === Cerrar con ESC ===
+    function escHandler(e) {
+      if (e.key === "Escape") {
+        cerrarModal();
+      }
+    }
+    document.addEventListener("keydown", escHandler);
 
     function mostrarModal(allTodos) {
         const tbody = crearModal();
@@ -451,7 +463,7 @@
             } else {
                 fila.classList.add("fila-impar");
             }
-            const idpostt = "https://fansly.com/post/";
+            //const idpostt = "https://fansly.com/post/";
 
             // fila.innerHTML = `
             // <td title="Click para ver la imagen: ${value.miniaturas}" style="width:10%;color:var(--blue-1);">
@@ -484,6 +496,7 @@
             img.addEventListener("click", () => CallChrome('fansly', value.mediaUrl, value.id));
 
             const linkImg = document.createElement("a");
+            linkImg.style.display = "block";
             linkImg.href = value.miniaturas;
             linkImg.target = "_blank";
             linkImg.appendChild(img);
@@ -516,7 +529,7 @@
             // ---------- URL ----------
             const tdUrl = document.createElement("td");
             tdUrl.className = "url-cell";
-            tdUrl.title = value.mediaUrl;
+            tdUrl.title = `Click para descargar el video: ${value.mediaUrl}`;
 
             const linkUrl = document.createElement("a");
             linkUrl.href = value.mediaUrl;
@@ -596,6 +609,7 @@
         //const userid = data.response[0].id;
         //const locationId = data.response[0].walls[1].id;
         //console.log(userid,locationId);
+        console.log(data);
         //return userid, locationId;
         return data;
         //return data.gif.urls.hd;
@@ -636,7 +650,7 @@
             const datos= await GetUserId(nombre);
             //console.log(datos);
             userid = datos.response[0]?.id;
-            locationid = datos.response[0]?.walls[0]?.id;
+            locationid = datos.response[0]?.walls?.[datos.response[0].walls.length - 1]?.id;
             
           //})();
             CantId = prompt("Ingrese el número de IDs que desea buscar.!");
@@ -661,7 +675,7 @@
         "authorization": "ODIxMzI0MDg1NTU1Mzc2MTI4OjE6MjphMTliYTkwNzM3YjAzMWI4NDMwMmQ0ODE0MzMxYzk",
         "fansly-client-check": "1eee9393a262d1",
         "fansly-client-id": "741332220559499264",
-        "fansly-client-ts": "1757291361332",
+        "fansly-client-ts": "1758071671458",
         "fansly-session-id": "741332362213732352",
         "cookie": `f-s-c=ODIxMzI0MDg1NTU1Mzc2MTI4OjE6MTo3NzQxYzY4M2Q4NmY1Y2MwMTI1NjNjYzFmN2QyOTU; f-v-d=1756492169909; f-d=741332220559499264; fansly-d=741332220559499264; intercom-device-id-g2ytx5gg=79956f94-5832-48b7-b70e-fbc16c440193; f-v-v=0.46.41; fansly-ts-info={"tso":-8513,"sts":1757760865003,"cts":1757760873516}; intercom-session-g2ytx5gg=NWJ5Tk1qZktHL3NzeFpPSHZaV0kzS2tJWGcydFhYaDVYYXdpQUdJVlpJdWVXVGVCUUFsSVBsQmpmZXRlM1hGUkd2NURESm9qanowMjlZZjBpYzl6N3ZaSTdsd2htUzlPMnUwY3pDWHVzdU09LS1XNTdpbFZlVE9YeERWb08rNXJaanV3PT0=--109576d0b1a920b075772788e0c44b9504c93469`,
         };

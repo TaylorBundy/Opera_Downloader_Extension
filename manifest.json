@@ -4,7 +4,7 @@
   "version": "1.1",
   "permissions": ["cookies", "scripting", "activeTab", "tabs", "storage", "downloads"],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "./background/background.js"
   },
   "action": {
     "browser_style": true,
@@ -16,32 +16,56 @@
     },
     "default_title": "Descargador de multiples paginas"
   },
-  "host_permissions": ["*://*.fansly.com/*", "*://*.redgifs.com/watch/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/gifs/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*"],
+  "host_permissions": ["*://*.x.com/*", "*://*.fansly.com/*", "*://*.redgifs.com/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*", "https://xdownloader.com/*"],
   "content_scripts": [
     {
-      "matches": ["*://*.fansly.com/*", "*://*.redgifs.com/watch/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/gifs/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*"],
-      "js": ["variables_globales.js"],
+      "matches": ["*://*.x.com/*", "*://*.fansly.com/*", "*://*.redgifs.com/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*"],
+      "js": ["./common/variables_globales.js"],
       "run_at": "document_idle"
     },
     {
-      "matches": ["*://*.redgifs.com/watch/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/gifs/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*"],
+      "matches": ["*://*.redgifs.com/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/model/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*"],
       "js": ["popup.js"],
       "run_at": "document_idle"
     },
     {
       "matches": ["*://*.fansly.com/*"],
-      "js": ["./fansly/popup.js", "./fansly/inject_button.js"],
+      "js": ["./common/funciones.js", "./fansly/popup.js", "./fansly/inject_button.js"],
       "run_at": "document_idle"
     },
     {
-      "matches": ["*://*.redgifs.com/watch/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/gifs/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*"],
-      "js": ["funciones.js", "inject_button.js"],
+      "matches": ["*://*.x.com/*"],
+      "js": ["./twitter/popup.js", "./twitter/inject_button.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://xdownloader.com/*"],
+      "js": ["./twitter/content.js"]
+    },
+    {
+      "matches": ["*://*.redgifs.com/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*"],
+      "js": ["./common/funciones.js", "./common/inject_button.js"],
       "run_at": "document_idle"
     }
    ],
   "commands": {
-    "inject_button": {
-      "description": "Colocar Boton"
+    "inject_main_script": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+H"
+      },
+      "description": "Activar la extensión"
+    },
+    "inject_main_script-fansly": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+A"
+      },
+      "description": "Activar la extension fansly"
+    },
+    "inject_main_script-twitter": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+G"
+      },
+      "description": "Activar la extension twitter"
     }
   },
   "web_accessible_resources": [
@@ -51,7 +75,8 @@
         "icons/save.avif",
         "icons/cookie.avif",
         "icons/del.avif",
-        "icons/Loading_2.webm"
+        "icons/Loading_2.webm",
+        "icons/logo_twitter.avif"
       ],
       "matches": ["<all_urls>"]
     }

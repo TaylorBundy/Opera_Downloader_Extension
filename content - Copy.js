@@ -40,20 +40,20 @@ if (!window.listenerProcesarUrl) {
   // };
   // Funcion para imprimir desde donde se esta ejecutando el codigo
   const imprime = (src) => {
-    if (src.includes('phncdn.com')) {
-      mensaje = 'desde pornhub';
-    } else if (src.includes('pbs.twimg.com') || src.includes('x.com')) {
-      mensaje = 'desde twitter';
-    } else if (src.includes('video.twimg.com')) {
-      mensaje = 'desde twpornstars';
-    } else if (src.includes('redgifs.com')) {
-      mensaje = 'desde redgifs';
-    } else if (src.includes('pornpics.com')) {
-      mensaje = 'desde pornpics';
-    } else if (src.includes('manyvids.com')) {
-      mensaje = 'desde manyvids';
-    } else if (src.includes('fapello.com')) {
-      mensaje = 'desde fapello';
+    if (src.includes("phncdn.com")) {
+      mensaje = "desde pornhub";
+    } else if (src.includes("pbs.twimg.com") || src.includes("x.com")) {
+      mensaje = "desde twitter";
+    } else if (src.includes("video.twimg.com")) {
+      mensaje = "desde twpornstars";
+    } else if (src.includes("redgifs.com")) {
+      mensaje = "desde redgifs";
+    } else if (src.includes("pornpics.com")) {
+      mensaje = "desde pornpics";
+    } else if (src.includes("manyvids.com")) {
+      mensaje = "desde manyvids";
+    } else if (src.includes("fapello.com")) {
+      mensaje = "desde fapello";
     }
     console.log(mensaje);
   };
@@ -63,7 +63,7 @@ if (!window.listenerProcesarUrl) {
   //     let segundos = 5;
   //     let intervalo;
   //     let descargando = false;
-  
+
   //     // Crear modal
   //     const modal = document.createElement("div");
   //     modal.style = `
@@ -75,30 +75,30 @@ if (!window.listenerProcesarUrl) {
   //       color: black;
   //       z-index: 9999;
   //     `;
-  
+
   //     const mensaje = document.createElement("p");
   //     mensaje.textContent = `La descarga de: ${url} comienza en ${segundos} segundos...`;
-  
+
   //     const btnAceptar = document.createElement("button");
   //     btnAceptar.textContent = "Aceptar";
   //     btnAceptar.style.margin = "5px";
-  
+
   //     const btnEsperar = document.createElement("button");
   //     btnEsperar.textContent = "Esperar";
   //     btnEsperar.style.margin = "5px";
-  
+
   //     const btnCancelar = document.createElement("button");
   //     btnCancelar.textContent = "Cancelar";
   //     btnCancelar.style.margin = "5px";
   //     btnCancelar.style.background = "red";
   //     btnCancelar.style.color = "white";
-  
+
   //     modal.appendChild(mensaje);
   //     modal.appendChild(btnAceptar);
   //     modal.appendChild(btnEsperar);
   //     modal.appendChild(btnCancelar);
   //     document.body.appendChild(modal);
-  
+
   //     // Función de descarga
   //     const iniciarDescarga = async () => {
   //       if (descargando) return;
@@ -108,31 +108,31 @@ if (!window.listenerProcesarUrl) {
   //       btnAceptar.disabled = true;
   //       btnEsperar.disabled = true;
   //       btnCancelar.disabled = true;
-  
+
   //       try {
-  //         const respuesta = await fetch(url);          
+  //         const respuesta = await fetch(url);
   //         const blob = await respuesta.blob();
   //         const blobUrl = URL.createObjectURL(blob);
-  
+
   //         const link = Object.assign(document.createElement("a"), {
   //           href: blobUrl,
   //           download: nombre
   //         });
-  
+
   //         document.body.appendChild(link);
   //         link.click();
   //         link.remove();
   //         URL.revokeObjectURL(blobUrl);
-  
+
   //         mensaje.textContent = "Descarga completa ?";
   //       } catch (err) {
   //         mensaje.textContent = "Error en la descarga ?";
   //         console.error(err);
   //       }
-  
+
   //       setTimeout(() => modal.remove(), 2000);
   //     };
-  
+
   //     // Eventos de botones
   //     btnAceptar.onclick = iniciarDescarga;
   //     btnEsperar.onclick = () => {
@@ -145,7 +145,7 @@ if (!window.listenerProcesarUrl) {
   //       limpiarListener();
   //       modal.remove();
   //     };
-  
+
   //     // Activar Enter para aceptar
   //     const teclaEnterListener = (e) => {
   //       if (e.key === "Enter") {
@@ -154,7 +154,7 @@ if (!window.listenerProcesarUrl) {
   //       }
   //     };
   //     document.addEventListener("keydown", teclaEnterListener);
-      
+
   //     // Limpiar listener al cerrar modal
   //     const limpiarListener = () => {
   //       document.removeEventListener("keydown", teclaEnterListener);
@@ -162,7 +162,7 @@ if (!window.listenerProcesarUrl) {
   //     btnAceptar.addEventListener("click", limpiarListener);
   //     btnEsperar.addEventListener("click", limpiarListener);
   //     btnCancelar.addEventListener("click", limpiarListener);
-  
+
   //     // Cuenta regresiva
   //     intervalo = setInterval(() => {
   //       segundos--;
@@ -173,7 +173,7 @@ if (!window.listenerProcesarUrl) {
   //         iniciarDescarga();
   //       }
   //     }, 1000);
-  
+
   //   } catch (err) {
   //     console.error("Error al descargar:", err);
   //   }
@@ -189,29 +189,30 @@ if (!window.listenerProcesarUrl) {
     try {
       const token = await getToken();
       const response = await fetch(src, {
-        "headers": {
-          "accept": "application/json, text/plain, */*",
+        headers: {
+          accept: "application/json, text/plain, */*",
           "accept-language": "es-ES,es;q=0.9,en-US;q=0.8,en;q=0.7",
           //"authorization": "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6Ijk1OjMzOjc0OjdkOjViOjc4Ojc2OmY0OmU3OjVmOjM4OjQ2OjE1OjRkOmE4OjBmIiwidHlwIjoiSldUIn0.eyJhdF9oYXNoIjoiQzNMSkdPYkc3RG5MQnVxSEJBWkMzQSIsImF1ZCI6WyJlMDZjMzRkYWM3NjU0ODIxYmNiMzdlMDM5M2I1NDM1MCJdLCJhdXRoX3RpbWUiOjE3NTM4NTQzNTYsImF6cCI6ImUwNmMzNGRhYzc2NTQ4MjFiY2IzN2UwMzkzYjU0MzUwIiwiZW1haWwiOiJtYXJ0b25iYXJib3NhQGhvdG1haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE3NTU3NTM0NzksImZhbWlseV9uYW1lIjoiIiwiZ2l2ZW5fbmFtZSI6IiIsImlhdCI6MTc1NTc0OTg3OSwiaXNzIjoiaHR0cHM6Ly9hdXRoMi5yZWRnaWZzLmNvbSIsImp0aSI6ImVhY2VmYmE2LTUxNzUtNDhmZi1iMjdmLTZjZDU3Yjc2Yjg1OCIsIm5hbWUiOiIiLCJvcmdfY29kZXMiOlsib3JnXzJmZGZmYjExMzEyIl0sInByZWZlcnJlZF91c2VybmFtZSI6InRheWxvcmJ1bmR5IiwicmF0IjoxNzUzODU0MzU2LCJzdWIiOiJrcF80ZTY0ZGViODY0ODA0ZGQ3YmYwMTcwMGVjM2Y3ZDc3NCIsInVwZGF0ZWRfYXQiOjEuNzUzODU0MzU2ZSswOX0.oaGDnexzxWNwQN3Pv7eVC3KVqkx1K9t4ty2pYxgScRyjf0PH_vHrQNCXKI5e3dEn_yRwctNWDxaq1Wl3_qA7wDWYiMKY9vpaUMEz6q2yPU2c2oS0GIF4_UH6wlKTfXeW-iUAWS4MCegI4J3WSWd_Y5Y2Jly22CWu-7o5KYFdbwBC0Gxfpc4oW_YQABvg_K_mW-cPTWI05paVMHFX2RIaUd-R1AqePDEUCOZSinUW-446NyfYidOo64UAvgURleSZlT_HeBvlynCPUQrmpPv961vip-Ff7QUHfJ70lJ4IhSaZdr8gTaXGtPAHbs9eKOYrf_hgDEAgHcSvDaV4HyKIzQ",
-          "authorization": `Bearer ${token}`,
-          "sec-ch-ua": "\"Opera\";v=\"95\", \"Chromium\";v=\"109\", \"Not;A=Brand\";v=\"24\"",
+          authorization: `Bearer ${token}`,
+          "sec-ch-ua":
+            '"Opera";v="95", "Chromium";v="109", "Not;A=Brand";v="24"',
           "sec-ch-ua-mobile": "?0",
-          "sec-ch-ua-platform": "\"Windows\"",
+          "sec-ch-ua-platform": '"Windows"',
           "sec-fetch-dest": "empty",
           "sec-fetch-mode": "cors",
           "sec-fetch-site": "same-site",
-          "Referer": "https://www.redgifs.com/",
-          "Referrer-Policy": "strict-origin"
+          Referer: "https://www.redgifs.com/",
+          "Referrer-Policy": "strict-origin",
         },
-        "body": null,
-        "method": "GET"
+        body: null,
+        method: "GET",
       });
       if (!response.ok) throw new Error(`Error ${response.status}`);
       const datoss = await response.json();
       return datoss.gif.urls.hd;
-      } catch(error) {
+    } catch (error) {
       // Capturamos errores durante la solicitud
-      console.error('Error durante la solicitud:', error);
+      console.error("Error durante la solicitud:", error);
     }
   };
   // Funcion para obtener twitter
@@ -260,11 +261,12 @@ if (!window.listenerProcesarUrl) {
   // };
   // Funcion que descarga erome desde proxy local
   function descargar(url) {
-    window.location.href = "http://localhost:5000/descargar?url=" + encodeURIComponent(url);
-  };
+    window.location.href =
+      "http://localhost:5000/descargar?url=" + encodeURIComponent(url);
+  }
   // Funcion para descargar desde fansly
   // const fansly = async (src, conte) => {
-  //   try {      
+  //   try {
   //     const response = await fetch(src, {
   //       "headers": {
   //   "accept": "application/json, text/plain, */*",
@@ -291,10 +293,10 @@ if (!window.listenerProcesarUrl) {
   //     if (!response.ok) throw new Error(`Error ${response.status}`);
   //       const datoss = await response.json();
   //       const respuesta = datoss.response.aggregationData;
-  //       const respuesta2 = datoss.response;        
-  //       const { filtrados } = obtenerContents(respuesta.posts, conte); 
-  //       const url2 = "https://apiv3.fansly.com/api/v1/post?ids=" + id + "&ngsw-bypass=true";       
-  //     return { filtrados, id, infor };      
+  //       const respuesta2 = datoss.response;
+  //       const { filtrados } = obtenerContents(respuesta.posts, conte);
+  //       const url2 = "https://apiv3.fansly.com/api/v1/post?ids=" + id + "&ngsw-bypass=true";
+  //     return { filtrados, id, infor };
   //     } catch(error) {
   //     // Capturamos errores durante la solicitud
   //     console.error('Error durante la solicitud:', error);
@@ -302,7 +304,7 @@ if (!window.listenerProcesarUrl) {
   // };
   // Funicion para fansly
   // const fansly2 = async (src) => {
-  //   try {            
+  //   try {
   //     //return fetch(src, {
   //     const response = await fetch(src, {
   //       headers: {
@@ -327,10 +329,10 @@ if (!window.listenerProcesarUrl) {
   //         "mode": "cors",
   //         "credentials": "include"
   //       })
-  //       if (!response.ok) throw new Error(`Error ${response.status}`); 
+  //       if (!response.ok) throw new Error(`Error ${response.status}`);
   //       const json = await response.json();
   //       return json; // ✅ acá devuelve el JSON
-  //   //.then(r => r.json())    
+  //   //.then(r => r.json())
   //     } catch(error) {
   //     // Capturamos errores durante la solicitud
   //     console.error('Error durante la solicitud:', error);
@@ -340,7 +342,7 @@ if (!window.listenerProcesarUrl) {
   // function obtenerContents(posts, filtro) {
   //   for (const post of posts) {
   //     if (post.content && post.content.includes(filtro)) {
-  //       filtrados.push(post.content);      
+  //       filtrados.push(post.content);
   //       id.push(post.id);
   //       infor.push(post.content, post.id);
   //     }
@@ -349,7 +351,6 @@ if (!window.listenerProcesarUrl) {
   // };
   // Comprobamos que pagina estamos ejecutando para ejecutar la funcion correcta
 
-  
   if (/cdni\.pornpics\.com|nudostar\.com\/content/.test(url)) {
     elemento = document.querySelector("img");
     enlace = elemento?.src;
@@ -359,9 +360,9 @@ if (!window.listenerProcesarUrl) {
     elemento = document.querySelector("img");
     enlace = elemento?.src;
     nombre = obtenerNombre(enlace);
-    host = 'fapello';
+    host = "fapello";
   } else if (/fapello\.com/.test(url)) {
-    host = 'fapello';
+    host = "fapello";
     if (tieneExtra(fullUrl)) {
       userId = fullUrl.split("/")[3];
       const local = new URL(fullUrl);
@@ -374,7 +375,10 @@ if (!window.listenerProcesarUrl) {
         };
         return;
       } else if (partido.length === 4) {
-        elemento = document.querySelector("#wrapper > div.main_content > div > div:nth-child(2) > div > div:nth-child(2) > a > img") || document.querySelector("img");
+        elemento =
+          document.querySelector(
+            "#wrapper > div.main_content > div > div:nth-child(2) > div > div:nth-child(2) > a > img"
+          ) || document.querySelector("img");
         enlace = elemento?.src;
         nombre = obtenerNombre(enlace);
       }
@@ -382,79 +386,96 @@ if (!window.listenerProcesarUrl) {
       return;
     }
   } else if (/media\.redgifs\.com/.test(url)) {
-    elemento = document.querySelector("source") || document.querySelector("img");
+    elemento =
+      document.querySelector("source") || document.querySelector("img");
     enlace = elemento?.src;
     nombre = obtenerNombre(enlace, { remover: ["-large"] });
-    host = 'redgifs';
+    host = "redgifs";
     CallChrome(host, enlace, nombre);
   } else if (/redgifs\.com\/watch/.test(url)) {
-    host = 'redgifs';
+    host = "redgifs";
     const link2 = url.split("/watch/")[1].split("#")[0];
-    const link1 = "https://api.redgifs.com/v2/gifs/" + link2 + "?views=yes&users=yes&niches=yes";    
+    const link1 =
+      "https://api.redgifs.com/v2/gifs/" +
+      link2 +
+      "?views=yes&users=yes&niches=yes";
     nombre = link2;
-    obtieneredgifs(link1).then(urlssss => {
-       CallChrome(host, urlssss, nombre + '.mp4');
+    obtieneredgifs(link1).then((urlssss) => {
+      CallChrome(host, urlssss, nombre + ".mp4");
     });
     return;
-  // } else if (/x\.com/.test(url)) {
-  //   const hayImagen = document.querySelector('img') !== null;
-  //   const hayVideo = document.querySelector('source') !== null;
-  //   ids = url.substring(url.lastIndexOf("/") +1);    
-  //   if (url.includes('photo/')) {
-  //     ids = ids -1;
-  //     //ids = ids -1;
-  //     elemento = document.querySelectorAll('img')[ids];
-  //     enlace = elemento?.src;
-  //     nombre = obtenerNombre(enlace, { remover: [":large"] });
-  //   } else if (url.includes('video/')) {      
-  //     ids = ids -1;
-  //     // Usando expresión regular
-  //     const match = url.match(/status\/(\d+)/);
-  //     if (match) {
-  //       const tweetId = match[1];
-  //       nombre = tweetId;
-  //     }
-  //     //console.log(`nombre: ${nombre}`);
-  //     //console.log(`ids: ${ids}`);
-  //     link1 = "https://x.com/i/api/graphql/iFEr5AcP121Og4wx9Yqo3w/TweetDetail?variables=%7B%22focalTweetId%22%3A%22" + nombre + "%22%2C%22with_rux_injections%22%3Afalse%2C%22rankingMode%22%3A%22Relevance%22%2C%22includePromotedContent%22%3Atrue%2C%22withCommunity%22%3Atrue%2C%22withQuickPromoteEligibilityTweetFields%22%3Atrue%2C%22withBirdwatchNotes%22%3Atrue%2C%22withVoice%22%3Atrue%7D&features=%7B%22rweb_video_screen_enabled%22%3Afalse%2C%22payments_enabled%22%3Afalse%2C%22rweb_xchat_enabled%22%3Afalse%2C%22profile_label_improvements_pcf_label_in_post_enabled%22%3Atrue%2C%22rweb_tipjar_consumption_enabled%22%3Atrue%2C%22verified_phone_label_enabled%22%3Afalse%2C%22creator_subscriptions_tweet_preview_api_enabled%22%3Atrue%2C%22responsive_web_graphql_timeline_navigation_enabled%22%3Atrue%2C%22responsive_web_graphql_skip_user_profile_image_extensions_enabled%22%3Afalse%2C%22premium_content_api_read_enabled%22%3Afalse%2C%22communities_web_enable_tweet_community_results_fetch%22%3Atrue%2C%22c9s_tweet_anatomy_moderator_badge_enabled%22%3Atrue%2C%22responsive_web_grok_analyze_button_fetch_trends_enabled%22%3Afalse%2C%22responsive_web_grok_analyze_post_followups_enabled%22%3Atrue%2C%22responsive_web_jetfuel_frame%22%3Atrue%2C%22responsive_web_grok_share_attachment_enabled%22%3Atrue%2C%22articles_preview_enabled%22%3Atrue%2C%22responsive_web_edit_tweet_api_enabled%22%3Atrue%2C%22graphql_is_translatable_rweb_tweet_is_translatable_enabled%22%3Atrue%2C%22view_counts_everywhere_api_enabled%22%3Atrue%2C%22longform_notetweets_consumption_enabled%22%3Atrue%2C%22responsive_web_twitter_article_tweet_consumption_enabled%22%3Atrue%2C%22tweet_awards_web_tipping_enabled%22%3Afalse%2C%22responsive_web_grok_show_grok_translated_post%22%3Afalse%2C%22responsive_web_grok_analysis_button_from_backend%22%3Afalse%2C%22creator_subscriptions_quote_tweet_preview_enabled%22%3Afalse%2C%22freedom_of_speech_not_reach_fetch_enabled%22%3Atrue%2C%22standardized_nudges_misinfo%22%3Atrue%2C%22tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled%22%3Atrue%2C%22longform_notetweets_rich_text_read_enabled%22%3Atrue%2C%22longform_notetweets_inline_media_enabled%22%3Atrue%2C%22responsive_web_grok_image_annotation_enabled%22%3Atrue%2C%22responsive_web_grok_imagine_annotation_enabled%22%3Atrue%2C%22responsive_web_grok_community_note_auto_translation_is_enabled%22%3Afalse%2C%22responsive_web_enhance_cards_enabled%22%3Afalse%7D&fieldToggles=%7B%22withArticleRichContentState%22%3Atrue%2C%22withArticlePlainText%22%3Afalse%2C%22withGrokAnalyze%22%3Afalse%2C%22withDisallowedReplyControls%22%3Afalse%7D";
-  //      obtienetwitter(link1, url, ids).then(urlssss => {
-  //        nombre = obtenerNombre(urlssss);
-  //        descargarArchivo(urlssss, nombre);
-  //      });
-  //   } else {
-  //     function ObtenerEnlaces(id, ids, url) {        
-  //       const link1 = "https://x.com/i/api/graphql/iFEr5AcP121Og4wx9Yqo3w/TweetDetail?variables=%7B%22focalTweetId%22%3A%22" + ids + "%22%2C%22with_rux_injections%22%3Afalse%2C%22rankingMode%22%3A%22Relevance%22%2C%22includePromotedContent%22%3Atrue%2C%22withCommunity%22%3Atrue%2C%22withQuickPromoteEligibilityTweetFields%22%3Atrue%2C%22withBirdwatchNotes%22%3Atrue%2C%22withVoice%22%3Atrue%7D&features=%7B%22rweb_video_screen_enabled%22%3Afalse%2C%22payments_enabled%22%3Afalse%2C%22rweb_xchat_enabled%22%3Afalse%2C%22profile_label_improvements_pcf_label_in_post_enabled%22%3Atrue%2C%22rweb_tipjar_consumption_enabled%22%3Atrue%2C%22verified_phone_label_enabled%22%3Afalse%2C%22creator_subscriptions_tweet_preview_api_enabled%22%3Atrue%2C%22responsive_web_graphql_timeline_navigation_enabled%22%3Atrue%2C%22responsive_web_graphql_skip_user_profile_image_extensions_enabled%22%3Afalse%2C%22premium_content_api_read_enabled%22%3Afalse%2C%22communities_web_enable_tweet_community_results_fetch%22%3Atrue%2C%22c9s_tweet_anatomy_moderator_badge_enabled%22%3Atrue%2C%22responsive_web_grok_analyze_button_fetch_trends_enabled%22%3Afalse%2C%22responsive_web_grok_analyze_post_followups_enabled%22%3Atrue%2C%22responsive_web_jetfuel_frame%22%3Atrue%2C%22responsive_web_grok_share_attachment_enabled%22%3Atrue%2C%22articles_preview_enabled%22%3Atrue%2C%22responsive_web_edit_tweet_api_enabled%22%3Atrue%2C%22graphql_is_translatable_rweb_tweet_is_translatable_enabled%22%3Atrue%2C%22view_counts_everywhere_api_enabled%22%3Atrue%2C%22longform_notetweets_consumption_enabled%22%3Atrue%2C%22responsive_web_twitter_article_tweet_consumption_enabled%22%3Atrue%2C%22tweet_awards_web_tipping_enabled%22%3Afalse%2C%22responsive_web_grok_show_grok_translated_post%22%3Afalse%2C%22responsive_web_grok_analysis_button_from_backend%22%3Afalse%2C%22creator_subscriptions_quote_tweet_preview_enabled%22%3Afalse%2C%22freedom_of_speech_not_reach_fetch_enabled%22%3Atrue%2C%22standardized_nudges_misinfo%22%3Atrue%2C%22tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled%22%3Atrue%2C%22longform_notetweets_rich_text_read_enabled%22%3Atrue%2C%22longform_notetweets_inline_media_enabled%22%3Atrue%2C%22responsive_web_grok_image_annotation_enabled%22%3Atrue%2C%22responsive_web_grok_imagine_annotation_enabled%22%3Atrue%2C%22responsive_web_grok_community_note_auto_translation_is_enabled%22%3Afalse%2C%22responsive_web_enhance_cards_enabled%22%3Afalse%7D&fieldToggles=%7B%22withArticleRichContentState%22%3Atrue%2C%22withArticlePlainText%22%3Afalse%2C%22withGrokAnalyze%22%3Afalse%2C%22withDisallowedReplyControls%22%3Afalse%7D";
-  //       obtienetwitter(link1, url, id).then(urlssss => {
-  //         nombre = obtenerNombre(urlssss);
-  //         descargarArchivo(urlssss, nombre);
-  //       });
-  //     }
-  //     if (hayVideo && url.includes('status/' + ids)) {        
-  //       const todo = document.querySelector("#react-root > div > div > div.css-175oi2r.r-1f2l425.r-13qz1uu.r-417010.r-18u37iz > main > div > div > div > div.css-175oi2r.r-kemksi.r-1kqtdi0.r-1ua6aaf.r-th6na.r-1phboty.r-16y2uox.r-184en5c.r-1abdc3e.r-1lg4w6u.r-f8sm7e.r-13qz1uu.r-1ye8kvj > div > section > div > div > div:nth-child(1) > div > div > article");
-  //       const boton = document.querySelector('button[aria-label="Pausar"]');
-  //       const TotalVideos = todo.querySelectorAll('video');                
-  //       let cantidad = null;      
-        
-  //       if (TotalVideos.length > 1) {
-  //         // Caso varios videos en el tweet
-  //         if (boton) {
-  //           TotalVideos.forEach((video, index) => {
-  //             if (!video.paused) {
-  //               console.log(`El video que se está reproduciendo es el número: ${index}`);
-  //               cantidad = index;
-  //             }
-  //           });
-  //         }
-  //       } else if (TotalVideos.length === 1) {
-  //         // Caso solo un video
-  //         console.log("Hay un solo video en la página, lo descargo directamente.");
-  //         cantidad = 0;
-  //       }        
-  //       ObtenerEnlaces(cantidad, ids, url);
-  //     } else {
-  //       alert('Debe reproducir al menos una vez los videos para poder descargarlos.!');
-  //     }
-  //   }
+  } else if (/redgifs\.com\/users/.test(url)) {
+    host = "redgifs";
+    const link2 = url.split("/users/")[1].split("#")[0];
+    console.log(link2);
+    const link1 =
+      "https://api.redgifs.com/v2/gifs/" +
+      link2 +
+      "?views=yes&users=yes&niches=yes";
+    nombre = link2;
+    obtieneredgifs(link1).then((urlssss) => {
+      //CallChrome(host, urlssss, nombre + '.mp4');
+    });
+    return;
+    // } else if (/x\.com/.test(url)) {
+    //   const hayImagen = document.querySelector('img') !== null;
+    //   const hayVideo = document.querySelector('source') !== null;
+    //   ids = url.substring(url.lastIndexOf("/") +1);
+    //   if (url.includes('photo/')) {
+    //     ids = ids -1;
+    //     //ids = ids -1;
+    //     elemento = document.querySelectorAll('img')[ids];
+    //     enlace = elemento?.src;
+    //     nombre = obtenerNombre(enlace, { remover: [":large"] });
+    //   } else if (url.includes('video/')) {
+    //     ids = ids -1;
+    //     // Usando expresión regular
+    //     const match = url.match(/status\/(\d+)/);
+    //     if (match) {
+    //       const tweetId = match[1];
+    //       nombre = tweetId;
+    //     }
+    //     //console.log(`nombre: ${nombre}`);
+    //     //console.log(`ids: ${ids}`);
+    //     link1 = "https://x.com/i/api/graphql/iFEr5AcP121Og4wx9Yqo3w/TweetDetail?variables=%7B%22focalTweetId%22%3A%22" + nombre + "%22%2C%22with_rux_injections%22%3Afalse%2C%22rankingMode%22%3A%22Relevance%22%2C%22includePromotedContent%22%3Atrue%2C%22withCommunity%22%3Atrue%2C%22withQuickPromoteEligibilityTweetFields%22%3Atrue%2C%22withBirdwatchNotes%22%3Atrue%2C%22withVoice%22%3Atrue%7D&features=%7B%22rweb_video_screen_enabled%22%3Afalse%2C%22payments_enabled%22%3Afalse%2C%22rweb_xchat_enabled%22%3Afalse%2C%22profile_label_improvements_pcf_label_in_post_enabled%22%3Atrue%2C%22rweb_tipjar_consumption_enabled%22%3Atrue%2C%22verified_phone_label_enabled%22%3Afalse%2C%22creator_subscriptions_tweet_preview_api_enabled%22%3Atrue%2C%22responsive_web_graphql_timeline_navigation_enabled%22%3Atrue%2C%22responsive_web_graphql_skip_user_profile_image_extensions_enabled%22%3Afalse%2C%22premium_content_api_read_enabled%22%3Afalse%2C%22communities_web_enable_tweet_community_results_fetch%22%3Atrue%2C%22c9s_tweet_anatomy_moderator_badge_enabled%22%3Atrue%2C%22responsive_web_grok_analyze_button_fetch_trends_enabled%22%3Afalse%2C%22responsive_web_grok_analyze_post_followups_enabled%22%3Atrue%2C%22responsive_web_jetfuel_frame%22%3Atrue%2C%22responsive_web_grok_share_attachment_enabled%22%3Atrue%2C%22articles_preview_enabled%22%3Atrue%2C%22responsive_web_edit_tweet_api_enabled%22%3Atrue%2C%22graphql_is_translatable_rweb_tweet_is_translatable_enabled%22%3Atrue%2C%22view_counts_everywhere_api_enabled%22%3Atrue%2C%22longform_notetweets_consumption_enabled%22%3Atrue%2C%22responsive_web_twitter_article_tweet_consumption_enabled%22%3Atrue%2C%22tweet_awards_web_tipping_enabled%22%3Afalse%2C%22responsive_web_grok_show_grok_translated_post%22%3Afalse%2C%22responsive_web_grok_analysis_button_from_backend%22%3Afalse%2C%22creator_subscriptions_quote_tweet_preview_enabled%22%3Afalse%2C%22freedom_of_speech_not_reach_fetch_enabled%22%3Atrue%2C%22standardized_nudges_misinfo%22%3Atrue%2C%22tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled%22%3Atrue%2C%22longform_notetweets_rich_text_read_enabled%22%3Atrue%2C%22longform_notetweets_inline_media_enabled%22%3Atrue%2C%22responsive_web_grok_image_annotation_enabled%22%3Atrue%2C%22responsive_web_grok_imagine_annotation_enabled%22%3Atrue%2C%22responsive_web_grok_community_note_auto_translation_is_enabled%22%3Afalse%2C%22responsive_web_enhance_cards_enabled%22%3Afalse%7D&fieldToggles=%7B%22withArticleRichContentState%22%3Atrue%2C%22withArticlePlainText%22%3Afalse%2C%22withGrokAnalyze%22%3Afalse%2C%22withDisallowedReplyControls%22%3Afalse%7D";
+    //      obtienetwitter(link1, url, ids).then(urlssss => {
+    //        nombre = obtenerNombre(urlssss);
+    //        descargarArchivo(urlssss, nombre);
+    //      });
+    //   } else {
+    //     function ObtenerEnlaces(id, ids, url) {
+    //       const link1 = "https://x.com/i/api/graphql/iFEr5AcP121Og4wx9Yqo3w/TweetDetail?variables=%7B%22focalTweetId%22%3A%22" + ids + "%22%2C%22with_rux_injections%22%3Afalse%2C%22rankingMode%22%3A%22Relevance%22%2C%22includePromotedContent%22%3Atrue%2C%22withCommunity%22%3Atrue%2C%22withQuickPromoteEligibilityTweetFields%22%3Atrue%2C%22withBirdwatchNotes%22%3Atrue%2C%22withVoice%22%3Atrue%7D&features=%7B%22rweb_video_screen_enabled%22%3Afalse%2C%22payments_enabled%22%3Afalse%2C%22rweb_xchat_enabled%22%3Afalse%2C%22profile_label_improvements_pcf_label_in_post_enabled%22%3Atrue%2C%22rweb_tipjar_consumption_enabled%22%3Atrue%2C%22verified_phone_label_enabled%22%3Afalse%2C%22creator_subscriptions_tweet_preview_api_enabled%22%3Atrue%2C%22responsive_web_graphql_timeline_navigation_enabled%22%3Atrue%2C%22responsive_web_graphql_skip_user_profile_image_extensions_enabled%22%3Afalse%2C%22premium_content_api_read_enabled%22%3Afalse%2C%22communities_web_enable_tweet_community_results_fetch%22%3Atrue%2C%22c9s_tweet_anatomy_moderator_badge_enabled%22%3Atrue%2C%22responsive_web_grok_analyze_button_fetch_trends_enabled%22%3Afalse%2C%22responsive_web_grok_analyze_post_followups_enabled%22%3Atrue%2C%22responsive_web_jetfuel_frame%22%3Atrue%2C%22responsive_web_grok_share_attachment_enabled%22%3Atrue%2C%22articles_preview_enabled%22%3Atrue%2C%22responsive_web_edit_tweet_api_enabled%22%3Atrue%2C%22graphql_is_translatable_rweb_tweet_is_translatable_enabled%22%3Atrue%2C%22view_counts_everywhere_api_enabled%22%3Atrue%2C%22longform_notetweets_consumption_enabled%22%3Atrue%2C%22responsive_web_twitter_article_tweet_consumption_enabled%22%3Atrue%2C%22tweet_awards_web_tipping_enabled%22%3Afalse%2C%22responsive_web_grok_show_grok_translated_post%22%3Afalse%2C%22responsive_web_grok_analysis_button_from_backend%22%3Afalse%2C%22creator_subscriptions_quote_tweet_preview_enabled%22%3Afalse%2C%22freedom_of_speech_not_reach_fetch_enabled%22%3Atrue%2C%22standardized_nudges_misinfo%22%3Atrue%2C%22tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled%22%3Atrue%2C%22longform_notetweets_rich_text_read_enabled%22%3Atrue%2C%22longform_notetweets_inline_media_enabled%22%3Atrue%2C%22responsive_web_grok_image_annotation_enabled%22%3Atrue%2C%22responsive_web_grok_imagine_annotation_enabled%22%3Atrue%2C%22responsive_web_grok_community_note_auto_translation_is_enabled%22%3Afalse%2C%22responsive_web_enhance_cards_enabled%22%3Afalse%7D&fieldToggles=%7B%22withArticleRichContentState%22%3Atrue%2C%22withArticlePlainText%22%3Afalse%2C%22withGrokAnalyze%22%3Afalse%2C%22withDisallowedReplyControls%22%3Afalse%7D";
+    //       obtienetwitter(link1, url, id).then(urlssss => {
+    //         nombre = obtenerNombre(urlssss);
+    //         descargarArchivo(urlssss, nombre);
+    //       });
+    //     }
+    //     if (hayVideo && url.includes('status/' + ids)) {
+    //       const todo = document.querySelector("#react-root > div > div > div.css-175oi2r.r-1f2l425.r-13qz1uu.r-417010.r-18u37iz > main > div > div > div > div.css-175oi2r.r-kemksi.r-1kqtdi0.r-1ua6aaf.r-th6na.r-1phboty.r-16y2uox.r-184en5c.r-1abdc3e.r-1lg4w6u.r-f8sm7e.r-13qz1uu.r-1ye8kvj > div > section > div > div > div:nth-child(1) > div > div > article");
+    //       const boton = document.querySelector('button[aria-label="Pausar"]');
+    //       const TotalVideos = todo.querySelectorAll('video');
+    //       let cantidad = null;
+
+    //       if (TotalVideos.length > 1) {
+    //         // Caso varios videos en el tweet
+    //         if (boton) {
+    //           TotalVideos.forEach((video, index) => {
+    //             if (!video.paused) {
+    //               console.log(`El video que se está reproduciendo es el número: ${index}`);
+    //               cantidad = index;
+    //             }
+    //           });
+    //         }
+    //       } else if (TotalVideos.length === 1) {
+    //         // Caso solo un video
+    //         console.log("Hay un solo video en la página, lo descargo directamente.");
+    //         cantidad = 0;
+    //       }
+    //       ObtenerEnlaces(cantidad, ids, url);
+    //     } else {
+    //       alert('Debe reproducir al menos una vez los videos para poder descargarlos.!');
+    //     }
+    //   }
   } else if (/pbs\.twimg\.com/.test(url)) {
     elemento = document.querySelector("img");
     enlace = elemento?.src;
@@ -464,43 +485,45 @@ if (!window.listenerProcesarUrl) {
     elemento = nuevo;
     enlace = elemento?.src;
     nombre = obtenerNombre(enlace);
-  // } else if (/.fansly\.com/.test(url)) {
-  //   const conte= document.getElementsByClassName("post-text-container")[2].childNodes[0].textContent;
-  //   const url = "https://apiv3.fansly.com/api/v1/mediaoffers/location?locationId=785320313247244288&locationType=1002&accountId=716078512095633408&mediaType=2&before=807884108381315073&after=0&limit=30&offset=0&ngsw-bypass=true";
-  //   const url1 = "https://apiv3.fansly.com/api/v1/mediaoffers/location?locationId=785320313247244288&locationType=1002&accountId=716078512095633408&mediaType=2&before=800845418148671488&after=0&limit=30&offset=0&ngsw-bypass=true";
-  //   function fannn () {
-  //     fansly(url1, conte).then((urlssss) => {
-  //         const url2 = "https://apiv3.fansly.com/api/v1/post?ids=" + id + "&ngsw-bypass=true";
-  //         (async () => {
-  //             const data = await fansly2(url2);
-  //             const response = data.response;
-  //           const media = response.accountMedia[0];
-  //           const direccion = media.preview.locations[0];
-  //           enlace = direccion.location;
-  //           nombre = obtenerNombre(enlace);
-  //           //descargarArchivo(enlace, nombre);
-  //           CallChrome('fansly', enlace, nombre);
-  //           })();
-  //         });
-  //   }
-  //   fannn();
+    // } else if (/.fansly\.com/.test(url)) {
+    //   const conte= document.getElementsByClassName("post-text-container")[2].childNodes[0].textContent;
+    //   const url = "https://apiv3.fansly.com/api/v1/mediaoffers/location?locationId=785320313247244288&locationType=1002&accountId=716078512095633408&mediaType=2&before=807884108381315073&after=0&limit=30&offset=0&ngsw-bypass=true";
+    //   const url1 = "https://apiv3.fansly.com/api/v1/mediaoffers/location?locationId=785320313247244288&locationType=1002&accountId=716078512095633408&mediaType=2&before=800845418148671488&after=0&limit=30&offset=0&ngsw-bypass=true";
+    //   function fannn () {
+    //     fansly(url1, conte).then((urlssss) => {
+    //         const url2 = "https://apiv3.fansly.com/api/v1/post?ids=" + id + "&ngsw-bypass=true";
+    //         (async () => {
+    //             const data = await fansly2(url2);
+    //             const response = data.response;
+    //           const media = response.accountMedia[0];
+    //           const direccion = media.preview.locations[0];
+    //           enlace = direccion.location;
+    //           nombre = obtenerNombre(enlace);
+    //           //descargarArchivo(enlace, nombre);
+    //           CallChrome('fansly', enlace, nombre);
+    //           })();
+    //         });
+    //   }
+    //   fannn();
   } else if (/erome\.com/.test(url)) {
-    if (url.includes('s204.erome.com')) {
+    if (url.includes("s204.erome.com")) {
       elemento = document.querySelector("img");
       enlace = elemento?.src;
       nombre = obtenerNombre(enlace);
-    } else if (url.includes('es.erome.com/a/')) {
-      const hayVideo = document.querySelector('source') !== null;
+    } else if (url.includes("es.erome.com/a/")) {
+      const hayVideo = document.querySelector("source") !== null;
       const contador = document.getElementById("lg-counter");
       const idss = contador.querySelector("#lg-counter-current").textContent;
-      let ids = document.getElementsByClassName("media-group")[idss-1];
+      let ids = document.getElementsByClassName("media-group")[idss - 1];
       const imgs = ids.querySelector("img").src;
       descargar(imgs);
     }
-  } else if (/video\.twimg\.com|twpornstars\.com|packaged-media\.redd\.it/.test(url)) {
+  } else if (
+    /video\.twimg\.com|twpornstars\.com|packaged-media\.redd\.it/.test(url)
+  ) {
     if (/twpornstars.com|twpornstars.com\/videos/.test(fullUrl)) {
-      host = 'twpornstars';
-    //if (fullUrl.includes('twpornstars.com') && fullUrl.includes('/videos')) {
+      host = "twpornstars";
+      //if (fullUrl.includes('twpornstars.com') && fullUrl.includes('/videos')) {
       if (fullUrl.match(/\d/) && !fullUrl.includes("?page=")) {
         elemento = document.querySelector("source");
         enlace = elemento?.src;
@@ -529,32 +552,32 @@ if (!window.listenerProcesarUrl) {
       nombre = obtenerNombre(enlace);
     }
   } else if (/manyvids\.com/.test(url)) {
-    host = 'manyvids';
-    const hayImagen = document.querySelector('video') !== null;
-    const hayVideo = document.querySelector('source') !== null;
+    host = "manyvids";
+    const hayImagen = document.querySelector("video") !== null;
+    const hayVideo = document.querySelector("source") !== null;
     if (hayVideo) {
-     elemento = document.querySelector('source');
+      elemento = document.querySelector("source");
     } else {
-      elemento = document.querySelector('video');
+      elemento = document.querySelector("video");
     }
     enlace = elemento?.src;
-    nombre = url.substring(url.lastIndexOf("/") +1);
-    CallChrome(host, enlace, nombre + '.mp4');
+    nombre = url.substring(url.lastIndexOf("/") + 1);
+    CallChrome(host, enlace, nombre + ".mp4");
     // chrome.runtime.sendMessage({
     //   action: "descargar",
     //   url: enlace,
     //   nombre: nombre + '.mp4'
     // });
-    return
+    return;
   } else if (/pornhub\.com/.test(url)) {
-    host = 'pornhub';
+    host = "pornhub";
     if (fullUrl.match(/\d/) && !fullUrl.includes("?page=")) {
       elemento = document.querySelectorAll("video")[4]?.children[0];
       enlace = elemento?.src;
       nombre = obtenerNombre(enlace);
       CallChrome(host, enlace, nombre);
       return;
-    } else if (fullUrl.includes('/gifs/')) {
+    } else if (fullUrl.includes("/gifs/")) {
       window.procesarUrl = (urlre) => {
         enlace = urlre;
         nombre = nombreRecibido;
@@ -575,38 +598,44 @@ if (!window.listenerProcesarUrl) {
     console.log("Página no reconocida");
     return;
   }
-  
+
   // Dependiendo de que pagina, ejecuta cierta funcion para descargar
   if (enlace && nombre) {
-    imprime(enlace);    
+    imprime(enlace);
     // if (fullUrl.includes('pornhub.com/gifs')) {
     //   return
     // }
-    if (enlace.includes('video.twimg.com') || enlace.includes('manyvids.com') || enlace.includes('el.phncdn.com') || enlace.includes('pbs.twimg')){
+    if (
+      enlace.includes("video.twimg.com") ||
+      enlace.includes("manyvids.com") ||
+      enlace.includes("el.phncdn.com") ||
+      enlace.includes("pbs.twimg")
+    ) {
+      CallChrome(host, enlace, nombre);
       //descargarArchivo(enlace, nombre);
-    } else if (enlace.includes('fapello.com')) {
+    } else if (enlace.includes("fapello.com")) {
       //descargarArchivo(enlace, nombre);
-      CallChrome(host,enlace, nombre);
-    } else if (enlace.includes('redgifs.com/watch')) {
+      CallChrome(host, enlace, nombre);
+    } else if (enlace.includes("redgifs.com/watch")) {
       return;
-    // } else if (enlace.includes('phncdn') || enlace.includes('pornhub.com')) {
-    //   if (fullUrl.includes('gifs')) {
-    //     console.log('linea 657');
-    //     //window.open(enlace, "_blank");
-    //     return;
-    //   } else {
-    //     console.log('linea 660');
-    //     descargarArchivo(enlace, nombre);
-    //   }
+      // } else if (enlace.includes('phncdn') || enlace.includes('pornhub.com')) {
+      //   if (fullUrl.includes('gifs')) {
+      //     console.log('linea 657');
+      //     //window.open(enlace, "_blank");
+      //     return;
+      //   } else {
+      //     console.log('linea 660');
+      //     descargarArchivo(enlace, nombre);
+      //   }
     } else {
-      console.log('linea 663');
+      console.log("linea 663");
       const link = Object.assign(document.createElement("a"), {
         href: enlace,
         //target: "_blank",
-        download: nombre
+        download: nombre,
       });
       document.body.appendChild(link);
-      link.click();      
+      link.click();
       link.remove();
     }
   } else {

@@ -1,15 +1,11 @@
-// const urlObj = new URL (window.location.toString());
-// const domain = urlObj.hostname;
-// const fullUrl = urlObj.href;
-// console.log(fullUrl);
 // Función auxiliar para extraer nombre limpio
-const obtenerNombre = (src, opciones = {}) => {
-    let limpio = src.split("?")[0]; // quitar parámetros
-    if (opciones.remover) {
-      opciones.remover.forEach(r => limpio = limpio.replace(r, ""));
-    }
-    return limpio.substring(limpio.lastIndexOf("/") + 1);
-  };
+// const obtenerNombre = (src, opciones = {}) => {
+//     let limpio = src.split("?")[0]; // quitar parámetros
+//     if (opciones.remover) {
+//       opciones.remover.forEach(r => limpio = limpio.replace(r, ""));
+//     }
+//     return limpio.substring(limpio.lastIndexOf("/") + 1);
+//   };
 
 function esperarElemento(selector, callback) {
     const elem = document.querySelector(selector);

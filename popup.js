@@ -31,7 +31,7 @@
   img.style.opacity = "0.2";
   img.style.right = "0";
   const texto  = document.createElement("span");
-  texto.innerHTML = `'✨ Extensión "Descarga_Multi_Sitio" activa:<br>lista para descargar (${domain}).<br>Si no aparece el boton de descarga, presione: "ctrl+shift+h".!'`;
+  texto.innerHTML = `'✨ Extensión "Descarga_Multi_Sitio" activa:<br>lista para descargar (${domain}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+H".!'`;
   texto.style.zIndex = "9";
   texto.style.textAlign = "left";
   popup.appendChild(img);
