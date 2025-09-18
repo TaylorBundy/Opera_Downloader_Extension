@@ -25,7 +25,8 @@ Compatible con los siguientes sitios:
 
 📷 Fapello (*.fapello.com/*)
 
-![Icon](https://abs.twimg.com/responsive-web/client-web/icon-default.522d363a.png) Twitter (*.x.com/*)
+<!-- ![Icon](https://abs.twimg.com/responsive-web/client-web/icon-default.522d363a.png) Twitter (*.x.com/*) -->
+<img src="https://abs.twimg.com/responsive-web/client-web/icon-default.522d363a.png" alt="Icono" width="20" height="20"> Twitter (*.x.com/*)
 
 Interfaz sencilla e intuitiva.
 
