@@ -20,21 +20,23 @@ Compatible con los siguientes sitios:
 - <img src="https://www.redgifs.com/favicon-32x32.png" alt="RedGifs" width="20"> RedGifs (*.redgifs.com/watch/*)
 
 <!-- 🔞 Pornhub GIFs (*.pornhub.com/gif/*) -->
-- <img src="https://es.pornhub.com/favicon.ico" alt="PornHub" width="20">Pornhub GIFs (*.pornhub.com/gif/*)
+- <img src="https://es.pornhub.com/favicon.ico" alt="PornHub" width="20"> Pornhub GIFs (*.pornhub.com/gif/*)
 
 <!-- 🌟 TWPornstars (*.twpornstars.com/*) -->
 - <img src="https://www.twpornstars.com/favicon.ico" alt="TwPornstars" width="20"> TWPornstars (*.twpornstars.com/*)
 
 <!-- 🎬 ManyVids (*.manyvids.com/Video/*) -->
-- <img src="https://logos.manyvids.com/icon_public/favicon-16x16.png?v=4" alt="ManyVids" width="20" height="20"> ManyVids (*.manyvids.com/Video/*)
+- <img src="https://logos.manyvids.com/icon_public/favicon-16x16.png?v=4" alt="ManyVids" width="20"> ManyVids (*.manyvids.com/Video/*)
 
 <!-- 📷 Fapello (*.fapello.com/*) -->
-- <img src="https://fapello.com/assets/favicon/favicon.ico" alt="Fapello" width="20" height="20"> Fapello (*.fapello.com/*)
+- <img src="https://fapello.com/assets/favicon/favicon.ico" alt="Fapello" width="20"> Fapello (*.fapello.com/*)
 
-- <img src="https://fansly.com/assets/images/icons/favicon.ico?v=12" alt="Fansly" width="20" height="20"> Fansly (*.fansly.com/*)
+- <img src="https://fansly.com/assets/images/icons/favicon.ico?v=12" alt="Fansly" width="20"> Fansly (*.fansly.com/*)
 
 <!-- ![Icon](https://abs.twimg.com/responsive-web/client-web/icon-default.522d363a.png) Twitter (*.x.com/*) -->
-- <img src="https://abs.twimg.com/responsive-web/client-web/icon-default.522d363a.png" alt="Twitter" width="20" height="20"> Twitter (*.x.com/*)
+- <img src="https://abs.twimg.com/responsive-web/client-web/icon-default.522d363a.png" alt="Twitter" width="20"> Twitter (*.x.com/*)
+
+- <img src="https://static.pornpics.com/favicon/favicon.ico?v=2" alt="PornPics" width="20" height="20"> PornPics (*.pornpics.com/*)
 
 Interfaz sencilla e intuitiva.
 
