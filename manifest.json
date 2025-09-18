@@ -4,7 +4,7 @@
   "version": "1.1",
   "permissions": ["cookies", "scripting", "activeTab", "tabs", "storage", "downloads"],
   "background": {
-    "service_worker": "./background/background.js"
+    "service_worker": "/background/background.js"
   },
   "action": {
     "browser_style": true,
@@ -16,15 +16,15 @@
     },
     "default_title": "Descargador de multiples paginas"
   },
-  "host_permissions": ["*://*.x.com/*", "*://*.fansly.com/*", "*://*.redgifs.com/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*", "https://xdownloader.com/*"],
+  "host_permissions": ["*://*.x.com/*", "*://*.fansly.com/*", "*://*.redgifs.com/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*", "https://xdownloader.com/*", "*://*.pornpics.com/*"],
   "content_scripts": [
     {
-      "matches": ["*://*.x.com/*", "*://*.fansly.com/*", "*://*.redgifs.com/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*"],
+      "matches": ["*://*.x.com/*", "*://*.fansly.com/*", "*://*.redgifs.com/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*", "*://*.pornpics.com/*"],
       "js": ["./common/variables_globales.js"],
       "run_at": "document_idle"
     },
     {
-      "matches": ["*://*.redgifs.com/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/model/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*"],
+      "matches": ["*://*.redgifs.com/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/model/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*", "*://*.pornpics.com/*"],
       "js": ["popup.js"],
       "run_at": "document_idle"
     },
@@ -43,7 +43,7 @@
       "js": ["./twitter/content.js"]
     },
     {
-      "matches": ["*://*.redgifs.com/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*"],
+      "matches": ["*://*.redgifs.com/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*", "*://*.pornpics.com/*"],
       "js": ["./common/funciones.js", "./common/inject_button.js"],
       "run_at": "document_idle"
     }

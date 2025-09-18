@@ -96,7 +96,7 @@ chrome.downloads.onChanged.addListener((delta) => {
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (tab.url && tab.url.includes("redgifs.com/watch/") || tab.url && tab.url.includes("pornhub.com/gif/")
-  || tab.url && tab.url.includes("twpornstars.com/") || tab.url && tab.url.includes("manyvids.com/Video/") || tab.url && tab.url.includes("fapello.com/") || tab.url && tab.url.includes("fansly.com/")|| tab.url && tab.url.includes("x.com/")) {
+  || tab.url && tab.url.includes("twpornstars.com/") || tab.url && tab.url.includes("manyvids.com/Video/") || tab.url && tab.url.includes("fapello.com/") || tab.url && tab.url.includes("fansly.com/")|| tab.url && tab.url.includes("x.com/") || tab.url && tab.url.includes("pornpics.com/")) {
     chrome.action.enable(tabId);
   } else {
     chrome.action.disable(tabId);
@@ -183,10 +183,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     return true; // asincrónico
   }
   if (msg.action === "descargar") {
+    //chrome.downloads.download.
     chrome.downloads.download(
       {
         url: msg.url,
-        //filename: msg.nombre,
+        //name: msg.nombre,
         //filename: msg.nombre,
         saveAs: true // fuerza mostrar "Guardar como"
       },

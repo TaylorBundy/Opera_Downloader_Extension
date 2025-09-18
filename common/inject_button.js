@@ -103,17 +103,52 @@ if (domain.includes('pornhub')) {
     }, 1000);
 } else if (domain.includes('redgifs')) {
     setTimeout(() => {
-      selector = document.querySelector('video[class="isLoaded"]');
-      if (selector) {
-        tiempo = 2000;
-      } else {
-        tiempo = 5000;
-      }
+        selector = document.querySelector('video[class="isLoaded"]');
+        //console.log(selector);
+        if (selector) {
+          tiempo = 2000;
+          resolverTiempo(tiempo);
+        } else if (intentos < 3) {
+          selector = document.querySelector('video[class="isLoaded"]');
+          tiempo = 1000;
+          resolverTiempo(tiempo);
+          intentos += 1;
+        } else {
+          setTimeout( () => {
+            resolverTiempo(tiempo)
+          }, 300);
+          tiempo = 5000;
+        }
     }, 2000);
 } else if (domain.includes('manyvids')) {
-  tiempo = 3000;
-} else if (domain.includes('twpornstars')) {
+  setTimeout(() => {
+    selector = document.querySelector("#mv-video-player-vid-5791941 > div.rmp-content > video");
+    if (selector) {
+      tiempo = 2000;
+      resolverTiempo(tiempo);
+    } else if (intentos < 3) {
+      selector = document.querySelector("#mv-video-player-vid-5791941 > div.rmp-content > video");
+      tiempo = 2000;
+      resolverTiempo(tiempo);
+      intentos += 1;
+    } else {
+      tiempo = 3000;
+    }
+  }, 2000);
+} else if (domain.includes('twpornstars') || domain.includes('pornpics')) {
+  if (domain.includes('twpornstars')) {
+    selector = document.querySelector("body > div.block.block-thumbs.js-thumbs > div.thumb > div.thumb__inner");
+    if (selector) {
+      tiempo = 1000;
+      resolverTiempo(tiempo);
+    } else if (intentos < 3 ) {
+      tiempo = 2000;
+      resolverTiempo(tiempo);
+      intentos += 1;
+    }
+  } else if (domain.includes('pornpics')) {
     tiempo = 3000;
+  }
 } else if (domain.includes('fapello')) {  
   userId = fullUrl.split("/")[3];
   const local = new URL(fullUrl);
@@ -159,7 +194,7 @@ function esperarTiempo() {
 //(async () => {
 (async function BuscaContenedores (){
   const valorTiempo = await esperarTiempo();
-  //console.log(valorTiempo);
+  console.log(valorTiempo);
   setTimeout(() => {
     const url = window.location.toString();
     const nombreTemporal = obtenerNombre(url);
@@ -244,7 +279,16 @@ function esperarTiempo() {
         cantidadInicial = 1;
         selector = "body";
         enlace = fullUrl;
-    }
+    } else if (fullUrl.includes('pornpics.com/galleries')) {
+      const todos = document.querySelectorAll("#tiles > li");
+      crearBotonFlotantePorImagen(todos);
+      return;
+    } else if (fullUrl.includes('pornpics')) {
+      cantidadInicial = 1;
+      selector = "body";
+      enlace = fullUrl;
+      console.log('hola');
+  }
     const contenedor = document.querySelector(
         selector
     );

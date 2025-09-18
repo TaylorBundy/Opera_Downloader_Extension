@@ -354,7 +354,16 @@ if (!window.listenerProcesarUrl) {
     elemento = document.querySelector("img");
     enlace = elemento?.src;
     nombre = obtenerNombre(enlace);
-    //console.log(nombre);
+    CallChrome(host, enlace, nombre);
+    return;
+  } else if (/pornpics\.com\/galleries/.test(url)) {
+    host = "pornpics";
+    window.procesarUrl = (urlre) => {
+      enlace = urlre;
+      nombre = nombreRecibido;
+      CallChrome(host, enlace, nombre);
+    };
+    return;
   } else if (/fapello\.com\/content/.test(url)) {
     elemento = document.querySelector("img");
     enlace = elemento?.src;
@@ -549,6 +558,7 @@ if (!window.listenerProcesarUrl) {
     }
     enlace = elemento?.src;
     nombre = url.substring(url.lastIndexOf("/") +1);
+    //console.log(nombre);
     CallChrome(host, enlace, nombre + '.mp4');
     // chrome.runtime.sendMessage({
     //   action: "descargar",

@@ -22,13 +22,15 @@ function crearBotonFlotante(contenedor, urlImg) {
     boton.textContent = "⬇ Descargar";
     boton.style.position = "absolute";    
     boton.style.padding = "5px 5px";
-    boton.style.background = "#1DA1F2";
+    //boton.style.background = "#1DA1F2";
+    boton.style.background = "rgb(7 112 177)";
     boton.style.color = "#fff";
     boton.style.border = "none";
     boton.style.borderRadius = "8px";
     boton.style.zIndex = "9999";
     boton.style.cursor = "pointer";    
-    boton.innerHTML = '<img src="' + logo + '" style="width:100%;vertical-align:middle;opacity:0.5;margin:0"> ⬇ Descargar';
+    //boton.innerHTML = '<img src="' + logo + '" style="width:100%;vertical-align:middle;opacity:0.5;margin:0"> 📥 Descargar';
+    boton.innerHTML = `<img src="${logo}" style="width:100%;vertical-align:middle;opacity:0.5;margin:0"> 📥 Descargar`;
     //boton.onmouseover = function() {boton.title = `Click para descargar: ${urlObj}.!`;};
     boton.onmouseover = function() {boton.title = `Click para descargar: ${urlImg}.!`;};
     boton.dataset.url = urlImg;
@@ -60,7 +62,7 @@ function crearBotonFlotante(contenedor, urlImg) {
       boton.style.left = "150px";
       boton.style.right = "0";
       boton.style.margin = "auto";
-    } else if (fullUrl.includes('fapello.com/content')) {
+    } else if (fullUrl.includes('fapello.com/content') || fullUrl.includes('cdni.pornpics.com')) {
       boton.style.left = "0";
       boton.style.right = "0";
       boton.style.margin = "auto";
@@ -91,14 +93,22 @@ function crearBotonFlotantePorImagen(contenedor) {
 
         } else if (fullUrl.includes('redgifs.com/users')) {
           selector = img?.href;
+        } else if (fullUrl.includes('pornpics.com/galleries')) {
+          const linkssss = document.querySelectorAll(`#tiles > li`);
+          selector = linkssss[index]?.querySelector('a')?.href;
+          console.log(selector);
         }
         // Evita inyectar varias veces en la misma imagen
         if (img.parentElement.querySelector(".mi-boton-flotante")) return;
         if (img.dataset.botonCreado) return;
         img.dataset.botonCreado = "true";
         const nodos = selector;
-        const contenedor2 = img;      
-        contenedor2.style.position = "relative";
+        const contenedor2 = img;
+        if (fullUrl.includes('pornpics.com/galleries')) {
+          contenedor2.style.position = "";
+        } else {
+          contenedor2.style.position = "relative";
+        }
         
         const boton = document.createElement("button");
         boton.id = `mi-boton-flotante-${index}`;
@@ -107,7 +117,8 @@ function crearBotonFlotantePorImagen(contenedor) {
         boton.textContent = "⬇ Descargar";
         boton.style.position = "absolute";    
         boton.style.padding = "2px";
-        boton.style.background = "#1DA1F2";
+        //boton.style.background = "#1DA1F2";
+        boton.style.background = "rgb(7 112 177)";
         boton.style.color = "#fff";
         boton.style.border = "none";
         boton.style.borderRadius = "8px";
@@ -121,7 +132,8 @@ function crearBotonFlotantePorImagen(contenedor) {
         enlaces = nodos;
         limpio = enlaces?.replace(/_300px(?=\.[a-z]+$)/i, "");
         const enlacesLimpios = limpio;
-        boton.innerHTML = '<img src="' + logo + '" style="width:80%;vertical-align:middle;opacity:0.5;margin:auto"> ⬇ Descargar';      
+        //boton.innerHTML = '<img src="' + logo + '" style="width:80%;vertical-align:middle;opacity:0.5;margin:auto"> 📥 Descargar';      
+        boton.innerHTML = `<img src="${logo}" style="width:80%;vertical-align:middle;opacity:0.5;margin:auto"> 📥 Descargar`;
         boton.onmouseover = function() {boton.title = `Click para descargar: ${enlacesLimpios}.!`;};
         boton.dataset.url = enlacesLimpios;
         
@@ -148,14 +160,14 @@ function crearBotonFlotantePorImagen(contenedor) {
             boton.style.top = "5px";
             boton.style.margin = "0";
             boton.style.height = "fit-content";
-            boton.innerHTML = '<img src="' + logo + '" style="width:80%;vertical-align:middle;opacity:0.5;margin:auto; position:relative"> ⬇ Descargar';
+            boton.innerHTML = '<img src="' + logo + '" style="width:80%;vertical-align:middle;opacity:0.5;margin:auto; position:relative"> 📥 Descargar';
         } else if (fullUrl.includes('pornhub.com/model/')) {
-          boton.style.width = "60px";
+          boton.style.width = "70px";
           boton.style.left = "";
           boton.style.bottom = "";
           boton.style.color = "#ff9000";
           boton.style.background = "rgb(0 0 0 / 43%)";
-          boton.innerHTML = '<img src="' + logo + '" style="width:80%;vertical-align:middle;opacity:0.8;margin:auto; position:relative"> ⬇ Descargar';
+          boton.innerHTML = '<img src="' + logo + '" style="width:80%;vertical-align:middle;opacity:0.8;margin:auto; position:relative"> 📥 Descargar';
         } else if (domain.includes('redgifs')) {
           if (fullUrl.includes('redgifs.com/users')) {
             boton.style.bottom = "";
@@ -168,18 +180,26 @@ function crearBotonFlotantePorImagen(contenedor) {
             boton.style.top = "5px";
             boton.style.margin = "";
             boton.style.justifyItems = "center";
-            boton.innerHTML = '<img src="' + logo + '" style="vertical-align:middle;opacity:0.5;margin:0"> ⬇ Descargar';
+            boton.innerHTML = '<img src="' + logo + '" style="vertical-align:middle;opacity:0.5;margin:0"> 📥 Descargar';
         } else if (fullUrl.includes('twpornstars.com') && !fullUrl.includes('/videos')) {
             boton.style.left = "0";
             boton.style.top = "0";
             boton.style.justifyItems = "center";
             boton.style.justifyContent = "center";          
-            boton.innerHTML = '<img src="' + logo + '" style="width:50%;vertical-align:middle;opacity:0.5;margin:0"> ⬇ Descargar';
+            boton.innerHTML = '<img src="' + logo + '" style="width:50%;vertical-align:middle;opacity:0.5;margin:0"> 📥 Descargar';
             contenedor2.appendChild(boton);
         } else if (fullUrl.includes('fapello.com') && !fullUrl.includes('fapello.com/content')) {
             //boton.style.top = "80%";
         } else if (fullUrl.includes('fapello.com/content')) {
             //
+        } else if (fullUrl.includes('pornpics.com/galleries')) {
+          boton.style.opacity = "0.9";
+          boton.style.background = "rgb(7 112 177)";
+          boton.style.color = "#e00083";
+          boton.style.fontWeight = "bold";
+          boton.style.fontSize = "";
+          boton.style.justifyItems = "center"
+          boton.innerHTML = `<img src="${logo}" style="width:80%;vertical-align:middle;opacity:1;margin:0"> 📥 Descargar`;
         }
     });
   }
@@ -391,6 +411,7 @@ async function ObtenemosLinkTwpornstar (enlace){
 // };
 
 const CallChrome = (host, urlssss, nombre) => {
+  console.log(nombre);
 //const descargarArchivo = (urlssss, nombre) => {
   try {
     let segundos = 5;
@@ -498,7 +519,7 @@ const CallChrome = (host, urlssss, nombre) => {
     intervalo = setInterval(() => {
       segundos--;
       if (segundos > 0) {
-        mensaje.textContent = `La descarga de: ${urlssss} comienza en ${segundos} segundos...`;
+        mensaje.textContent = `La descarga de: ${nombre} - ${urlssss} comienza en ${segundos} segundos...`;
       } else {
         clearInterval(intervalo);
         iniciarDescarga();

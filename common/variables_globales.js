@@ -47,4 +47,6 @@ if (domain.includes('pornhub')) {
   idpostt = "https://fansly.com/post/";
 } else if (domain.includes('x.com')) {
   logo = "https://abs.twimg.com/responsive-web/client-web/icon-default.522d363a.png";
+} else if (domain.includes('pornpics')) {
+  logo = "https://static.pornpics.com/style/img/logo.svg";
 }
