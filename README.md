@@ -17,10 +17,12 @@ Compatible con los siguientes sitios:
 <!-- Template logos -->
 <!-- <img src="" alt="Icono" width="20" height="20"> -->
 <!-- 🟥 RedGifs (*.redgifs.com/watch/*) -->
-<img src="https://www.redgifs.com/favicon-32x32.png" alt="Icono" width="20" height="20"> RedGifs (*.redgifs.com/watch/*)
+- <img src="https://www.redgifs.com/favicon-32x32.png" alt="Icono" width="20" height="20">
+RedGifs (*.redgifs.com/watch/*)
 
 <!-- 🔞 Pornhub GIFs (*.pornhub.com/gif/*) -->
-<img src="https://es.pornhub.com/favicon.ico" alt="Icono" width="20" height="20"> Pornhub GIFs (*.pornhub.com/gif/*)
+- <img src="https://es.pornhub.com/favicon.ico" alt="Icono" width="20" height="20">
+Pornhub GIFs (*.pornhub.com/gif/*)
 
 <!-- 🌟 TWPornstars (*.twpornstars.com/*) -->
 <img src="https://www.twpornstars.com/favicon.ico" alt="Icono" width="20" height="20"> TWPornstars (*.twpornstars.com/*)
@@ -103,8 +105,8 @@ Si la extensión, no es soportada por la página web o sección de la misma, el 
 
 Si quieres mejorar la extensión o agregar nuevas funcionalidades, siéntete libre de:
 
-Hacer un fork del repositorio.
-Crear una rama con tus cambios (`git checkout -b feature/nueva-funcionalidad`).
-Hacer commit de tus cambios (`git commit -am 'Agrega nueva funcionalidad'`).
-Hacer push a la rama (`git push origin feature/nueva-funcionalidad`).
-Enviar un Pull Request.
+1. Hacer un fork del repositorio.
+2. Crear una rama con tus cambios (`git checkout -b feature/nueva-funcionalidad`).
+3. Hacer commit de tus cambios (`git commit -am 'Agrega nueva funcionalidad'`).
+4. Hacer push a la rama (`git push origin feature/nueva-funcionalidad`).
+5. Enviar un Pull Request.
