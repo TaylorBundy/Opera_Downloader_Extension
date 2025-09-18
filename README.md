@@ -17,8 +17,7 @@ Compatible con los siguientes sitios:
 <!-- Template logos -->
 <!-- <img src="" alt="Icono" width="20" height="20"> -->
 <!-- 🟥 RedGifs (*.redgifs.com/watch/*) -->
-- <img src="https://www.redgifs.com/favicon-32x32.png" alt="Icono" width="20" height="20">
-RedGifs (*.redgifs.com/watch/*)
+- <img src="https://www.redgifs.com/favicon-32x32.png" alt="RedGifs" width="20"> RedGifs (*.redgifs.com/watch/*)
 
 <!-- 🔞 Pornhub GIFs (*.pornhub.com/gif/*) -->
 - <img src="https://es.pornhub.com/favicon.ico" alt="Icono" width="20" height="20">
