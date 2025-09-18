@@ -396,6 +396,7 @@ if (!window.listenerProcesarUrl) {
     nombre = obtenerNombre(enlace, { remover: ["-large"] });
     host = 'redgifs';
     CallChrome(host, enlace, nombre);
+    return;
   } else if (/redgifs\.com\/watch/.test(url)) {
     host = 'redgifs';
     const link2 = url.split("/watch/")[1].split("#")[0];
@@ -407,13 +408,14 @@ if (!window.listenerProcesarUrl) {
     return;
   } else if (/redgifs\.com\/users/.test(url)) {
     host = 'redgifs';
-    const link2 = url.split("/users/")[1].split("#")[0];
-    //console.log(link2);
-    const link1 = "https://api.redgifs.com/v2/gifs/" + link2 + "?views=yes&users=yes&niches=yes";    
-    nombre = link2;
-    obtieneredgifs(link1).then(urlssss => {
-       //CallChrome(host, urlssss, nombre + '.mp4');
-    });
+    window.procesarUrl = (urlre) => {
+      const link2 = urlre.split("/watch/")[1].split("#")[0];
+      const link1 = "https://api.redgifs.com/v2/gifs/" + link2 + "?views=yes&users=yes&niches=yes";
+      nombre = link2;
+      obtieneredgifs(link1).then(urlssss => {
+        CallChrome(host, urlssss, nombre + '.mp4');
+      });
+    };
     return;
   // } else if (/x\.com/.test(url)) {
   //   const hayImagen = document.querySelector('img') !== null;
@@ -627,8 +629,8 @@ if (!window.listenerProcesarUrl) {
         download: nombre
       });
       document.body.appendChild(link);
-      link.click();      
-      link.remove();
+      //link.click();      
+      //link.remove();
     }
   } else {
     console.warn("No se encontró recurso válido.");

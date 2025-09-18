@@ -25,21 +25,23 @@ Compatible con los siguientes sitios:
 
 📷 Fapello (*.fapello.com/*)
 
+![Icon](https://abs.twimg.com/responsive-web/client-web/icon-default.522d363a.png) Twitter (*.x.com/*)
+
 Interfaz sencilla e intuitiva.
 
 ---
 
 👨‍🔧 **Instalación**
 
-Clona este repositorio o descarga el ZIP:
+1. ![Icon](icons/github.webp) Clona este repositorio o 📥 descarga el ZIP:
 ```bash
 git clone https://github.com/TaylorBundy/opera-downloader-extension.git
 ```
-Abre Opera y ve a opera://extensions.
+2. Abre Opera y ve a opera://extensions.
 
-Activa el Modo desarrollador.
+3. Activa el Modo desarrollador.
 
-Haz clic en Cargar extensión sin empaquetar y selecciona la carpeta del proyecto.
+4. Haz clic en Cargar extensión sin empaquetar y selecciona la carpeta del proyecto.
 
 ---
 
@@ -76,3 +78,24 @@ opera-downloader-extension/
 ├── popup.js       # ventana popup
 └── README.md        # Este archivo
 ```
+---
+
+📋💡 **Notas importantes:**
+
+Dicha extensión, esta pensada para poder descargar contenido multimedia de diversas paginas web.
+
+AL momento de abrir una página, la cual sea soportada por la extensión, la misma despleglará un popup, informando al usuario sobre el atajo de teclado a utilizar.
+
+Si la extensión, no es soportada por la página web o sección de la misma, el icono permanecera deshabilitado.
+
+---
+
+🔹 **Contribuir:**
+
+Si quieres mejorar la extensión o agregar nuevas funcionalidades, siéntete libre de:
+
+Hacer un fork del repositorio.
+Crear una rama con tus cambios (`git checkout -b feature/nueva-funcionalidad`).
+Hacer commit de tus cambios (`git commit -am 'Agrega nueva funcionalidad'`).
+Hacer push a la rama (`git push origin feature/nueva-funcionalidad`).
+Enviar un Pull Request.

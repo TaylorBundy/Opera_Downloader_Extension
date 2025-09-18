@@ -32,9 +32,11 @@ let valorCookie = '';
 let idpostt;
 
 if (domain.includes('pornhub')) {
-    logo = document.querySelector("#headerContainer > div:nth-child(1) > div > div > a > img").src;    
+    //logo = document.querySelector("#headerContainer > div:nth-child(1) > div > div > a > img").src;
+    logo = "https://ei.phncdn.com/pics/logos/10211.png?cache=2025091603";
 } else if (domain.includes('redgifs')) {
-    logo = document.querySelector("#root > div > div.topNav > a > img").src;    
+    //logo = document.querySelector("#root > div > div.topNav > a > img").src;
+    logo = "https://www.redgifs.com/static/logo-full-red-C9X7m0yF.svg";
 } else if (domain.includes('manyvids')) {
   logo = "https://logos.manyvids.com/icon_public/favicon-32x32.png?v=4";
 } else if (domain.includes('twpornstars')) {

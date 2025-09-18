@@ -80,23 +80,16 @@ function crearBotonFlotantePorImagen(contenedor) {
             selector = linkssss[index]?.querySelector('video').dataset.webm;
         } else if (fullUrl.includes('pornhub.com/model/')) {
           const linkssss = document.querySelectorAll(`#profileContent > div > section > div > div.profileVids > div.gifsWrapperProfile > ul > li > a`);
-          //selector = linkssss[index]?.querySelector('video').dataset.webm;
           let nummmm = linkssss[index]?.href.split('/')[4];
           const str = '0' + nummmm;
           const partes = str.match(/.{1,3}/g);
           const ellink = `https://el.phncdn.com/pics/gifs/${partes[0]}/${partes[1]}/${partes[2]}/${nummmm}a.webm`;
-          //console.log(nummmm);
-          //console.log(partes[1]);
-          //console.log(ellink);
-          //selector = linkssss[index]?.href;
           selector = ellink;
-
         } else if (fullUrl.includes('redgifs.com/users')) {
           selector = img?.href;
         } else if (fullUrl.includes('pornpics.com/galleries')) {
           const linkssss = document.querySelectorAll(`#tiles > li`);
           selector = linkssss[index]?.querySelector('a')?.href;
-          console.log(selector);
         }
         // Evita inyectar varias veces en la misma imagen
         if (img.parentElement.querySelector(".mi-boton-flotante")) return;
@@ -153,7 +146,17 @@ function crearBotonFlotantePorImagen(contenedor) {
             }
         });
         
-        contenedor2.appendChild(boton);      
+        if (fullUrl.includes('redgifs.com/users')) {
+          const nuevoDiv = document.createElement('div');
+          nuevoDiv.style.position = "relative";
+          nuevoDiv.classList.add(`mi-contenedor-${index}`);
+          const contenedorRedgifs = document.querySelector('.tileFeed');          
+          nuevoDiv.appendChild(img);
+          nuevoDiv.prepend(boton);
+          contenedorRedgifs.appendChild(nuevoDiv);
+        } else {
+          contenedor2.appendChild(boton);
+        }
         if (fullUrl.includes('pornhub.com/gif/')) {
             boton.style.left = "0";
         } else if (fullUrl.includes('pornhub.com/gifs/')) {
@@ -187,7 +190,7 @@ function crearBotonFlotantePorImagen(contenedor) {
             boton.style.justifyItems = "center";
             boton.style.justifyContent = "center";          
             boton.innerHTML = '<img src="' + logo + '" style="width:50%;vertical-align:middle;opacity:0.5;margin:0"> 📥 Descargar';
-            contenedor2.appendChild(boton);
+            //contenedor2.appendChild(boton);
         } else if (fullUrl.includes('fapello.com') && !fullUrl.includes('fapello.com/content')) {
             //boton.style.top = "80%";
         } else if (fullUrl.includes('fapello.com/content')) {
@@ -411,7 +414,7 @@ async function ObtenemosLinkTwpornstar (enlace){
 // };
 
 const CallChrome = (host, urlssss, nombre) => {
-  console.log(nombre);
+  //console.log(nombre);
 //const descargarArchivo = (urlssss, nombre) => {
   try {
     let segundos = 5;
@@ -430,7 +433,7 @@ const CallChrome = (host, urlssss, nombre) => {
     `;
 
     const mensaje = document.createElement("p");
-    mensaje.textContent = `La descarga de: ${urlssss} comienza en ${segundos} segundos...`;
+    mensaje.textContent = `La descarga de: ${nombre} - ${urlssss} comienza en ${segundos} segundos...`;
 
     const btnAceptar = document.createElement("button");
     btnAceptar.textContent = "Aceptar";
