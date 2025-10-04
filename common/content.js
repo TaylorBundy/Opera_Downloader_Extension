@@ -7,10 +7,10 @@ if (!window.listenerProcesarUrl) {
       const nomTemp = urlRecibida.split("?")[0];
       nombreRecibido = nomTemp.substring(nomTemp.lastIndexOf("/") + 1);
 
-      //console.log("URL recibida:", urlRecibida);
+      console.log("URL recibida:", urlRecibida);
       //alert(`urlRecibida: ${urlRecibida}`);
       //alert(`nombreRecibido: ${nombreRecibido}`);
-      //console.log("NOMBRE recibido:", nombreRecibido);
+      console.log("NOMBRE recibido:", nombreRecibido);
 
       if (typeof window.procesarUrl === "function") {
         window.procesarUrl(urlRecibida);
@@ -21,7 +21,8 @@ if (!window.listenerProcesarUrl) {
 
 (() => {
   const url = location.href;
-  let elemento, nombre, mensaje, gif;
+  //let elemento, nombre, mensaje, gif;
+  let elemento, mensaje, gif;
   const filtrados = [];
   const id = [];
   const infor = [];
@@ -364,6 +365,14 @@ if (!window.listenerProcesarUrl) {
       CallChrome(host, enlace, nombre);
     };
     return;
+  } else if (/youtube\.com/.test(url)) {
+    host = "youtube";
+    window.procesarUrl = (urlre) => {
+      enlace = urlre;
+      nombre = nombreRecibido;
+      CallChrome(host, enlace, nombre);
+    };
+    return;
   } else if (/fapello\.com\/content/.test(url)) {
     elemento = document.querySelector("img");
     enlace = elemento?.src;
@@ -372,7 +381,7 @@ if (!window.listenerProcesarUrl) {
   } else if (/fapello\.com/.test(url)) {
     host = 'fapello';
     if (tieneExtra(fullUrl)) {
-      userId = fullUrl.split("/")[3];
+      //userId = fullUrl.split("/")[3];
       const local = new URL(fullUrl);
       const partido = local.pathname.split("/");
       if (partido.length === 3) {
@@ -398,13 +407,31 @@ if (!window.listenerProcesarUrl) {
     CallChrome(host, enlace, nombre);
     return;
   } else if (/redgifs\.com\/watch/.test(url)) {
+    console.log('aca');
     host = 'redgifs';
     const link2 = url.split("/watch/")[1].split("#")[0];
-    const link1 = "https://api.redgifs.com/v2/gifs/" + link2 + "?views=yes&users=yes&niches=yes";    
+    const link1 = "https://api.redgifs.com/v2/gifs/" + link2 + "?views=yes&users=yes&niches=yes";
     nombre = link2;
     obtieneredgifs(link1).then(urlssss => {
-       CallChrome(host, urlssss, nombre + '.mp4');
+      CallChrome(host, urlssss, `${nombre}${extension}`);
     });
+
+    // if (extension === '.jpg') {
+    //   // window.procesarUrl = (urlre) => {
+    //   //   //const link2 = urlre.split("/watch/")[1].split("#")[0];
+    //   //   //const link1 = "https://api.redgifs.com/v2/gifs/" + link2 + "?views=yes&users=yes&niches=yes";
+    //   //   //nombre = link2;
+    //   //   //obtieneredgifs(link1).then(urlssss => {
+    //   //     nombre = nombreRecibido;
+    //   //     CallChrome(host, urlre, nombre + '.mp4');
+    //   //   //});
+    //   };
+    // } else {
+    //   nombre = link2;
+    //   obtieneredgifs(link1).then(urlssss => {
+    //     CallChrome(host, urlssss,`${nombre}`);
+    //  });
+    // }
     return;
   } else if (/redgifs\.com\/users/.test(url)) {
     host = 'redgifs';
@@ -480,11 +507,28 @@ if (!window.listenerProcesarUrl) {
     elemento = document.querySelector("img");
     enlace = elemento?.src;
     nombre = obtenerNombre(enlace, { remover: [":large"] });
+  // } else if (/.loyalfans\.com/.test(url)) {
+  //   console.log('estamos aca? linea 484');
+  //   const nuevo = document.querySelector("body > img");
+  //   elemento = nuevo;
+  //   enlace = elemento?.src;
+  //   nombre = obtenerNombre(enlace);
   } else if (/.loyalfans\.com/.test(url)) {
-    const nuevo = document.querySelector("body > img");
-    elemento = nuevo;
-    enlace = elemento?.src;
-    nombre = obtenerNombre(enlace);
+    host = 'LoyalFans';
+    if (fullUrl.includes('/videos')) {
+      console.log('estamos aca? linea 492');
+      //elemento = document.querySelector("#mat-mdc-dialog-0 > div > div > app-media-modal > div > div.media-container > video > source");
+      //enlace = elemento?.src;
+      //nombre = obtenerNombre(enlace);
+      window.procesarUrl = (urlre) => {
+        enlace = urlre;
+        nombre = nombreRecibido;
+        CallChrome(host, enlace, nombre);
+      };
+      return;
+    }
+
+
   // } else if (/.fansly\.com/.test(url)) {
   //   const conte= document.getElementsByClassName("post-text-container")[2].childNodes[0].textContent;
   //   const url = "https://apiv3.fansly.com/api/v1/mediaoffers/location?locationId=785320313247244288&locationType=1002&accountId=716078512095633408&mediaType=2&before=807884108381315073&after=0&limit=30&offset=0&ngsw-bypass=true";
@@ -576,7 +620,7 @@ if (!window.listenerProcesarUrl) {
       nombre = obtenerNombre(enlace);
       CallChrome(host, enlace, nombre);
       return;
-    } else if (fullUrl.includes('/gifs/')) {
+    } else if (fullUrl.includes('/gifs')) {
       window.procesarUrl = (urlre) => {
         enlace = urlre;
         nombre = nombreRecibido;

@@ -7,6 +7,7 @@
     "service_worker": "/background/background.js"
   },
   "action": {
+    "default_popup": "/common/popup.html",
     "browser_style": true,
     "default_icon": {
       "16": "icons/download16.png",
@@ -16,15 +17,24 @@
     },
     "default_title": "Descargador de multiples paginas"
   },
-  "host_permissions": ["*://*.x.com/*", "*://*.fansly.com/*", "*://*.redgifs.com/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*", "https://xdownloader.com/*", "*://*.pornpics.com/*"],
+  "host_permissions": ["*://*.loyalfans.com/*", "*://*.youtube.com/*", "*://*.x.com/*", "*://*.fansly.com/*", "*://*.redgifs.com/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*", "https://xdownloader.com/*", "*://*.pornpics.com/*"],
   "content_scripts": [
     {
-      "matches": ["*://*.x.com/*", "*://*.fansly.com/*", "*://*.redgifs.com/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*", "*://*.pornpics.com/*"],
-      "js": ["./common/variables_globales.js"],
+      "matches": ["<all_urls>"],
+      "js": ["./common/funciones.js"]
+    },
+    {
+      "matches": ["*://*.youtube.com/*", "*://*.loyalfans.com/*", "*://*.x.com/*", "*://*.fansly.com/*", "*://*.redgifs.com/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*", "*://*.pornpics.com/*"],
+      "js": ["./common/estadoExtension.js", "./common/variables_globales.js","./common/funciones.js"],
       "run_at": "document_idle"
     },
     {
-      "matches": ["*://*.redgifs.com/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/model/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*", "*://*.pornpics.com/*"],
+      "matches": ["*://*.x.com/*", "*://*.loyalfans.com/*", "*://*.redgifs.com/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*", "*://*.pornpics.com/*"],
+      "js": ["./common/estadoExtension.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://*.loyalfans.com/*", "*://*.redgifs.com/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*", "*://*.pornpics.com/*"],
       "js": ["popup.js"],
       "run_at": "document_idle"
     },
@@ -35,17 +45,17 @@
     },
     {
       "matches": ["*://*.x.com/*"],
-      "js": ["./twitter/popup.js", "./twitter/inject_button.js"],
+      "js": ["./twitter/popup.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "js": ["./common/estadoExtension.js", "./common/funciones.js", "popup.js"],
       "run_at": "document_idle"
     },
     {
       "matches": ["https://xdownloader.com/*"],
       "js": ["./twitter/content.js"]
-    },
-    {
-      "matches": ["*://*.redgifs.com/*", "*://*.pornhub.com/gif/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*", "*://*.pornpics.com/*"],
-      "js": ["./common/funciones.js", "./common/inject_button.js"],
-      "run_at": "document_idle"
     }
    ],
   "commands": {
@@ -54,6 +64,12 @@
         "default": "Ctrl+Shift+H"
       },
       "description": "Activar la extensión"
+    },
+    "toggle_extension": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+V"
+      },
+      "description": "Activar la extensión Youtube"
     },
     "inject_main_script-fansly": {
       "suggested_key": {
@@ -71,12 +87,15 @@
   "web_accessible_resources": [
     {
       "resources": [
+        "icons/download16.png",
         "icons/logo_redgifs.avif",
         "icons/save.avif",
         "icons/cookie.avif",
         "icons/del.avif",
         "icons/Loading_2.webm",
-        "icons/logo_twitter.avif"
+        "icons/logo_twitter.avif",
+        "icons/twitter16.png",
+        "icons/twitter48.png"
       ],
       "matches": ["<all_urls>"]
     }

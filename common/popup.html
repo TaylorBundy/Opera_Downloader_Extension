@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body {
+      width: 450px;
+      height: 50px;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 10px 5px;
+    }
+    /* label {
+      width: 100%;
+      display: flex;
+      align-items: center;
+    } */
+    .container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      /* box-shadow: 1px 1px 10px 0px rgb(30 190 90 / 75%); */
+      box-shadow: inset 0px 0px 10px 2px rgb(255 0 51 / 75%);
+      border-radius: 5px;
+      /* padding: 5px; */
+    }
+    .img_container {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: right;
+      /* margin-left: 8px;
+      margin-right: 8px; */
+    }
+    .img {
+      /* position: absolute; */
+      /* width: 48px;
+      height: 48px; */
+      /* background-image: url("https://www.gstatic.com/youtube/img/branding/favicon/favicon_192x192_v2.png");
+      background-size: cover; */
+      margin-right: 8px;
+      opacity: 0.5;
+      padding: 0;
+    }
+    input {
+      cursor: pointer;
+      margin: 5px 10px;
+      /* margin-right: 8px; */
+    }
+  </style>
+</head>
+<body>
+  <label>
+    <div class="container">
+      <div class="img_container">
+        <div class="img"></div>
+      </div>
+      <input type="checkbox" id="toggle">
+      <span class="texto">Activar en:</span>
+    </div>
+  </label>
+  <script src="popup.js"></script>
+  <!-- <script>
+    // const titulo = window.document.title;
+    // const texto = document.getElementsByClassName("texto")[0];
+    // texto.textContent = titulo;
+    //console.log(titulo);
+  </script> -->
+</body>
+</html>

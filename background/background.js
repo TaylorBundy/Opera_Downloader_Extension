@@ -1,232 +1,332 @@
-// background.js
-//importScripts("funciones.js");
-
+// background.js optimizado
 let lastDir = '';
 let poraca = '';
-
-chrome.commands.onCommand.addListener((command) => {
-  console.log("Comando recibido:", command);
-
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const tab = tabs[0];
-    if (!tab) return;
-
-    switch (command) {
-      case "inject_main_script":
-        chrome.scripting.executeScript({
-          target: { tabId: tab.id },
-          files: ["/common/content.js"],
-        });
-        break;
-
-      case "inject_main_script-fansly":
-        chrome.scripting.executeScript({
-          target: { tabId: tab.id },
-          files: ["/fansly/content.js"],
-        });
-        break;
-
-      case "inject_main_script-twitter":
-        if (!tab.url.includes("x.com/")) {
-          console.warn("No estás en un tweet de X.");
-          return;
+let userId;
+let idFoto;
+let domain;
+// let estado = null;
+// let host = null;
+// --- Íconos por dominio ---
+const ICONS = {
+    twitter: { 16: "/icons/Twitter16.png", 48: "/icons/Twitter48.png" },
+    fansly: { 16: "/icons/Fansly16.png", 48: "/icons/Fansly48.png" },
+    redgifs: { 16: "/icons/Redgifs16.png", 48: "/icons/Redgifs48.png" },
+    pornhub: { 16: "/icons/Pornhub16.png", 48: "/icons/Pornhub48.png" },
+    twpornstars: { 16: "/icons/Twpornstars16.png", 48: "/icons/Twpornstars48.png" },
+    manyvids: { 16: "/icons/Manyvids16.png", 48: "/icons/Manyvids48.png" },
+    fapello: { 16: "/icons/Fapello16.png", 48: "/icons/Fapello48.png" },
+    pornpics: { 16: "/icons/Pornpics16.png", 48: "/icons/Pornpics48.png" },
+    youtube: { 16: "/icons/Youtube16.png", 48: "/icons/Youtube48.png" },
+    default: { 16: "/icons/download16.png", 48: "/icons/download48.png" }
+  };
+  
+  // --- Reglas de activación por dominio ---
+  const DOMAIN_RULES = {
+    "twitter.com": { icon: ICONS.twitter, enable: (url) => url.includes("/status") },
+    "x.com": { icon: ICONS.twitter, enable: (url) => url.includes("/status") },
+    "fansly.com": { icon: ICONS.fansly, enable: () => true },
+    "redgifs.com": { icon: ICONS.redgifs, enable: (url) => url.includes("/users") },
+    "pornhub.com": { icon: ICONS.pornhub, enable: (url) => url.includes("/model") },
+    "twpornstars.com": { icon: ICONS.twpornstars, enable: () => true },
+    "manyvids.com": { icon: ICONS.manyvids, enable: (url) => url.includes("/Video/") },
+    "fapello.com": { icon: ICONS.fapello, enable: (url) => !url.includes("/content") },
+    "pornpics.com": { icon: ICONS.pornpics, enable: () => true },
+    "youtube.com": { icon: ICONS.youtube, enable: (url) => url.includes("/watch") },
+    "loyalfans.com": { icon: ICONS.default, enable: () => true },
+    "default": { icon: ICONS.default, enable: () => false }
+  };
+  
+  // --- Cookies: guardar y leer estado ---
+  function setEstado(domain, activo) {
+    chrome.cookies.set({
+      url: "https://" + domain,
+      name: "estado_extension_" + domain,
+      value: JSON.stringify({ activo }),
+      path: "/"
+    });
+  }
+  
+  function getEstado(domain, url, callback) {
+    const cookieName = "estado_extension_" + domain;
+    const cookieUrl = new URL(url).origin;
+    console.log(cookieUrl, cookieName);
+  
+    chrome.cookies.get({ url: cookieUrl, name: cookieName }, (cookie) => {
+      if (!cookie) return callback({ activo: true }); // por defecto activo
+      try {
+        callback(JSON.parse(cookie.value));
+      } catch {
+        callback({ activo: true });
+      }
+    });
+  }
+  
+  // --- Actualizar icono + título según estado ---
+  function updateAction(tabId, url, tab) {
+    try {
+        let cleanHost = null;
+      const { hostname } = new URL(url);
+      if (hostname.includes('es')) {
+        cleanHost = hostname.replace("es.", "");
+      } else {
+        cleanHost = hostname.replace("www.", "");
+      }
+      const rules = DOMAIN_RULES[cleanHost] || DOMAIN_RULES.default;
+      const host = hostname;
+      console.log(host);
+  
+    //   getEstado(cleanHost, url, (estado) => {
+    //     const activo = estado.activo && rules.enable(url);
+    //     chrome.action.setIcon({ tabId, path: rules.icon });
+    //     chrome.action.setTitle({
+    //       tabId,
+    //       title: activo
+    //         ? `✅ Descargador activo en ${cleanHost}`
+    //         : `⛔ Descargador desactivado en ${cleanHost}`
+    //     });
+    //     chrome.action[activo ? "enable" : "disable"](tabId);
+    //     console.log(activo);
+    //   });
+      GetState(tab.id, host, tab.url, (estado) => {
+        if (estado.activo) {
+          console.log("✅ Extensión activa en", host);
+          title = `✅ Descargador "(Activada)" para: ${cleanHost}`;
+          // iniciarExtension();
+        } else {
+          console.log("⛔ Extensión desactivada en", host);
+          title = `⛔ Descargador "(Desactivada)" para: ${cleanHost}`;
         }
-        const tweetUrl = tab.url;
-        chrome.tabs.create({ url: "https://xdownloader.com/es" }, (newTab) => {
-          chrome.scripting.executeScript({
-            target: { tabId: newTab.id },
-            func: (url) => sessionStorage.setItem("tweetUrl", url),
-            args: [tweetUrl],
-          });
-        });
-        break;
+        chrome.action.setIcon({ tabId, path: rules.icon });
+        chrome.action.setTitle({ tabId, title });
+      });
+    } catch (e) {
+      console.error("Error en updateAction:", e);
+    }
+  }
+  
+  // --- Listener único para actualizar cuando cambia una pestaña ---
+  chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (changeInfo.status === "complete" && tab.url) {
+      updateAction(tabId, tab.url, tab);
     }
   });
-});
-
-
-
-// chrome.action.onClicked.addListener((tab) => {
-//   chrome.scripting.executeScript({
-//     target: { tabId: tab.id },
-//     files: ["content.js"]
-//   });
-// });
-
-// Cargar carpeta guardada al iniciar
-chrome.storage.local.get("lastDir", (data) => {
-  if (data.lastDir) lastDir = data.lastDir;
-  poraca = lastDir;
-  console.log("Carpeta cargada al iniciar:", lastDir);
-});
-
-// Listener que se activa cuando se crea cualquier descarga
-chrome.downloads.onCreated.addListener((item) => {
-  // Detectar separador de ruta según SO
-  const sep = item.filename.includes("\\") ? "\\" : "/";
-
-  // Obtener carpeta de la descarga
-  const currentDir = item.filename.substring(0, item.filename.lastIndexOf(sep));
-
-  // Guardar en storage local
-  chrome.storage.local.set({ currentDir });
-  lastDir = currentDir;
-
-  // Log para depuración
-  console.log("Descarga creada:", item.filename);
-  console.log("Última carpeta usada:", lastDir);
-});
-
-// Listener que se activa cuando cambia el estado de una descarga
-// (opcional, útil si quieres asegurarte de capturar descargas completadas)
-chrome.downloads.onChanged.addListener((delta) => {
-  if (delta.state && delta.state.current === "complete") {
-    chrome.downloads.search({ id: delta.id }, (results) => {
-      if (results.length > 0) {
-        const item = results[0];
-        const sep = item.filename.includes("\\") ? "\\" : "/";
-        const lastDir = item.filename.substring(0, item.filename.lastIndexOf(sep));
-        console.log("Descarga completada:", item.filename);
-        console.log("Última carpeta usada:", lastDir);
-        chrome.storage.local.set({ lastDir });
-      }
+  
+  // --- También al cambiar de pestaña activa ---
+  chrome.tabs.onActivated.addListener(({ tabId }) => {
+    chrome.tabs.get(tabId, (tab) => {
+      if (tab?.url) updateAction(tabId, tab.url, tab);
     });
-  }
-});
-
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (tab.url && tab.url.includes("redgifs.com/watch/") || tab.url && tab.url.includes("pornhub.com/gif/")
-  || tab.url && tab.url.includes("twpornstars.com/") || tab.url && tab.url.includes("manyvids.com/Video/") || tab.url && tab.url.includes("fapello.com/") || tab.url && tab.url.includes("fansly.com/")|| tab.url && tab.url.includes("x.com/") || tab.url && tab.url.includes("pornpics.com/")) {
-    chrome.action.enable(tabId);
-  } else {
-    chrome.action.disable(tabId);
-  }
-});
-
-chrome.runtime.onMessage.addListener((msg, sender) => {
-  if (msg.action === "inject_main_script3" && sender.tab) {
-    chrome.scripting.executeScript({
-      target: { tabId: sender.tab.id },
-      files: ["/common/content.js"]   // tu script pesado solo se carga cuando tocas el botón
-    });
-  }
-});
-
-chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-  if (msg.action === "inject_main_script" && sender.tab) {
-    chrome.scripting.executeScript(
-      {
-        target: { tabId: sender.tab.id },
-        files: ["/common/content.js"],
-      },
-      () => {
-        if (msg.url) {
-          // Enviar la URL solo cuando sabemos que content.js ya está cargado
-          chrome.tabs.sendMessage(sender.tab.id, {
-            action: "procesar_url",
-            url: msg.url,
-          });
-        } else {
-          console.log("Script inyectado sin URL, no se envía procesar_url");
+  });
+  
+  // --- Mensajes desde otros scripts ---
+  chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+    if (msg.action === "getEstadoExtension") {
+      getEstado(msg.domain, msg.url, (estado) => sendResponse(estado));
+      return true; // mantener el canal abierto
+    }
+    if (msg.action === "setEstadoExtension") {
+      setEstado(msg.domain, msg.activo);
+      sendResponse({ ok: true });
+    }
+    if (msg.action === "getState") {
+        GetState(msg.tabId, msg.host, msg.url, (estado) => {
+            sendResponse({ estado }); // devolvemos al caller
+        });
+        return true; // 🔥 necesario porque la respuesta es async
+    }
+    if (msg.action === "toggleExtension") {
+        setEstado(msg.domain, msg.enabled);
+        if (sender.tab?.id && sender.tab?.url) {
+          updateAction(sender.tab.id, sender.tab.url);
         }
+        sendResponse({ ok: true });
       }
-    );
-  }
-  if (msg.action === "inject_main_script-fansly" && sender.tab) {
-    chrome.scripting.executeScript(
-      {
+    switch (msg.action) {
+        case "inject_main_script3":
+        case "inject_main_script":
+        //case "download_video":
+        chrome.scripting.executeScript({
+            target: { tabId: sender.tab.id },
+            files: ["/common/content.js"]
+            }, () => {
+            if (msg.url) {
+                chrome.tabs.sendMessage(sender.tab.id, {
+                action: "procesar_url",
+                url: msg.url
+                });
+            }
+        });
+        break;
+        // case "injectar":
+        // chrome.scripting.executeScript({
+        // target: { tabId: sender.tab.id },
+        // files: ["/common/inject_button.js"],
+        // });
+        // break;
+    //   case "popupClosed":
+    //     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    //         //if (tabs[0]) {
+    //         chrome.scripting.executeScript({
+    //             target: { tabId: tabs[0].id },
+    //             files: ["/youtube/content_nuevo.js"]
+    //         });
+    //         //}
+    //     });
+    //     break;
+
+        case "popupClosed":
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            const tab = tabs[0];
+            if (!tab?.url) return;
+    
+            const domain = new URL(tab.url).hostname;
+    
+            // 📌 Diccionario de dominios → archivos a inyectar
+            const SCRIPTS_MAP = {
+            //"youtube.com": "/youtube/content_nuevo.js",
+            "x.com": "/twitter/inject_button.js",
+            "manyvids.com": "/common/inject_button.js",
+            "pornhub.com": "/common/inject_button.js",
+            "redgifs.com": "/common/inject_button.js",
+            // default
+            //"default": "/common/content.js"
+            };
+    
+            // Si el dominio existe en el mapa, usamos ese archivo, si no usamos default
+            const fileToInject = Object.entries(SCRIPTS_MAP)
+            .find(([key]) => domain.includes(key))?.[1] || SCRIPTS_MAP.default;
+    
+            chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            files: [fileToInject]
+            }, () => {
+            console.log("✅ Script inyectado:", fileToInject, "en", domain);
+            });
+        });
+        break;
+
+
+    case "inject_main_script-fansly":
+        chrome.scripting.executeScript({
         target: { tabId: sender.tab.id },
-        files: ["/fansly/content.js"],
-      },
-      () => {
+        files: ["/fansly/content.js"]
+        }, () => {
         if (msg.url) {
-          // Enviar la URL solo cuando sabemos que content.js ya está cargado
-          chrome.tabs.sendMessage(sender.tab.id, {
+            chrome.tabs.sendMessage(sender.tab.id, {
             action: "procesar_url",
-            url: msg.url,
-          });
-        } else {
-          console.log("Script inyectado sin URL, no se envía procesar_url");
+            url: msg.url
+            });
         }
-      }
-    );
-  }
-  //if (msg.action === "abrir_xdownloader") {
-  if (msg.action === "inject_main_script-twitter") {
-    // Validar URL
-    if (!msg.url.includes("x.com/")) {
-      sendResponse({ status: "error", message: "No estás en un tweet de X." });
+        });
+        break;
+
+    case "inject_main_script-twitter":
+        if (!msg.url.includes("x.com/")) {
+        sendResponse({ status: "error", message: "No estás en un tweet de X." });
+        return;
+        }
+        chrome.tabs.create({ url: "https://xdownloader.com/es" }, (newTab) => {
+        chrome.scripting.executeScript({
+            target: { tabId: newTab.id },
+            func: url => sessionStorage.setItem("tweetUrl", url),
+            args: [msg.url]
+        });
+        });
+        sendResponse({ status: "ok" });
+        break;
+
+    case "updateCookie":
+        chrome.cookies.set({
+        url: msg.url,
+        name: msg.cookieName,
+        value: msg.cookieValue,
+        path: "/"
+        }, () => sendResponse({ status: "ok" }));
+        return true;
+
+    case "descargar":
+        chrome.downloads.download({ url: msg.url, saveAs: true }, downloadId => {
+        sendResponse({ last: poraca, nombre: msg.nombre, id: downloadId });
+        });
+        return true;
+    }
+  });
+  
+  function GetState(tabId, host, url, callback) {
+    const protocol = new URL(url).protocol;
+    if (protocol !== "http:" && protocol !== "https:") {
+      console.warn("⛔ No se pueden leer cookies en:", url);
+      callback({ activo: true }); // valor por defecto
       return;
     }
-
-    const tweetUrl = msg.url;
-
-    chrome.tabs.create({ url: "https://xdownloader.com/es" }, (newTab) => {
-      chrome.scripting.executeScript({
-        target: { tabId: newTab.id },
-        func: (url) => {
-          sessionStorage.setItem("tweetUrl", url);
-        },
-        args: [tweetUrl],
-      });
-    });
-
-    sendResponse({ status: "ok" });
-  }
-  if (msg.action === "updateCookie") {
-    chrome.cookies.set({
-      url: msg.url,
-      name: msg.cookieName,
-      value: msg.cookieValue,
-      path: "/"
-    }, () => sendResponse({ status: "ok" }));
-    return true; // asincrónico
-  }
-  if (msg.action === "descargar") {
-    //chrome.downloads.download.
-    chrome.downloads.download(
-      {
-        url: msg.url,
-        //name: msg.nombre,
-        //filename: msg.nombre,
-        saveAs: true // fuerza mostrar "Guardar como"
-      },
-      (downloadId) => {
-        console.log("Download ID:", downloadId);
-
-        sendResponse({
-          last: poraca,
-          nombre: msg.nombre,
-          id: downloadId
-        })
+    const COOKIE_NAME = "estado_extension_" + host;
+    const COOKIE_URL = new URL(url).origin;
+    //console.log(COOKIE_URL, COOKIE_NAME);
+  
+    chrome.cookies.get({ url: COOKIE_URL, name: COOKIE_NAME }, (cookie) => {
+      if (cookie) {
+        try {
+          const datos = JSON.parse(cookie.value);
+          console.log("Estado leido:", datos);
+          estado = datos.activo;
+          callback(datos); // 🔥 devolvemos el valor al caller
+          //return;
+        } catch (e) {
+          console.error("Error parseando cookie:", e);
+          callback({ activo: true }); // fallback
+          //return;
+        }
+      } else {
+        console.log("No hay cookie → por defecto activo");
+        estado = true;
+        callback({ activo: true }); // si no hay cookie
       }
-    );
-    return true; // mantiene el canal abierto para sendResponse
+    });
   }
-});
 
-chrome.action.onClicked.addListener(async (tab) => {
-  if (tab.url.includes("x.com/")) {
-      //alert("No estás en un tweet de X.");
-      //return;
-    //}
-    // Guardamos la URL del tweet en sessionStorage del navegador
-    const tweetUrl = tab.url;
-    // Abrimos xdownloader
-    chrome.tabs.create({ url: "https://xdownloader.com/es" }, (newTab) => {
-      // Esperamos a que cargue y le pasamos la URL del tweet
-      chrome.scripting.executeScript({
-        target: { tabId: newTab.id },
-        func: (url) => {
-          sessionStorage.setItem("tweetUrl", url);
-        },
-        args: [tweetUrl]
-      });
+  chrome.commands.onCommand.addListener((command) => {
+    console.log("Comando recibido:", command);
+  
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const tab = tabs[0];
+      if (!tab) return;
+  
+      switch (command) {
+        case "inject_main_script":
+          chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            files: ["/common/content.js"],
+          });
+          break;
+  
+        case "inject_main_script-fansly":
+          chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            files: ["/fansly/content.js"],
+          });
+          break;
+  
+        // case "popupClosed":
+        //   chrome.scripting.executeScript({
+        //     target: { tabId: tab.id },
+        //     files: ["/youtube/content_nuevo.js"],
+        //   });
+        //   break;
+  
+        case "inject_main_script-twitter":
+          if (!tab.url.includes("x.com/")) {
+            console.warn("No estás en un tweet de X.");
+            return;
+          }
+          const tweetUrl = tab.url;
+          chrome.tabs.create({ url: "https://xdownloader.com/es" }, (newTab) => {
+            chrome.scripting.executeScript({
+              target: { tabId: newTab.id },
+              func: (url) => sessionStorage.setItem("tweetUrl", url),
+              args: [tweetUrl],
+            });
+          });
+          break;
+      }
     });
-  } else {
-    chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      files: ["/common/content.js"]
-    });
-  }
-});
+  });
