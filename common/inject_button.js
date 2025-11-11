@@ -61,7 +61,7 @@ function procesarVideos() {
         observer.disconnect();
       }
     }
-  }, 5000);
+  }, 2000);
 }
 
 function hola (){
@@ -247,6 +247,7 @@ if (domain.includes('pornhub')) {
     }
   }, 2000);
 } else if (domain.includes('twpornstars') || domain.includes('pornpics')) {
+  tiempo = 2000;
   if (domain.includes('twpornstars')) {
     selector = document.querySelector("body > div.block.block-thumbs.js-thumbs > div.thumb > div.thumb__inner");
     if (selector) {
@@ -425,6 +426,7 @@ observer4.observe(document.body, { childList: true, subtree: true });
 //const start = performance.now();
 //(async () => {
 async function BuscaContenedores (){
+  //console.log(fullUrl);
   const valorTiempo = await esperarTiempo();
   //console.log(valorTiempo);
   setTimeout(() => {
@@ -485,11 +487,13 @@ async function BuscaContenedores (){
         return;
       }
     } else if (domain.includes('twpornstars')) {
+      //console.log(domain);
       if (fullUrl.includes('twpornstars.com') && fullUrl.includes('/videos')) {
-        //const todos = document.querySelectorAll("body > div.block.block-thumbs.js-thumbs > div.thumb > div.thumb__inner");
+        const todos = document.querySelectorAll("body > div.block.block-thumbs.js-thumbs > div.thumb > div.thumb__inner");
         crearBotonFlotantePorImagen(todos);
         return
       } else {
+        //selector = "#video_tag";
         selector = "#video_tag";
         enlace = document.querySelector(`${selector} > video > source`).src;
       }
@@ -608,6 +612,7 @@ async function BuscaContenedores (){
       const contenedor = document.querySelector(
           selector
       );
+      //console.log(contenedor);
     if (contenedor) {
       if (demoraBtn) {
         crearBotonFlotante(contenedor, enlace)

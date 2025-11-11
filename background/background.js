@@ -186,6 +186,7 @@ const ICONS = {
             //"youtube.com": "/youtube/content_nuevo.js",
             "x.com": "/twitter/inject_button.js",
             "manyvids.com": "/common/inject_button.js",
+            "twpornstars.com": "/common/inject_button.js",
             "pornhub.com": "/common/inject_button.js",
             "redgifs.com": "/common/inject_button.js",
             // default

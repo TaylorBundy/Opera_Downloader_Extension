@@ -562,7 +562,10 @@ if (!window.listenerProcesarUrl) {
       const imgs = ids.querySelector("img").src;
       descargar(imgs);
     }
-  } else if (/video\.twimg\.com|twpornstars\.com|packaged-media\.redd\.it/.test(url)) {
+  //} else if (/twpornstars\.com/.test(url)) {
+    //console.log(url);
+                  //console.log(urlre);
+  } else if (/video\.twimg\.com|twpornstars.com|packaged-media\.redd\.it/.test(url)) {
     if (/twpornstars.com|twpornstars.com\/videos/.test(fullUrl)) {
       host = 'twpornstars';
     //if (fullUrl.includes('twpornstars.com') && fullUrl.includes('/videos')) {

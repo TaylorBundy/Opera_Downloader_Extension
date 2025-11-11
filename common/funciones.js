@@ -50,7 +50,7 @@ const obtenerNombre = (src, opciones = {}) => {
   };
 
 function crearBotonFlotante(contenedor, urlImg, retrasos) {
-  
+  //console.log(contenedor);
     if (document.getElementById("mi-boton-flotante")) return;
     const boton = document.createElement("button");
     if (fullUrl.includes('loyalfans')) {
@@ -171,10 +171,12 @@ function crearBotonFlotante(contenedor, urlImg, retrasos) {
   }
 
 function crearBotonFlotantePorImagen(contenedor) {
+  //console.log(contenedor);
     contenedor.forEach((img, index) => {
         if (fullUrl.includes('fapello')) {
             selector = document.querySelector(`#content > div:nth-child(${index +1}) > a > div > img`)?.src;
         } else if (fullUrl.includes('twpornstars.com')) {
+          //console.log(img);
             selector = document.querySelector(`body > div.block.block-thumbs.js-thumbs > div:nth-child(${index + 1}) > div.thumb__inner > a`)?.href;
         } else if (fullUrl.includes('pornhub.com/gifs/')) {
             const linkssss = document.querySelectorAll(`body > div.wrapper > div.container > div.nf-videos > div > div.gifsWrapper.hideLastItemLarge > ul > li > a`);
@@ -348,6 +350,7 @@ function crearBotonFlotantePorImagen(contenedor) {
   }
 
 async function ObtenemosLinkTwpornstar (enlace){
+  console.log(enlace);
     try {
         const respuesta = await fetch(enlace, {
         method: 'GET',

@@ -179,6 +179,10 @@ if (/fapello\.com/.test(fullUrl)) {
   host = fullUrl;
 } else if (/pornhub\.com/.test(fullUrl)) {
   host = GetHosts(fullUrl);
+} else if (/twpornstars\.com/.test(fullUrl)) {
+  host = GetHosts(fullUrl);
+} else if (/manyvids\.com/.test(fullUrl)) {
+  host = GetHosts(fullUrl);
 } else if (/youtube\.com/.test(fullUrl)) {
   //host = GetHosts(fullUrl);
   URL_ESPECIFICA = fullUrl;
@@ -229,6 +233,11 @@ const DOMAIN_RULES1 = {
     { include: [`/watch`], result: true },
     //{ include: [`/${idFoto}`], result: true },
     { include: ["youtube.com"], exclude: [`/watch`], result: false }
+  ],
+  "twpornstars.com": [
+    { include: ["/videos","/p"], result: true },
+    //{ include: [`/${idFoto}`], result: true },
+    { include: ["twpornstars.com"], exclude: ["/videos", "/p"], result: false }
   ],
   "redgifs.com": [
     { include: ["/users","/watch"], result: true },
@@ -380,6 +389,9 @@ if (muestra === false) {
         TiempoCuentaRegresiva = 1000;
       } else if (domain.includes('twpornstars')) {
         img.style.padding = "0";
+                  texto.innerHTML = `'✨ Extensión "Descarga_Multi_Sitio" activa en: (${domain})<br>listo para descargar: (${host}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+H".!<br>Tiempo estimado para cargar boton: ${segundos / 1000} segundos.<br>Tiempo restante: ${segundos / 1000} segundos.'`;
+          mensaje = `'✨ Extensión "Descarga_Multi_Sitio" activa en: (${domain})<br>listo para descargar: (${host}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+H".!'`;
+          mensaje2 = `Boton cargado.!'`;
       } else if (domain.includes('redgifs')) {
         if (!estadoGene) {
           segundos = 10000;
