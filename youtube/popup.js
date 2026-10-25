@@ -6,7 +6,7 @@ if (location.hostname === "youtube.com" && location.pathname.includes("home")) {
   // Tu código normal aquí
   (() => {
     if (document.getElementById("mi-popup-extension")) return;
-    
+
     const popup = document.createElement("div");
     popup.id = "mi-popup-extension";
     popup.style.position = "fixed";
@@ -26,7 +26,7 @@ if (location.hostname === "youtube.com" && location.pathname.includes("home")) {
     const img = document.createElement("img");
     img.id = "popupImg";
     img.style.position = "absolute";
-    img.style.height = "100%"
+    img.style.height = "100%";
     img.style.right = "0";
     img.style.padding = "5px 5px";
     img.style.background = "#333";
@@ -37,7 +37,7 @@ if (location.hostname === "youtube.com" && location.pathname.includes("home")) {
     img.style.fontSize = "14px";
     img.src = logo;
     img.style.opacity = "0.2";
-    const texto  = document.createElement("span");
+    const texto = document.createElement("span");
     texto.innerHTML = `'✨ Extensión "Descarga_Multi_Sitio" activa:<br>lista para descargar (${domain}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+V".!'`;
     texto.style.zIndex = "9";
     texto.style.textAlign = "left";
@@ -48,6 +48,7 @@ if (location.hostname === "youtube.com" && location.pathname.includes("home")) {
     // Hacer que desaparezca después de 8 segundos
     setTimeout(() => {
       popup.remove();
+      //chrome.runtime.sendMessage({ action: "popupClosed" });
     }, 8000);
   })();
 }

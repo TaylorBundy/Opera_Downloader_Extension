@@ -586,7 +586,7 @@
           "headers": {
             "accept": "application/json, text/plain, */*",
             "accept-language": "es-ES,es;q=0.9,en-US;q=0.8,en;q=0.7",
-            "authorization": "ODIxMzI0MDg1NTU1Mzc2MTI4OjE6MjphMTliYTkwNzM3YjAzMWI4NDMwMmQ0ODE0MzMxYzk",
+            "authorization": "OTAwNzIyMDE4NDgyMTUxNDI2OjE6MjphNDZkOWViZmZjZmZjOTFjNDBiYWVmMmVmZTFlYzc",
             "fansly-client-check": "3b5d6d05a484e",
             "fansly-client-id": "741332220559499264",
             "fansly-client-ts": "1757340601428",
@@ -640,7 +640,8 @@
         let userid;
         let locationid;        
         let CantId;
-        let url;                
+        let url;          
+        let filtro;      
         if (fullUrl.includes("fansly.com/post")) {
             //console.log(fullUrl);
             CantId = "1";
@@ -659,7 +660,7 @@
             extensionElegida = prompt("Ingrese la extensión que desea filtrar (jpg, jpeg, png, mp4):");
         }
         //url = url;
-        const filtro = extensionElegida;
+        filtro = extensionElegida;
         if (CantId === null) return;
         const Eleccion = CantId;
     
@@ -677,7 +678,7 @@
         "fansly-client-id": "741332220559499264",
         "fansly-client-ts": "1758071671458",
         "fansly-session-id": "741332362213732352",
-        "cookie": `f-s-c=ODIxMzI0MDg1NTU1Mzc2MTI4OjE6MTo3NzQxYzY4M2Q4NmY1Y2MwMTI1NjNjYzFmN2QyOTU; f-v-d=1756492169909; f-d=741332220559499264; fansly-d=741332220559499264; intercom-device-id-g2ytx5gg=79956f94-5832-48b7-b70e-fbc16c440193; f-v-v=0.46.41; fansly-ts-info={"tso":-8513,"sts":1757760865003,"cts":1757760873516}; intercom-session-g2ytx5gg=NWJ5Tk1qZktHL3NzeFpPSHZaV0kzS2tJWGcydFhYaDVYYXdpQUdJVlpJdWVXVGVCUUFsSVBsQmpmZXRlM1hGUkd2NURESm9qanowMjlZZjBpYzl6N3ZaSTdsd2htUzlPMnUwY3pDWHVzdU09LS1XNTdpbFZlVE9YeERWb08rNXJaanV3PT0=--109576d0b1a920b075772788e0c44b9504c93469`,
+        "cookie": `f-v-d=1768236032614; f-d=897127406660251648; fansly-d=897127406660251648; f-v-v=0.47.39; f-s-c=OTAwNzIyMDE4NDgyMTUxNDI2OjE6MTo0NTlhYTEwNDE0MjYyYjU5NjZjZmRjYWExNTExMWE; intercom-device-id-g2ytx5gg=91e45d38-e994-4e82-b991-74f6314951d6; intercom-session-g2ytx5gg=ckxBektXdm4vZ0Z6U3dsQjVaN0w2dVRWWWpaQVFnU2dGcFFBQmJFL2EzVVZiclFRVDljcjFoRC9VQkkvSDVHbm52SU1rTE9BTnZsSzdwdE9RUHBNaGpsZHhlVUp4QlBPcnFEWFdnNHo1WTgwRjFQdVdQMy9oMGpNQkw1VlVyYzg5WGtRcVIzU2hsWXFRcjl1UWt3Yk9VOC9CV01qU2FCeWtJOXBqVjh3Tzg1MEF4VnovTlZYaVN4c29xci82MjVqY1NTR1N4eVZKWjB0eUNpWUFIVG0vQT09LS1DOXdqcGgyRUhuUzh5dzc1N3lZZjhnPT0=--4390a3922902db08ac5edd6c7fb2bbc3de7feb9f; fansly-ts-info={"tso":-2482,"sts":1778306606871,"cts":1778306609353}`,
         };
     
         while (keepGoing) {
@@ -705,6 +706,7 @@
     
         const data = await res.json();
         
+        
         const idConLos = data?.response?.aggregationData || [];
         //const posts = data?.response?.aggregationData?.posts || [];
         let posts;
@@ -731,8 +733,12 @@
         let content;
         let mediaUrl;
         let miniaturas;
-    
+    if (!posts || posts.length === 0) {
+    console.log("Sin posts");
+    break;
+}
         if (posts.length > 1){
+          console.log(data);
             // Paso 1: recorrer posts → obtener contentId + content
             for (const post of posts ?? []) {
                 id = post?.id;
@@ -745,22 +751,24 @@
                 // }
                 contentId = att.contentId;
                 content = post.content;
+                console.log(contentId);
                 
                 if (!contentId) continue;
             
                 // Paso 2: buscar en accountMedia por id == contentId
                 const mediaItem = (medias ?? [])
-                    .find(m => m.id === contentId);                
+                    .find(m => m.id === contentId);   
+                    console.log(mediaItem);             
                 
             
-                mediaUrl = mediaItem?.media?.locations?.[0]?.location || null;
-                miniaturas = mediaItem?.media?.variants?.[0]?.locations?.[0]?.location || null;
+                mediaUrl = mediaItem?.preview?.locations?.[0]?.location || null;
+                miniaturas = mediaItem?.preview?.variants?.[0]?.locations?.[0]?.location || null;
                 
                 // if (mediaUrl.includes(filtro)) {
                 //     console.log(mediaUrl);
                 // }
                 before = allTodos.size;
-                allTodos.set(id, { id, contentId, content, mediaUrl, miniaturas });
+                allTodos.set(contentId, { id, contentId, content, mediaUrl, miniaturas });
                 contador++;
                 //allTodos.set(id, {tuti});
                 //console.log(contador);
@@ -773,9 +781,10 @@
             mediaUrl = medias.location;
             miniaturas = imgsT.location;
             contentId = posts[0].attachments[0].contentId;
-            allTodos.set(id, { id, contentId, content, mediaUrl, miniaturas });
+            allTodos.set(contentId, { id, contentId, content, mediaUrl, miniaturas });
             //before = posts[0].id;            
         }
+        
         //console.log(before);
     
         //console.log(`✅ IDs Extraídos ${before} posts, total acumulado: ${allTodos.size}`);
@@ -788,7 +797,7 @@
         }
         page++;
         }
-        //console.log(filtrarPorExtension(allTodos, filtro));
+        console.log(filtrarPorExtension(allTodos, filtro));
         const tuti = filtrarPorExtension(allTodos, filtro);
         //console.log(tuti);
         console.log("🎯 Todos obtenidos:", Array.from(allTodos.values()));

@@ -1,58 +1,56 @@
 // Al inicio de popup.js
 
 // --- Al cargar la página ---
-  // Revisar si el dominio está deshabilitado ANTES de arrancar
-  // chrome.storage.local.get({ disabledDomains: [] }, ({ disabledDomains }) => {
-  //   const domain = location.hostname;
-  
-  //   if (disabledDomains.includes(domain)) {
-  //     console.log("🚫 Extensión desactivada en", domain);
-  //     estado = false;
-  //     return; // no iniciar nada
-  //   } else {
-  //     console.log("✅ Extensión activa en", domain);
-  //     estado = true;
-  //   }
-  
-  //   console.log("✅ Extensión activa en", domain);
-  //   //iniciarExtension();
-  // });
+// Revisar si el dominio está deshabilitado ANTES de arrancar
+// chrome.storage.local.get({ disabledDomains: [] }, ({ disabledDomains }) => {
+//   const domain = location.hostname;
 
-  
-  
+//   if (disabledDomains.includes(domain)) {
+//     console.log("🚫 Extensión desactivada en", domain);
+//     estado = false;
+//     return; // no iniciar nada
+//   } else {
+//     console.log("✅ Extensión activa en", domain);
+//     estado = true;
+//   }
 
-  function obtenerEstadoExtension(url, name, callback) {
-    chrome.cookies.get({ url: url, name: name }, (cookie) => {
-      if (!cookie) {
-        callback(true); // por defecto activo
-        return;
-      }
-      try {
-        const datos = JSON.parse(cookie.value);
-        callback(datos.activo);
-      } catch (e) {
-        console.error("Error parseando cookie:", e);
-        callback(true);
-      }
-    });
-  }
+//   console.log("✅ Extensión activa en", domain);
+//   //iniciarExtension();
+// });
 
-  // // Leer estado y reflejar en toggle
-  // const COOKIE_NAME2 = "estado_extension_" + domain;
-  // chrome.cookies.get({ url: fullUrl, name: COOKIE_NAME2 }, (cookie) => {
-  //   if (!cookie) {
-  //     callback(true); // por defecto activo
-  //     return;
-  //   }
-  //   try {
-  //     const datos = JSON.parse(cookie.value);
-  //     console.log(datos.activo);
-  //     callback(datos.activo);
-  //   } catch (e) {
-  //     console.error("Error parseando cookie:", e);
-  //     callback(true);
-  //   }
-  // });
+//obtener estado exten
+function obtenerEstadoExtension(url, name, callback) {
+  chrome.cookies.get({ url: url, name: name }, (cookie) => {
+    if (!cookie) {
+      callback(true); // por defecto activo
+      return;
+    }
+    try {
+      const datos = JSON.parse(cookie.value);
+      callback(datos.activo);
+    } catch (e) {
+      console.error("Error parseando cookie:", e);
+      callback(true);
+    }
+  });
+}
+
+// // Leer estado y reflejar en toggle
+// const COOKIE_NAME2 = "estado_extension_" + domain;
+// chrome.cookies.get({ url: fullUrl, name: COOKIE_NAME2 }, (cookie) => {
+//   if (!cookie) {
+//     callback(true); // por defecto activo
+//     return;
+//   }
+//   try {
+//     const datos = JSON.parse(cookie.value);
+//     console.log(datos.activo);
+//     callback(datos.activo);
+//   } catch (e) {
+//     console.error("Error parseando cookie:", e);
+//     callback(true);
+//   }
+// });
 
 // if (domain.includes('pornhub.com')) {
 //   if (fullUrl.includes('/gifs/') || fullUrl.includes('/gif')) {
@@ -107,29 +105,29 @@ const obtieneredgifs = async (src) => {
   try {
     const token = await getToken();
     const response = await fetch(src, {
-      "headers": {
-        "accept": "application/json, text/plain, */*",
+      headers: {
+        accept: "application/json, text/plain, */*",
         "accept-language": "es-ES,es;q=0.9,en-US;q=0.8,en;q=0.7",
         //"authorization": "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6Ijk1OjMzOjc0OjdkOjViOjc4Ojc2OmY0OmU3OjVmOjM4OjQ2OjE1OjRkOmE4OjBmIiwidHlwIjoiSldUIn0.eyJhdF9oYXNoIjoiQzNMSkdPYkc3RG5MQnVxSEJBWkMzQSIsImF1ZCI6WyJlMDZjMzRkYWM3NjU0ODIxYmNiMzdlMDM5M2I1NDM1MCJdLCJhdXRoX3RpbWUiOjE3NTM4NTQzNTYsImF6cCI6ImUwNmMzNGRhYzc2NTQ4MjFiY2IzN2UwMzkzYjU0MzUwIiwiZW1haWwiOiJtYXJ0b25iYXJib3NhQGhvdG1haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE3NTU3NTM0NzksImZhbWlseV9uYW1lIjoiIiwiZ2l2ZW5fbmFtZSI6IiIsImlhdCI6MTc1NTc0OTg3OSwiaXNzIjoiaHR0cHM6Ly9hdXRoMi5yZWRnaWZzLmNvbSIsImp0aSI6ImVhY2VmYmE2LTUxNzUtNDhmZi1iMjdmLTZjZDU3Yjc2Yjg1OCIsIm5hbWUiOiIiLCJvcmdfY29kZXMiOlsib3JnXzJmZGZmYjExMzEyIl0sInByZWZlcnJlZF91c2VybmFtZSI6InRheWxvcmJ1bmR5IiwicmF0IjoxNzUzODU0MzU2LCJzdWIiOiJrcF80ZTY0ZGViODY0ODA0ZGQ3YmYwMTcwMGVjM2Y3ZDc3NCIsInVwZGF0ZWRfYXQiOjEuNzUzODU0MzU2ZSswOX0.oaGDnexzxWNwQN3Pv7eVC3KVqkx1K9t4ty2pYxgScRyjf0PH_vHrQNCXKI5e3dEn_yRwctNWDxaq1Wl3_qA7wDWYiMKY9vpaUMEz6q2yPU2c2oS0GIF4_UH6wlKTfXeW-iUAWS4MCegI4J3WSWd_Y5Y2Jly22CWu-7o5KYFdbwBC0Gxfpc4oW_YQABvg_K_mW-cPTWI05paVMHFX2RIaUd-R1AqePDEUCOZSinUW-446NyfYidOo64UAvgURleSZlT_HeBvlynCPUQrmpPv961vip-Ff7QUHfJ70lJ4IhSaZdr8gTaXGtPAHbs9eKOYrf_hgDEAgHcSvDaV4HyKIzQ",
-        "authorization": `Bearer ${token}`,
-        "sec-ch-ua": "\"Opera\";v=\"95\", \"Chromium\";v=\"109\", \"Not;A=Brand\";v=\"24\"",
+        authorization: `Bearer ${token}`,
+        "sec-ch-ua": '"Opera";v="95", "Chromium";v="109", "Not;A=Brand";v="24"',
         "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": "\"Windows\"",
+        "sec-ch-ua-platform": '"Windows"',
         "sec-fetch-dest": "empty",
         "sec-fetch-mode": "cors",
         "sec-fetch-site": "same-site",
-        "Referer": "https://www.redgifs.com/",
-        "Referrer-Policy": "strict-origin"
+        Referer: "https://www.redgifs.com/",
+        "Referrer-Policy": "strict-origin",
       },
-      "body": null,
-      "method": "GET"
+      body: null,
+      method: "GET",
     });
     if (!response.ok) throw new Error(`Error ${response.status}`);
     const datoss = await response.json();
     return datoss.gif.urls.hd;
-    } catch(error) {
+  } catch (error) {
     // Capturamos errores durante la solicitud
-    console.error('Error durante la solicitud:', error);
+    console.error("Error durante la solicitud:", error);
   }
 };
 
@@ -154,12 +152,12 @@ if (/fapello\.com/.test(fullUrl)) {
   }
   host = fullUrl;
 } else if (/redgifs\.com/.test(fullUrl)) {
-  if (fullUrl.includes('redgifs.com')) {
+  if (fullUrl.includes("redgifs.com")) {
     URL_ESPECIFICA = fullUrl;
     if (!estadoGene) {
       retraso = 1500;
     } else {
-      retraso = 5500;
+      retraso = 2500;
     }
   }
   // //setTimeout(() => {
@@ -179,8 +177,14 @@ if (/fapello\.com/.test(fullUrl)) {
   host = fullUrl;
 } else if (/pornhub\.com/.test(fullUrl)) {
   host = GetHosts(fullUrl);
+} else if (/porn4fans\.com/.test(fullUrl)) {
+  host = GetHosts(fullUrl);
+  retraso = 5000;
 } else if (/twpornstars\.com/.test(fullUrl)) {
   host = GetHosts(fullUrl);
+} else if (/onlyfans\.com/.test(fullUrl)) {
+  host = GetHosts(fullUrl);
+  retraso = 7000;
 } else if (/manyvids\.com/.test(fullUrl)) {
   host = GetHosts(fullUrl);
 } else if (/youtube\.com/.test(fullUrl)) {
@@ -202,47 +206,90 @@ if (/fapello\.com/.test(fullUrl)) {
     }
   })();
   //obtenerEstadoExtension(fullUrl, COOKIE_NAME, (activo) => {
-    //toggle.checked = activo;
-    // if (!activo) {
-    //   console.log("Extensión desactivada según cookie, no se inyectarán botones.");
-    //   //estado = false;
-    // } else {
-    //   console.log("Extensión activa, se procede con la inyección de botones.");
-    //   //estado = true;
-    // }
-    //console.log(activo);
+  //toggle.checked = activo;
+  // if (!activo) {
+  //   console.log("Extensión desactivada según cookie, no se inyectarán botones.");
+  //   //estado = false;
+  // } else {
+  //   console.log("Extensión activa, se procede con la inyección de botones.");
+  //   //estado = true;
+  // }
+  //console.log(activo);
   //});
 }
 
 // Reglas dinámicas para cada dominio
 const DOMAIN_RULES1 = {
   "pornhub.com": [
-    { include: ["/model", "/pornstar", "/gifs", "/video", "/gif"], result: true },
-    { include: ["pornhub.com", "channels"], exclude: ["/model", "/pornstar", "/gifs", "/video", "/gif"], result: false }
+    {
+      include: [
+        "/model",
+        "/pornstar",
+        "/gifs",
+        "/video",
+        "/view_video",
+        "/gif",
+      ],
+      result: true,
+    },
+    {
+      include: ["pornhub.com", "channels"],
+      exclude: ["/model", "/pornstar", "/gifs", "/gif"],
+      result: false,
+    },
+  ],
+  "onlyfans.com": [
+    { include: [`/${userId}/media`, `/${userId}/videos`], result: true },
   ],
   "x.com": [
     { include: ["/status", "/gif"], result: true },
-    { include: ["x.com", "home"], exclude: ["status", "gif"], result: false }
+    { include: ["x.com", "home"], exclude: ["status", "gif"], result: false },
   ],
   "fapello.com": [
     { include: [`/${idFoto1}`, `/${userId1}_0${idFoto1}`], result: true },
     //{ include: [`/${idFoto}`], result: true },
-    { include: ["fapello.com"], exclude: [`/${idFoto1}`, `/${userId1}_0${idFoto1}`], result: false }
+    {
+      include: ["fapello.com"],
+      exclude: [`/${idFoto1}`, `/${userId1}_0${idFoto1}`],
+      result: false,
+    },
   ],
   "youtube.com": [
     { include: [`/watch`], result: true },
     //{ include: [`/${idFoto}`], result: true },
-    { include: ["youtube.com"], exclude: [`/watch`], result: false }
+    { include: ["youtube.com"], exclude: [`/watch`], result: false },
   ],
   "twpornstars.com": [
-    { include: ["/videos","/p"], result: true },
+    { include: ["/videos", "/p"], result: true },
     //{ include: [`/${idFoto}`], result: true },
-    { include: ["twpornstars.com"], exclude: ["/videos", "/p"], result: false }
+    { include: ["twpornstars.com"], exclude: ["/videos", "/p"], result: false },
+  ],
+  "porn4fans.com": [
+    { include: ["/video"], result: true },
+    //{ include: [`/${idFoto}`], result: true },
+    { include: ["porn4fans.com"], exclude: ["/video"], result: false },
+  ],
+  "viralxxxporn.com": [
+    { include: ["/es/video"], result: true },
+    //{ include: [`/${idFoto}`], result: true },
+    { include: ["viralxxxporn.com"], exclude: ["/es/video"], result: false },
   ],
   "redgifs.com": [
-    { include: ["/users","/watch"], result: true },
-    { include: ["redgifs.com", "channels", `/users/${userId}`], exclude: ["/users", "/watch"], result: false }
-  ]
+    { include: ["/users", "/watch", "/gifs", "/niches"], result: true },
+    {
+      include: ["redgifs.com", "channels", `/users/${userId}`],
+      exclude: ["/users", "/watch"],
+      result: false,
+    },
+  ],
+  "redditp.com": [
+    { include: ["/u"], result: true },
+    {
+      include: ["redditp.com", "channels", `/users/${userId}`],
+      exclude: ["/users", "/watch"],
+      result: false,
+    },
+  ],
 };
 
 // let muestra;
@@ -261,7 +308,6 @@ const muestra = checkUrl(fullUrl, DOMAIN_RULES1);
 // } else {
 //   // No aplica ninguna regla
 // }
-
 
 // if (location.hostname === "es.pornhub.com" || location.pathname.includes("channels")
 //   || location.pathname.includes("pornstar")) {
@@ -302,13 +348,13 @@ if (muestra === false) {
       img.style.padding = "10px 15px";
       img.style.background = "#333";
       img.style.color = "#fff";
-      img.style.borderRadius = "8px";  
+      img.style.borderRadius = "8px";
       img.style.zIndex = "8";
       img.style.fontSize = "14px";
       img.src = logo;
       img.style.opacity = "0.2";
       img.style.right = "0";
-      const texto  = document.createElement("span");
+      const texto = document.createElement("span");
       texto.id = "contador";
       //texto.innerHTML = `'✨ Extensión "Descarga_Multi_Sitio" activa en: (${domain})<br>listo para descargar: (${host}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+H".!'`;
       // texto.innerHTML = `✨ Extensión "Descarga_Multi_Sitio" activa en: (${domain})<br>
@@ -322,9 +368,14 @@ if (muestra === false) {
       popup.appendChild(texto);
       popup.insertBefore(img, texto);
 
-      if (domain.includes('manyvids')) {
-        //
-      } else if (domain.includes('youtube')) {
+      if (domain.includes("manyvids")) {
+        if (estadoGene) {
+          segundos = 500;
+          texto.innerHTML = `'✨ Extensión "Descarga_Multi_Sitio" activa en:<br>lista para descargar (${domain}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+V".!'`;
+          mensaje = `'✨ Extensión "Descarga_Multi_Sitio" activa en: (${domain})<br>listo para descargar: (${host}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+V".!'`;
+          mensaje2 = `Boton cargado.!'`;
+        }
+      } else if (domain.includes("youtube")) {
         img.src = logo1;
         img.style.height = "90%";
         img.style.background = "";
@@ -339,11 +390,11 @@ if (muestra === false) {
           mensaje = `'✨ Extensión "Descarga_Multi_Sitio" activa en: (${domain})<br>listo para descargar: (${host}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+V".!'`;
           mensaje2 = `Boton cargado.!'`;
         }
-      } else if (domain.includes('pornhub')) {
+      } else if (domain.includes("pornhub")) {
         img.style.height = "90%";
         img.style.padding = "5px";
         if (estadoGene) {
-          segundos = 2000;
+          segundos = 1000;
           if (/pornhub\.com\/.*\/gifs\/?$/.test(fullUrl)) {
             //segundos = 2500;
             texto.innerHTML = `'✨ Extensión "Descarga_Multi_Sitio" activa en: (${domain})<br>para descargar haga click en algun boton de descarga.<br>Si no aparece ningún boton de descarga, recargue la pagina.!<br>Tiempo estimado para cargar botones: ${segundos / 1000} segundos.<br>Tiempo restante: ${segundos / 1000} segundos.'`;
@@ -387,12 +438,27 @@ if (muestra === false) {
         }
         popup.style.lineHeight = "1.5";
         TiempoCuentaRegresiva = 1000;
-      } else if (domain.includes('twpornstars')) {
+      } else if (domain.includes("twpornstars")) {
         img.style.padding = "0";
-                  texto.innerHTML = `'✨ Extensión "Descarga_Multi_Sitio" activa en: (${domain})<br>listo para descargar: (${host}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+H".!<br>Tiempo estimado para cargar boton: ${segundos / 1000} segundos.<br>Tiempo restante: ${segundos / 1000} segundos.'`;
-          mensaje = `'✨ Extensión "Descarga_Multi_Sitio" activa en: (${domain})<br>listo para descargar: (${host}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+H".!'`;
-          mensaje2 = `Boton cargado.!'`;
-      } else if (domain.includes('redgifs')) {
+        texto.innerHTML = `'✨ Extensión "Descarga_Multi_Sitio" activa en: (${domain})<br>listo para descargar: (${host}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+H".!<br>Tiempo estimado para cargar boton: ${segundos / 1000} segundos.<br>Tiempo restante: ${segundos / 1000} segundos.'`;
+        mensaje = `'✨ Extensión "Descarga_Multi_Sitio" activa en: (${domain})<br>listo para descargar: (${host}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+H".!'`;
+        mensaje2 = `Boton cargado.!'`;
+      } else if (
+        domain.includes("porn4fans") ||
+        domain.includes("viralxxxporn")
+      ) {
+        segundos = 4000;
+        img.style.padding = "0";
+        texto.innerHTML = `'✨ Extensión "Descarga_Multi_Sitio" activa en: (${domain})<br>listo para descargar: (${host}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+H".!<br>Tiempo estimado para cargar boton: ${segundos / 1000} segundos.<br>Tiempo restante: ${segundos / 1000} segundos.'`;
+        mensaje = `'✨ Extensión "Descarga_Multi_Sitio" activa en: (${domain})<br>listo para descargar: (${host}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+H".!'`;
+        mensaje2 = `Boton cargado.!'`;
+      } else if (domain.includes("onlyfans")) {
+        segundos = 7000;
+        img.style.padding = "0";
+        texto.innerHTML = `'✨ Extensión "Descarga_Multi_Sitio" activa en: (${domain})<br>listo para descargar: (${host}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+H".!<br>Tiempo estimado para cargar boton: ${segundos / 1000} segundos.<br>Tiempo restante: ${segundos / 1000} segundos.'`;
+        mensaje = `'✨ Extensión "Descarga_Multi_Sitio" activa en: (${domain})<br>listo para descargar: (${host}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+H".!'`;
+        mensaje2 = `Boton cargado.!'`;
+      } else if (domain.includes("redgifs")) {
         if (!estadoGene) {
           segundos = 10000;
           texto.innerHTML = `'✨ Extensión "Descarga_Multi_Sitio" Desactivada temporalmente en: (${domain}).<br>Para habilitar nuevamente la extensión, presione: "Ctrl+Shift+V".!<br>Tiempo restante: ${(segundos / 1000).toFixed(1)} segundos.'`;
@@ -400,7 +466,7 @@ if (muestra === false) {
           mensaje2 = `Temporalmente deshabilitado.!'`;
           //mensaje2 = `Tiempo restante: ${(segundos / 1000).toFixed(1)} segundos.'`;
         } else {
-          segundos = 2500;
+          segundos = 1500;
           texto.innerHTML = `'✨ Extensión "Descarga_Multi_Sitio" activa en: (${domain})<br>listo para descargar: (${host}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+H".!<br>Tiempo estimado para cargar boton: ${segundos / 1000} segundos.<br>Tiempo restante: ${segundos / 1000} segundos.'`;
           mensaje = `'✨ Extensión "Descarga_Multi_Sitio" activa en: (${domain})<br>listo para descargar: (${host}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+H".!'`;
           mensaje2 = `Boton cargado.!'`;
@@ -420,7 +486,7 @@ if (muestra === false) {
         //   //   mensaje2 = `Boton cargado.!'`;
         //   // });
         //   // segundos = 3000;
-          
+
         //   TiempoCuentaRegresiva = 1500;
         // } else if (fullUrl.includes('redgifs.com/users')) {
         //   segundos = 5000;
@@ -429,11 +495,11 @@ if (muestra === false) {
         //   mensaje2 = `Botones cargados.!'`;
         //   TiempoCuentaRegresiva = 1500;
         // }
-        
+
         popup.style.width = "fit-content";
         popup.style.lineHeight = "1.5";
         img.style.height = "90%";
-      } else if (domain.includes('fapello')) {
+      } else if (domain.includes("fapello")) {
         texto.innerHTML = `✨ Extensión "Descarga_Multi_Sitio" activa en: (${domain})<br>
           listo para descargar: (<span style="color: red;font-weight: bold">${host}</span>).<br>
           Si no aparece el botón de descarga, presione: "<span style="color: red;font-weight: bold">Ctrl+Shift+H</span>".!`;
@@ -444,7 +510,7 @@ if (muestra === false) {
         img.style.color = "";
         img.style.background = "";
         texto.style.lineHeight = "1.5";
-      } else if (domain.includes('loyalfans')) {
+      } else if (domain.includes("loyalfans")) {
         img.style.height = "80%";
         img.style.padding = "10px";
       }
@@ -455,40 +521,47 @@ if (muestra === false) {
       setTimeout(() => {
         //texto.innerHTML = mensaje;
         //iniciarCuentaRegresiva(texto1, segundos, mensaje, mensaje2, domain);
-        iniciarCuentaRegresiva(texto1, segundos, mensaje, mensaje2, estadoGene, domain, () => {
-          //console.log("✅ La cuenta regresiva llegó a 0.");
-          setTimeout(() => {
-            popup.remove();
-            if (domain.includes('youtube')) {
-              if (estadoGene) {
-                //console.log(`estado: ${estadoGene}`);
-                //chrome.runtime.sendMessage({ action: "popupClosed" });
+        iniciarCuentaRegresiva(
+          texto1,
+          segundos,
+          mensaje,
+          mensaje2,
+          estadoGene,
+          domain,
+          () => {
+            //console.log("✅ La cuenta regresiva llegó a 0.");
+            setTimeout(() => {
+              popup.remove();
+              if (domain.includes("youtube")) {
+                if (estadoGene) {
+                  //console.log(`estado: ${estadoGene}`);
+                  //chrome.runtime.sendMessage({ action: "popupClosed" });
+                }
+              } else {
+                chrome.runtime.sendMessage({ action: "popupClosed" });
               }
-            } else {
-              chrome.runtime.sendMessage({ action: "popupClosed" });
-            }
-            // (async () => {
-            //   const estado1 = await obtenerEstado(null, location.hostname, location.href);
-            //   console.log("Estado recibido:", estado1);
-            //   if (estado1.activo) {
-            //     console.log("✅ La extensión está activa");
-            //     chrome.runtime.sendMessage({ action: "popupClosed" });
-            //   } else {
-            //     console.log("🚫 La extensión está desactivada");
-            //   }
-            // })();
-            
-            // console.log(estado);
-            // if (domain.includes('youtube')) {
-            //   if (estado) {
-            //     chrome.runtime.sendMessage({ action: "popupClosed" });
-            //   }
-            // }
-          }, elTiempo);
-          // Aquí podés ejecutar el código que necesites al finalizar
-        });
-      }, TiempoCuentaRegresiva);
+              // (async () => {
+              //   const estado1 = await obtenerEstado(null, location.hostname, location.href);
+              //   console.log("Estado recibido:", estado1);
+              //   if (estado1.activo) {
+              //     console.log("✅ La extensión está activa");
+              //     chrome.runtime.sendMessage({ action: "popupClosed" });
+              //   } else {
+              //     console.log("🚫 La extensión está desactivada");
+              //   }
+              // })();
 
+              // console.log(estado);
+              // if (domain.includes('youtube')) {
+              //   if (estado) {
+              //     chrome.runtime.sendMessage({ action: "popupClosed" });
+              //   }
+              // }
+            }, elTiempo);
+            // Aquí podés ejecutar el código que necesites al finalizar
+          },
+        );
+      }, TiempoCuentaRegresiva);
     };
     // Si la URL coincide, mostrar con retraso, sino mostrar inmediatamente
     if (fullUrl === URL_ESPECIFICA) {
@@ -510,11 +583,11 @@ function obtenerEstado(tabId, host, url) {
         action: "getState",
         tabId,
         host,
-        url
+        url,
       },
       (response) => {
         resolve(response.estado); // devolvemos solo el objeto estado
-      }
+      },
     );
   });
 }

@@ -17,24 +17,25 @@
     },
     "default_title": "Descargador de multiples paginas"
   },
-  "host_permissions": ["*://*.loyalfans.com/*", "*://*.youtube.com/*", "*://*.x.com/*", "*://*.fansly.com/*", "*://*.redgifs.com/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*", "https://xdownloader.com/*", "*://*.pornpics.com/*"],
+  "host_permissions": ["*://127.0.0.1/*", "*://*.redditp.com/*", "*://*.porn4fans.com/*", "*://*.viralxxxporn.com/*", "*://*.onlyfans.com/*",
+  "*://*.loyalfans.com/*", "*://*.youtube.com/*", "*://*.x.com/*", "*://*.fansly.com/*", "*://*.redgifs.com/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*", "https://xdownloader.com/*","https://xdownloader.io/*", "*://*.pornpics.com/*"],
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
       "js": ["./common/funciones.js"]
     },
     {
-      "matches": ["*://*.youtube.com/*", "*://*.loyalfans.com/*", "*://*.x.com/*", "*://*.fansly.com/*", "*://*.redgifs.com/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*", "*://*.pornpics.com/*"],
+      "matches": ["*://*.redditp.com/*", "*://*.porn4fans.com/*", "*://*.viralxxxporn.com/*", "*://*.onlyfans.com/*","*://*.youtube.com/*", "*://*.loyalfans.com/*", "*://*.x.com/*", "*://*.fansly.com/*", "*://*.redgifs.com/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*", "*://*.pornpics.com/*"],
       "js": ["./common/estadoExtension.js", "./common/variables_globales.js","./common/funciones.js"],
       "run_at": "document_idle"
     },
     {
-      "matches": ["*://*.x.com/*", "*://*.loyalfans.com/*", "*://*.redgifs.com/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*", "*://*.pornpics.com/*"],
+      "matches": ["*://*.redditp.com/*","*://*.x.com/*", "*://*.loyalfans.com/*", "*://*.redgifs.com/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*", "*://*.pornpics.com/*"],
       "js": ["./common/estadoExtension.js"],
       "run_at": "document_idle"
     },
     {
-      "matches": ["*://*.loyalfans.com/*", "*://*.redgifs.com/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*", "*://*.pornpics.com/*"],
+      "matches": ["*://*.redditp.com/*", "*://*.viralxxxporn.com/*", "*://*.porn4fans.com/*", "*://*.onlyfans.com/*","*://*.loyalfans.com/*", "*://*.redgifs.com/*", "*://*.pornhub.com/*", "*://*.twpornstars.com/*", "*://*.manyvids.com/Video/*", "*://*.fapello.com/*", "*://*.pornpics.com/*"],
       "js": ["popup.js"],
       "run_at": "document_idle"
     },
@@ -54,7 +55,7 @@
       "run_at": "document_idle"
     },
     {
-      "matches": ["https://xdownloader.com/*"],
+      "matches": ["https://xdownloader.com/*","https://xdownloader.io/*"],
       "js": ["./twitter/content.js"]
     }
    ],
@@ -95,7 +96,9 @@
         "icons/Loading_2.webm",
         "icons/logo_twitter.avif",
         "icons/twitter16.png",
-        "icons/twitter48.png"
+        "icons/twitter48.png",
+        "icons/Onlyfans16.png",
+        "icons/Onlyfans48.png"
       ],
       "matches": ["<all_urls>"]
     }
