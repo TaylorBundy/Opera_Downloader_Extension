@@ -375,6 +375,13 @@ if (muestra === false) {
           mensaje = `'✨ Extensión "Descarga_Multi_Sitio" activa en: (${domain})<br>listo para descargar: (${host}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+V".!'`;
           mensaje2 = `Boton cargado.!'`;
         }
+      } else if (domain.includes("pornpics")) {
+        //if (estadoGene) {
+          segundos = 2000;
+          texto.innerHTML = `'✨ Extensión "Descarga_Multi_Sitio" activa en:<br>lista para descargar (${domain}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+V".!'`;
+          mensaje = `'✨ Extensión "Descarga_Multi_Sitio" activa en: (${domain})<br>listo para descargar: (${host}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+V".!'`;
+          mensaje2 = `Boton cargado.!'`;
+        //}
       } else if (domain.includes("youtube")) {
         img.src = logo1;
         img.style.height = "90%";

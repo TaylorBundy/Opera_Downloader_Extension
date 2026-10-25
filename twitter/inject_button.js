@@ -126,7 +126,7 @@ function crearBotonFlotante(contenedor, mensaje, enlaces) {
           );
 
           // Tu función existente consulta el endpoint de X
-          const enlaceVideo = await obtieneredgifs(
+          const enlaceVideo = await obtieneTwitter(
             url.toString(),
             typeof refer !== "undefined" ? refer : undefined,
           );
@@ -377,7 +377,7 @@ function iniciarExtension() {
         );
 
         // Tu función existente consulta el endpoint de X
-        const enlaceVideo = await obtieneredgifs(
+        const enlaceVideo = await obtieneTwitter(
           url.toString(),
           typeof refer !== "undefined" ? refer : undefined,
         );
@@ -489,7 +489,7 @@ function desactivarExtension() {
   }
 }
 
-function iniciarObservers() {
+function iniciarObservers2() {
   userId = fullUrl.split("/")[3];
   let urls;
   if (fullUrl.includes("media")) {
@@ -512,6 +512,33 @@ function iniciarObservers() {
   //console.log(selector);
   crearBotonFlotantePorImagen([...urls]);
   //}
+}
+function iniciarObservers() {
+  const url = new URL(location.href);
+  const partes = url.pathname.split("/").filter(Boolean);
+  const esRutaMedia = /\/media(?:[/?#]|$)/.test(fullUrl);
+  const esParametroMedia = /=media(?:[&#]|$)/.test(fullUrl);
+  //console.log({ esRutaMedia, esParametroMedia });
+
+  let urls = [];
+
+  //if (partes.length >= 2 && partes[1] === "media") {
+  if (esRutaMedia) {
+    // Perfil de usuario: /usuario/media
+    urls = [...document.querySelectorAll("article")];
+  } else if (esParametroMedia) {//if (partes.includes("media")) {
+    // Otras vistas que incluyan /media
+    urls = [
+      ...document.querySelectorAll(
+        'li > div > div > div > a[href*="video"]'
+      ),
+    ]
+      .map((a) => a.closest("li"))
+      .filter(Boolean);
+  }
+
+  //console.log("Elementos encontrados:", urls);
+  crearBotonFlotantePorImagen(urls);
 }
 
 function detenerObservers() {

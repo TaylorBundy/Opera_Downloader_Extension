@@ -519,7 +519,7 @@ if (domain.includes("pornhub")) {
       intentos += 1;
     }
   } else if (domain.includes("pornpics")) {
-    tiempo = 3000;
+    tiempo = 1000;
   }
 } else if (domain.includes("fapello")) {
   //userId = fullUrl.split("/")[3];
@@ -1228,8 +1228,9 @@ async function BuscaContenedores() {
       selector = "#root > div > div > div > div";
       enlace = fullUrl;
       crearBotonFlotante(lklk, enlace);
-    } else if (fullUrl.includes("pornpics.com/galleries")) {
-      //const todos = document.querySelectorAll("#tiles > li");
+    } else if (fullUrl.includes("pornpics.com/es/galleries")) {
+      //const todos = document.querySelectorAll("#tiles > li > a");
+      //selector = `#tiles > li`;
       crearBotonFlotantePorImagen(todos);
       return;
     } else if (fullUrl.includes("onlyfans")) {
@@ -1269,10 +1270,12 @@ async function BuscaContenedores() {
         //crearBotonFlotantePorImagen(todos);
         return;
       }
-    } else if (fullUrl.includes("pornpics")) {
+    } else if (fullUrl.includes("pornpics") && !fullUrl.includes("pornpics.com/es/galleries")) {
       cantidadInicial = 1;
-      selector = "body";
-      enlace = fullUrl;
+      //selector = "body";
+      //enlace = fullUrl;
+      //const linkssss = document.querySelectorAll(`#tiles > li`);
+      //selector = linkssss[index]?.querySelector("a")?.href;
     } else if (domain.includes("loyalfans")) {
       if (fullUrl.includes("/videos")) {
         const urlFetch = `https://www.loyalfans.com/api/v2/social/videos/${userId}?ngsw-bypass=true`;

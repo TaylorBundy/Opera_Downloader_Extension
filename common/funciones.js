@@ -1143,7 +1143,7 @@ function crearBotonFlotante(contenedor, urlImg, retrasos) {
   }
 }
 
-const obtieneredgifs = async (src, refer) => {
+const obtieneTwitter = async (src, refer) => {
   try {
     //const token = await getToken();
     const response = await fetch(src, {
@@ -1293,9 +1293,10 @@ function crearBotonFlotantePorImagen(contenedor) {
       selector = losLink;
       //selector = img?.href;
       //console.log(img);
-    } else if (fullUrl.includes("pornpics.com/galleries")) {
+    } else if (fullUrl.includes("pornpics.com/es/galleries")) {
       const linkssss = document.querySelectorAll(`#tiles > li`);
       selector = linkssss[index]?.querySelector("a")?.href;
+      console.log(selector);
     } else if (fullUrl.includes(`onlyfans.com/${userId}/videos`)) {
       const linkssss = document.querySelectorAll(
         ".vue-recycle-scroller__item-wrapper > div > .dynamic-scroller-item > a",
@@ -1317,7 +1318,7 @@ function crearBotonFlotantePorImagen(contenedor) {
     img.dataset.botonCreado = "true";
     const nodos = selector;
     const contenedor2 = img;
-    if (fullUrl.includes("pornpics.com/galleries")) {
+    if (fullUrl.includes("pornpics.com/es/galleries")) {
       contenedor2.style.position = "";
     } else {
       contenedor2.style.position = "relative";
@@ -1364,6 +1365,16 @@ function crearBotonFlotantePorImagen(contenedor) {
             url: enlace,
           });
         })();
+        } else if (fullUrl.includes(`pornpics.com/es/galleries`)) {
+        (async () => {
+        enlace = urlImagen; //await ObtenemosLinkTwpornstar(urlImagen);
+        nombreFinal = urlImagen.split("/").pop().replace(".jpg", "");
+        await descargarImagen(enlace, nombreFinal);
+        // chrome.runtime.sendMessage({
+        //   action: "inject_main_script",
+        //   url: enlace,
+        // });
+      })();
       } else if (fullUrl.includes(`x.com/${userId}/media`)) {
         // (async () => {
         //   await navigator.clipboard.writeText(urlImagen);
@@ -1439,7 +1450,7 @@ function crearBotonFlotantePorImagen(contenedor) {
             );
 
             // Tu función existente consulta el endpoint de X
-            const enlaceVideo = await obtieneredgifs(
+            const enlaceVideo = await obtieneTwitter(
               url.toString(),
               typeof refer !== "undefined" ? refer : undefined,
             );
@@ -1553,7 +1564,7 @@ function crearBotonFlotantePorImagen(contenedor) {
             );
 
             // Tu función existente consulta el endpoint de X
-            const enlaceVideo = await obtieneredgifs(
+            const enlaceVideo = await obtieneTwitter(
               url.toString(),
               typeof refer !== "undefined" ? refer : undefined,
             );
@@ -1686,11 +1697,22 @@ function crearBotonFlotantePorImagen(contenedor) {
         logo1 +
         '" style="width:80%;vertical-align:middle;opacity:0.5;margin:auto; position:relative"> 📥 Descargar';
     } else if (fullUrl.includes(`x.com/${userId}/media`)) {
+      boton.style.top = "40px";
+      boton.style.right = "10px";
+      boton.style.left = "unset";
+      boton.style.bottom = "unset";
+      boton.style.fontSize = "";
+      boton.style.fontWeigth = "bold";
       boton.innerHTML =
         '<img src="' +
         logo +
         '" style="width:20%;vertical-align:middle;opacity:0.8;margin:auto"> 📥 Descargar';
     } else if (fullUrl.includes(`x.com/search`)) {
+      boton.style.right = "10px";
+      boton.style.left = "unset";
+      boton.style.bottom = "8px";
+      boton.style.fontSize = "";
+      boton.style.fontWeigth = "bold";
       boton.innerHTML =
         '<img src="' +
         logo +
@@ -1757,13 +1779,14 @@ function crearBotonFlotantePorImagen(contenedor) {
       //boton.style.top = "80%";
     } else if (fullUrl.includes("fapello.com/content")) {
       //
-    } else if (fullUrl.includes("pornpics.com/galleries")) {
+    } else if (fullUrl.includes("pornpics.com/es/galleries")) {
       boton.style.opacity = "0.9";
       boton.style.background = "rgb(7 112 177)";
       boton.style.color = "#e00083";
       boton.style.fontWeight = "bold";
       boton.style.fontSize = "";
       boton.style.justifyItems = "center";
+      boton.style.bottom = "5px";
       boton.innerHTML = `<img src="${logo}" style="width:80%;vertical-align:middle;opacity:1;margin:0"> 📥 Descargar`;
     } else if (fullUrl.includes("loyalfans")) {
       boton.style.zIndex = "10";

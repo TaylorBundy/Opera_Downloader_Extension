@@ -215,6 +215,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           "manyvids.com": "/common/inject_button.js",
           "twpornstars.com": "/common/inject_button.js",
           "pornhub.com": "/common/inject_button.js",
+          "pornpics.com": "/common/inject_button.js",
           "porn4fans.com": "/common/inject_button.js",
           "viralxxxporn.com": "/common/inject_button.js",
           "redgifs.com": "/common/inject_button.js",

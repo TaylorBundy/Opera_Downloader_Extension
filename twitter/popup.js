@@ -96,20 +96,20 @@ if (location.hostname === "x.com" && location.pathname.includes("home")) {
     console.log(estadoTwitter);
     //texto.innerHTML = `'✨ Extensión "Descarga_Multi_Sitio" activa:<br>lista para descargar (${domain}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+G".!'`;
     if (!estadoTwitter) {
-      segundos = 10000;
+      segundos = 2500;
       texto.innerHTML = `'✨ Extensión "Descarga_Multi_Sitio" Desactivada temporalmente en: (${domain}).<br>Para habilitar nuevamente la extensión, presione: "Ctrl+Shift+V".!<br>Tiempo restante: ${(segundos / 1000).toFixed(1)} segundos.'`;
       mensaje = `'✨ Extensión "Descarga_Multi_Sitio" Desactivada temporalmente en: (${domain}).<br>Para habilitar nuevamente la extensión, presione: "Ctrl+Shift+V".!'`;
       mensaje2 = `Temporalmente deshabilitado.!'`;
       //mensaje2 = `Tiempo restante: ${(segundos / 1000).toFixed(1)} segundos.'`;
     } else {
-      segundos = 5000;
+      segundos = 2500;
       //texto.innerHTML = `'✨ Extensión "Descarga_Multi_Sitio" activa:<br>lista para descargar (${domain}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+G".!'`;
       //mensaje = `'✨ Extensión "Descarga_Multi_Sitio" activa:<br>lista para descargar (${domain}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+G".!'`;
       //mensaje2 = `Boton cargado.!'`;
       texto.innerHTML = `'✨ Extensión "Descarga_Multi_Sitio" activa en: (${domain})<br>listo para descargar: (${domain}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+H".!<br>Tiempo estimado para cargar boton: ${segundos / 1000} segundos.<br>Tiempo restante: ${segundos / 1000} segundos.'`;
       mensaje = `'✨ Extensión "Descarga_Multi_Sitio" activa en: (${domain})<br>listo para descargar: (${domain}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+H".!'`;
       mensaje2 = `Boton cargado.!'`;
-      TiempoCuentaRegresiva = 1500;
+      TiempoCuentaRegresiva = 5000;
     }
     texto.style.zIndex = "9";
     texto.style.textAlign = "left";
