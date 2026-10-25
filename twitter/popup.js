@@ -102,7 +102,7 @@ if (location.hostname === "x.com" && location.pathname.includes("home")) {
       mensaje2 = `Temporalmente deshabilitado.!'`;
       //mensaje2 = `Tiempo restante: ${(segundos / 1000).toFixed(1)} segundos.'`;
     } else {
-      segundos = 3000;
+      segundos = 2000;
       //texto.innerHTML = `'✨ Extensión "Descarga_Multi_Sitio" activa:<br>lista para descargar (${domain}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+G".!'`;
       //mensaje = `'✨ Extensión "Descarga_Multi_Sitio" activa:<br>lista para descargar (${domain}).<br>Si no aparece el boton de descarga, presione: "Ctrl+Shift+G".!'`;
       //mensaje2 = `Boton cargado.!'`;

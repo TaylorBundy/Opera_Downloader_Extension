@@ -2,6 +2,30 @@
     // Recuperamos la URL guardada
     const tweetUrl = sessionStorage.getItem("tweetUrl");
     if (!tweetUrl) return;
+     try {
+    // Esperar 3 segundos (3000 ms)
+    await new Promise(resolve => setTimeout(resolve, 4000));
+
+    // Leer el contenido del portapapeles
+    const texto = await navigator.clipboard.readText();
+
+    // Buscar el input por ID
+    //const input = nuevaVentana.document.getElementById("twitterUrl");
+const input = nuevaVentana.querySelector("#twitterUrl")
+input.autocomplete = "on";
+input.focus();
+input.value = texto;
+
+    if (input) {
+      input.value = texto;
+      input.dispatchEvent(new Event("input", { bubbles: true })); // opcional pero recomendable
+      console.log("Texto pegado correctamente:", texto);
+    } else {
+      console.log("No se encontró el elemento postLink");
+    }
+  } catch (error) {
+    console.error("Error al leer el portapapeles:", error);
+  }
 
     function esperarBoton(textoBoton) {
         return new Promise(resolve => {

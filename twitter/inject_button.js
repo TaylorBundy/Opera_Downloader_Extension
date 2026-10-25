@@ -21,7 +21,7 @@ function esperarElemento(selector, callback) {
   observer.observe(document.body, { childList: true, subtree: true });
 }
 
-function crearBotonFlotante(contenedor, mensaje) {
+function crearBotonFlotante(contenedor, mensaje, enlaces) {
   if (document.getElementById("mi-boton-flotante")) return;
 
   const boton = document.createElement("button");
@@ -51,8 +51,12 @@ function crearBotonFlotante(contenedor, mensaje) {
   texto.style.fontSize = "12px";
 
   boton.onclick = () => {
+    (async () => {
+    await navigator.clipboard.writeText(enlaces);
     //abrir_xdownloader
-    chrome.runtime.sendMessage({ action: "inject_main_script-twitter", url: window.location.href });
+    //chrome.runtime.sendMessage({ action: "inject_main_script-twitter", url: window.location.href });
+    chrome.runtime.sendMessage({ action: "inject_main_script-twitter", url: enlaces });
+    })();
     boton.remove();
   };
   boton.appendChild(texto);
@@ -126,17 +130,35 @@ function iniciarExtension() {
         //mensaje = `Click para descargar: ${urlObj}.!`;
     } else if (fullUrl.includes('x.com/home')) {
       return;
+    } else if (fullUrl.includes('media')) {
+      userId = fullUrl.split('/')[3];
+      const urls = [...document.querySelectorAll('li > div > div > div > a[href*="video"]')]
+    .map(a => a.closest("li"));
+
+//console.log(urls);
+const enlaces = [...document.querySelectorAll("li > div > div > div > a")]
+    .filter(a => a.href.includes("video"));
+    const padre = enlaces.parentElement;
+    console.log(padre);
+
+//console.log(enlaces);
+      //selector = "li > div > div > div > a";
+      //console.log(selector);
+      crearBotonFlotantePorImagen([...urls]);
     } else if (fullUrl.includes('status')) {
       //console.log(fullUrl);
-        selector = "#react-root > div > div > div.css-175oi2r.r-1f2l425.r-13qz1uu.r-417010.r-18u37iz > main > div > div > div > div.css-175oi2r.r-kemksi.r-1kqtdi0.r-1ua6aaf.r-th6na.r-1phboty.r-16y2uox.r-184en5c.r-1abdc3e.r-1lg4w6u.r-f8sm7e.r-13qz1uu.r-1ye8kvj > div > section > div > div > div:nth-child(1) > div > div > article";
+        //selector = "#react-root > div > div > div.css-175oi2r.r-1f2l425.r-13qz1uu.r-417010.r-18u37iz > main > div > div > div > div.css-175oi2r.r-kemksi.r-1kqtdi0.r-1ua6aaf.r-th6na.r-1phboty.r-16y2uox.r-184en5c.r-1abdc3e.r-1lg4w6u.r-f8sm7e.r-13qz1uu.r-1ye8kvj > div > section > div > div > div:nth-child(1) > div > div > article";
+        //selector = "#react-root > div > div > div.css-175oi2r.r-1f2l425.r-13qz1uu.r-417010.r-18u37iz > main > div > div > div > div.css-175oi2r.r-14lw9ot.r-jxzhtn.r-1ua6aaf.r-th6na.r-1phboty.r-16y2uox.r-184en5c.r-1abdc3e.r-1lg4w6u.r-f8sm7e.r-13qz1uu.r-1ye8kvj > div > section > div > div > div > div > div > article";
+        selector = "#react-root > div > div > div.css-175oi2r.r-1f2l425.r-13qz1uu.r-417010.r-18u37iz > main > div > div > div > div.css-175oi2r.r-kemksi.r-1kqtdi0.r-8e33y0.r-1lnugsr.r-1phboty.r-16y2uox.r-184en5c.r-1abdc3e.r-1lg4w6u.r-f8sm7e.r-13qz1uu.r-1ye8kvj > div > section > div > div > div:nth-child(1) > div > div > article";
         mensaje = `Click para descargar: ${urlObj}.!`;
-    }
-      esperarElemento( selector,
+        esperarElemento( selector,
         (contenedor) => {
-          crearBotonFlotante(contenedor, mensaje);
+          crearBotonFlotante(contenedor, mensaje, urlObj);
         }
       );
-  }, 3000); // espera 5 segundos
+    }
+      
+  }, 500); // espera 5 segundos
 
   // --- Observador para detectar media maximizado ---
   const OVERLAY_SELECTORS = 'div[role="dialog"] video, div[role="dialog"] img';
@@ -153,12 +175,16 @@ function iniciarExtension() {
       const u = window.location.href;
       const parts = u.split("/");
       let without = null;
+      let liinnkk;
       if (parts.includes('video')) {
-        without = parts.slice(0, parts.indexOf("video")).join("/");  
+        without = parts.slice(5, parts.indexOf("video")).join("/");
+        liinnkk = `https://x.com/i/status/${without}`;  
       } else if (parts.includes('photo')) {
         without = parts.slice(0, parts.indexOf("photo")).join("/");  
+        liinnkk = `${without}`;
       }
-      const baseUrl = without;
+      //const baseUrl = `https://x.com/i/status/${without}`;
+      const baseUrl = liinnkk;
       const mensaje = `Click para descargar: ${baseUrl}.!`;
 
       // 🔹 Contenedor donde meter el botón
@@ -167,7 +193,7 @@ function iniciarExtension() {
       );
 
       if (contenedor) {
-        crearBotonFlotante(contenedor, mensaje);
+        crearBotonFlotante(contenedor, mensaje, baseUrl);
       }
     }
   });
@@ -185,6 +211,45 @@ function desactivarExtension() {
     observer = null;
   }
 }
+
+function iniciarObservers() {
+  if (fullUrl.includes('media')) {
+      userId = fullUrl.split('/')[3];
+      const urls = [...document.querySelectorAll('li > div > div > div > a[href*="video"]')]
+    .map(a => a.closest("li"));
+
+//console.log(urls);
+const enlaces = [...document.querySelectorAll("li > div > div > div > a")]
+    .filter(a => a.href.includes("video"));
+    const padre = enlaces.parentElement;
+    console.log(padre);
+
+//console.log(enlaces);
+      //selector = "li > div > div > div > a";
+      //console.log(selector);
+      crearBotonFlotantePorImagen([...urls]);
+    }
+}
+
+function detenerObservers() {
+  observers.forEach(obs => obs.disconnect());
+  observers = [];
+  console.log("Observers detenidos");
+}
+
+function resetInactivityTimer() {
+  clearTimeout(inactivityTimer);
+
+  inactivityTimer = setTimeout(() => {
+    detenerObservers();
+  }, INACTIVITY_TIME);
+}
+
+document.addEventListener("scroll", () => {
+  //console.log("hola");
+  iniciarObservers();
+  resetInactivityTimer();
+}, true);
 
 // Observar cuando aparece el visor de imagen/video
 // const observer = new MutationObserver(() => {
