@@ -27,9 +27,6 @@
 //   }
 // });
 
-
-
-
 function cuentaVeces(mensaje, contador) {
   //contador ++;
   console.log(`Funcion: ${mensaje} - Ejecutada: ${contador}`);
@@ -42,344 +39,1192 @@ function tieneExtra(algo) {
 }
 
 const obtenerNombre = (src, opciones = {}) => {
-    limpio = src.split("?")[0]; // quitar parámetros
-    if (opciones.remover) {
-      opciones.remover.forEach(r => limpio = limpio.replace(r, ""));
-    }
-    return limpio.substring(limpio.lastIndexOf("/") + 1);
+  limpio = src.split("?")[0]; // quitar parámetros
+  if (opciones.remover) {
+    opciones.remover.forEach((r) => (limpio = limpio.replace(r, "")));
+  }
+  return limpio.substring(limpio.lastIndexOf("/") + 1);
+};
+
+function guardarDescargado(nombre) {
+  const key = "videos_descargados";
+
+  let lista = JSON.parse(localStorage.getItem(key)) || [];
+
+  if (!lista.includes(nombre)) {
+    lista.push(nombre);
+    localStorage.setItem(key, JSON.stringify(lista));
+  }
+}
+
+function yaDescargado(nombre) {
+  const key = "videos_descargados";
+  let lista = JSON.parse(localStorage.getItem(key)) || [];
+  return lista.includes(nombre);
+}
+async function descargarVideo2(url, nombre = "video.mp4") {
+  const res = await fetch(url);
+
+  if (!res.ok) {
+    throw new Error(`Error ${res.status}`);
+  }
+
+  const blob = await res.blob();
+
+  const enlace = document.createElement("a");
+  enlace.href = URL.createObjectURL(blob);
+  enlace.download = nombre;
+
+  document.body.appendChild(enlace);
+  enlace.click();
+  enlace.remove();
+
+  URL.revokeObjectURL(enlace.href);
+}
+
+async function descargarVideo3(url, nombre = "video.mp4") {
+  const segundosIniciales = 6;
+  let segundos = segundosIniciales;
+
+  // Crear modal
+  const modal = document.createElement("div");
+  modal.style.cssText = `
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999999;
+        font-family: Arial, sans-serif;
+    `;
+
+  const contenido = document.createElement("div");
+  contenido.style.cssText = `
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        max-width: 400px;
+        color: black;
+        width: 90%;
+        box-shadow: 0 4px 15px rgba(0,0,0,.3);
+    `;
+
+  const texto = document.createElement("div");
+  texto.style.fontSize = "16px";
+
+  contenido.appendChild(texto);
+  modal.appendChild(contenido);
+  document.body.appendChild(modal);
+
+  const actualizarTexto = () => {
+    //texto.innerHTML = `
+    //<b>La descarga de:</b><br>
+    //${nombre}<br><br>
+    //<b>Comienza en: ${segundos} segundo${segundos !== 1 ? "s" : ""}</b>
+    //`;
+    texto.innerHTML = `La descarga de: ${nombre}<br>${url} comienza en ${segundos} segundos...`;
   };
 
+  actualizarTexto();
+
+  await new Promise((resolve) => {
+    const intervalo = setInterval(() => {
+      segundos--;
+
+      if (segundos <= 0) {
+        clearInterval(intervalo);
+        modal.remove();
+        resolve();
+        return;
+      }
+
+      actualizarTexto();
+    }, 1000);
+  });
+
+  const res = await fetch(url);
+
+  if (!res.ok) {
+    throw new Error(`Error ${res.status}`);
+  }
+
+  const blob = await res.blob();
+
+  const enlace = document.createElement("a");
+  enlace.href = URL.createObjectURL(blob);
+  enlace.download = nombre;
+
+  document.body.appendChild(enlace);
+  enlace.click();
+  enlace.remove();
+
+  URL.revokeObjectURL(enlace.href);
+}
+
+async function descargarVideoFuncionando(url, nombre = "video.mp4") {
+  //console.log(idDelBoton);
+  // Modal
+  const modal = document.createElement("div");
+  modal.style.cssText = `
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999999;
+        font-family: Arial, sans-serif;
+    `;
+
+  const contenido = document.createElement("div");
+  contenido.style.cssText = `
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        width: 350px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,.3);
+        color: black;
+    `;
+
+  const imagenContainer = document.createElement("div");
+  imagenContainer.style.position = "relative";
+  imagenContainer.style.display = "flex";
+  imagenContainer.style.justifyContent = "center";
+  imagenContainer.style.backgroundColor = backgroundColor;
+  imagenContainer.style.borderRadius = "12px";
+  imagenContainer.style.padding = "5px";
+
+  const imagen = document.createElement("img");
+  imagen.src = `${logo}`;
+  //imagen.style.position = "absolute";
+  //imagen.style.backgroundColor = backgroundColor;
+  imagenContainer.appendChild(imagen);
+
+  const titulo = document.createElement("div");
+  titulo.style.cssText = `
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        word-break: break-word;
+    `;
+  titulo.textContent = `📥 Descargando: ${nombre}`;
+
+  const porcentajeTexto = document.createElement("div");
+  porcentajeTexto.style.cssText = `
+        font-size: 20px;
+        margin-bottom: 10px;
+    `;
+  porcentajeTexto.textContent = "0%";
+
+  const barra = document.createElement("div");
+  barra.style.cssText = `
+        width: 100%;
+        height: 20px;
+        background: #e0e0e0;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 10px;
+    `;
+
+  const progreso = document.createElement("div");
+  progreso.style.cssText = `
+        width: 0%;
+        height: 100%;
+        background: #4caf50;
+        transition: width .2s;
+    `;
+
+  barra.appendChild(progreso);
+
+  const detalle = document.createElement("div");
+  detalle.style.cssText = `
+        font-size: 12px;
+        color: #666;
+    `;
+
+  contenido.append(imagenContainer, titulo, porcentajeTexto, barra, detalle);
+
+  modal.appendChild(contenido);
+  document.body.appendChild(modal);
+
+  try {
+    const res = await fetch(url);
+
+    if (!res.ok) {
+      throw new Error(`Error ${res.status}`);
+    }
+
+    const total = Number(res.headers.get("content-length"));
+
+    // Si no hay Content-Length
+    if (!total) {
+      porcentajeTexto.textContent = "Descargando...";
+      detalle.textContent = "No se puede calcular el progreso.";
+    }
+
+    const reader = res.body.getReader();
+    const chunks = [];
+    let descargado = 0;
+
+    while (true) {
+      const { done, value } = await reader.read();
+
+      if (done) break;
+
+      chunks.push(value);
+      descargado += value.length;
+
+      if (total) {
+        const porcentaje = ((descargado / total) * 100).toFixed(1);
+
+        porcentajeTexto.textContent = `${porcentaje}%`;
+
+        progreso.style.width = `${porcentaje}%`;
+
+        detalle.textContent = `${(descargado / 1024 / 1024).toFixed(2)} MB / ${(total / 1024 / 1024).toFixed(2)} MB`;
+      }
+    }
+
+    const blob = new Blob(chunks);
+
+    const enlace = document.createElement("a");
+    enlace.href = URL.createObjectURL(blob);
+    enlace.download = nombre;
+
+    document.body.appendChild(enlace);
+    enlace.click();
+    enlace.remove();
+
+    URL.revokeObjectURL(enlace.href);
+
+    porcentajeTexto.textContent = "100%";
+    progreso.style.width = "100%";
+    detalle.textContent = "Descarga completada";
+
+    setTimeout(() => modal.remove(), 1000);
+  } catch (error) {
+    modal.remove();
+    throw error;
+  }
+}
+
+async function descargarVideo(url, nombre = "video.mp4") {
+  // Modal
+  const modal = document.createElement("div");
+  modal.style.cssText = `
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999999;
+        font-family: Arial, sans-serif;
+    `;
+
+  const contenido = document.createElement("div");
+  contenido.style.cssText = `
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        width: 370px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,.3);
+        color: black;
+    `;
+
+  const imagenContainer = document.createElement("div");
+  imagenContainer.style.position = "relative";
+  imagenContainer.style.display = "flex";
+  imagenContainer.style.justifyContent = "center";
+  imagenContainer.style.backgroundColor = backgroundColor;
+  imagenContainer.style.borderRadius = "12px";
+  imagenContainer.style.padding = "5px";
+
+  const imagen = document.createElement("img");
+  imagen.src = logo;
+  imagenContainer.appendChild(imagen);
+
+  const titulo = document.createElement("div");
+  titulo.style.cssText = `
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        word-break: break-word;
+    `;
+  titulo.textContent = `📥 Descargando: ${nombre}`; //`⬇ Descargando: ${nombre}`;
+
+  const porcentajeTexto = document.createElement("div");
+  porcentajeTexto.style.cssText = `
+        font-size: 20px;
+        margin-bottom: 10px;
+    `;
+  porcentajeTexto.textContent = "0%";
+
+  const barra = document.createElement("div");
+  barra.style.cssText = `
+        width: 100%;
+        height: 20px;
+        background: #e0e0e0;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 10px;
+    `;
+
+  const progreso = document.createElement("div");
+  progreso.style.cssText = `
+        width: 0%;
+        height: 100%;
+        background: #4caf50;
+        transition: width .2s;
+    `;
+
+  barra.appendChild(progreso);
+
+  const detalle = document.createElement("div");
+  detalle.style.cssText = `
+        font-size: 12px;
+        color: #666;
+        margin-top: 8px;
+    `;
+
+  const velocidadTexto = document.createElement("div");
+  velocidadTexto.style.cssText = `
+        font-size: 12px;
+        color: #666;
+        margin-top: 4px;
+    `;
+  velocidadTexto.textContent = "Velocidad: 0 KB/s";
+
+  contenido.append(
+    imagenContainer,
+    titulo,
+    porcentajeTexto,
+    barra,
+    detalle,
+    velocidadTexto,
+  );
+
+  modal.appendChild(contenido);
+  document.body.appendChild(modal);
+
+  try {
+    const res = await fetch(url);
+
+    if (!res.ok) {
+      throw new Error(`Error ${res.status}`);
+    }
+
+    const total = Number(res.headers.get("content-length"));
+
+    if (!total) {
+      porcentajeTexto.textContent = "Descargando...";
+      detalle.textContent = "No se puede calcular el progreso.";
+    }
+
+    const reader = res.body.getReader();
+    const chunks = [];
+
+    let descargado = 0;
+
+    // Variables para calcular velocidad
+    let ultimoTiempo = performance.now();
+    let ultimoDescargado = 0;
+
+    while (true) {
+      const { done, value } = await reader.read();
+
+      if (done) break;
+
+      chunks.push(value);
+      descargado += value.length;
+
+      // ===== Calcular velocidad =====
+      const ahora = performance.now();
+      const tiempo = (ahora - ultimoTiempo) / 1000;
+
+      if (tiempo >= 0.5) {
+        const bytesIntervalo = descargado - ultimoDescargado;
+        const velocidad = bytesIntervalo / tiempo;
+
+        let textoVelocidad;
+
+        if (velocidad >= 1024 * 1024) {
+          textoVelocidad = `${(velocidad / 1024 / 1024).toFixed(2)} MB/s`;
+        } else if (velocidad >= 1024) {
+          textoVelocidad = `${(velocidad / 1024).toFixed(2)} KB/s`;
+        } else {
+          textoVelocidad = `${velocidad.toFixed(0)} B/s`;
+        }
+
+        velocidadTexto.textContent = `Velocidad: ${textoVelocidad}`;
+
+        ultimoTiempo = ahora;
+        ultimoDescargado = descargado;
+
+        // Tiempo restante (ETA)
+        if (total && velocidad > 0) {
+          const restante = total - descargado;
+          const segundos = restante / velocidad;
+
+          let eta;
+
+          if (segundos >= 3600) {
+            eta = `${Math.floor(segundos / 3600)}h ${Math.floor((segundos % 3600) / 60)}m`;
+          } else if (segundos >= 60) {
+            eta = `${Math.floor(segundos / 60)}m ${Math.floor(segundos % 60)}s`;
+          } else {
+            eta = `${Math.ceil(segundos)} s`;
+          }
+
+          detalle.textContent = `${(descargado / 1024 / 1024).toFixed(2)} MB / ${(total / 1024 / 1024).toFixed(2)} MB • ETA: ${eta}`;
+        }
+      }
+
+      // ===== Progreso =====
+      if (total) {
+        const porcentaje = ((descargado / total) * 100).toFixed(1);
+
+        porcentajeTexto.textContent = `${porcentaje}%`;
+        progreso.style.width = `${porcentaje}%`;
+      }
+    }
+
+    const blob = new Blob(chunks);
+
+    const enlace = document.createElement("a");
+    enlace.href = URL.createObjectURL(blob);
+    enlace.download = nombre;
+
+    document.body.appendChild(enlace);
+    enlace.click();
+    enlace.remove();
+
+    URL.revokeObjectURL(enlace.href);
+
+    porcentajeTexto.textContent = "100%";
+    progreso.style.width = "100%";
+    detalle.textContent = "Descarga completada";
+    velocidadTexto.textContent = "Velocidad: 0 KB/s";
+
+    setTimeout(() => modal.remove(), 1000);
+  } catch (error) {
+    modal.remove();
+    throw error;
+  }
+}
+
+function crearNombreFlotante(contenedor, urlImg, retrasos) {
+  if (contenedor.dataset.nombreCreado) return;
+  if (fullUrl.includes("redgifs")) {
+    const sup = contenedor.querySelector("video");
+
+    //console.log(nombreVid);
+    //const iden = document.querySelectorAll(`${contenedor} > p`);
+    //console.log(iden);
+    //if (document.getElementById(`nom${nombreVid}`)) return;
+    //const iden = document.querySelectorAll("#root > div > div.Wrapper > div > div.creatorPage > div.skyWrapper > div.middle > div > div.gifList.ProfileGifList > div > div.tileFeed > div.tileItem > p");
+    if (document.getElementById(`nom-${idBoto}`)) return;
+    const nomVid = document.createElement("p");
+    contenedor.dataset.nombreCreado = "true";
+    nomVid.id = `nom-${idBoto}`;
+
+    nomVid.style.display = "inline-grid";
+    nomVid.style.position = "absolute";
+    nomVid.style.color = "#fff";
+    nomVid.style.zIndex = "9999";
+    nomVid.textContent = nombreVid;
+    nomVid.title = nombreVid;
+    nomVid.style.left = "0";
+    nomVid.style.right = "0";
+    //nomVid.style.top = "50px";
+    nomVid.style.bottom = "0";
+    nomVid.style.margin = "auto";
+    nomVid.style.textAlign = "center";
+    nomVid.style.padding = "5px 5px";
+    nomVid.style.borderRadius = "8px";
+    nomVid.style.background = "rgb(7 112 177)";
+    nomVid.style.width = "fit-content";
+    nomVid.style.fontSize = "10px";
+    nomVid.style.fontWeight = "bold";
+    nomVid.style.wordBreak = "break-word";
+    nomVid.style.opacity = "0.5";
+    setTimeout(() => {
+      contenedor.appendChild(nomVid);
+      //const iden = document.querySelectorAll(`${contenedor} > p`);
+      //console.log(iden);
+      //if (sup.className.includes("isLoaded")) {
+      //console.log(contenedor);
+      //console.log(sup);
+      //nomVid.style.top = "50px";
+      //nomVid.style.bottom = "unset";
+      //}
+      esperarElementos(".isLoaded", (tiles) => {
+        tiles.forEach((tile) => {
+          const sup1 = tile.closest("video");
+          //console.log(sup1);
+          if (sup1.className.includes("isLoaded")) {
+            //console.log(contenedor);
+            //console.log(sup1);
+            nomVid.style.top = "50px";
+            nomVid.style.bottom = "unset";
+          }
+          //const contenedor = tile.closest(".Player-Video");
+          //console.log(contenedor);
+          //selector = contenedor;
+        });
+        //console.log("Tiles detectados:", tiles.length);
+        //const modal = document.querySelector(".Player-OverLayer, .Modal, .videoWrapper, .isLoaded");
+        //selector = e.target;
+        //const contenedor = tiles.closest(".Player-Video");
+        //console.log(contenedor);
+        //console.log(tiles.offsetParent);
+        //crearBotonFlotante(selector, losLink);
+        //crearNombreFlotante(selector, losLink);
+        //crearBotones();
+      });
+    }, 500);
+  }
+}
+
 function crearBotonFlotante(contenedor, urlImg, retrasos) {
-  //console.log(contenedor);
-    if (document.getElementById("mi-boton-flotante")) return;
-    const boton = document.createElement("button");
-    if (fullUrl.includes('loyalfans')) {
-      if (mensajeTodos === 'Todos') {
-        boton.id = `mi-boton-flotante-${idBoto}`;
-        if (document.getElementById(`mi-boton-flotante-${idBoto}`)) return;
-      }
-      if (mensajeUno === 'Uno') {
-        boton.id = "mi-boton-flotante";
-      }
-    } else {
+  console.log(contenedor);
+  if (document.getElementById("mi-boton-flotante")) return;
+  if (contenedor.dataset.botonCreado) return;
+  if (yaDescargado(urlImg)) return;
+  const boton = document.createElement("button");
+  //const nomVid  = document.createElement("p");
+  if (fullUrl.includes("loyalfans")) {
+    if (mensajeTodos === "Todos") {
+      boton.id = `mi-boton-flotante-${idBoto}`;
+      if (document.getElementById(`mi-boton-flotante-${idBoto}`)) return;
+    }
+    if (mensajeUno === "Uno") {
       boton.id = "mi-boton-flotante";
     }
+    //} else if (fullUrl.includes("redgifs.com/users/")) {
+    //console.log(urlImg.split("/").pop());
+    //const Titulos = document.querySelectorAll("#root > div > div.Wrapper > div > div.creatorPage > div.skyWrapper > div.middle > div > div.gifList.ProfileGifList > div > div.tileFeed > div.tileItem > img");
+    //const elNom = Titulos[idBoto]?.src;
+    //console.log(elNom);
+    //const nombreX = elNom.split('/').pop().replace('-mobile.jpg', '');
+    //nombreFinal = urlImg.split("/").pop().replace(".mp4", "");
+  } else if (fullUrl.includes("redgifs")) {
+    //console.log(contenedor);
+    contenedor.dataset.botonCreado = "true";
+    boton.id = `mi-boton-flotante-${idBoto}`;
+    //nomVid.id = `nom${nombreVid}`;
+    if (document.getElementById(`mi-boton-flotante-${idBoto}`)) return;
+  } else {
+    boton.id = "mi-boton-flotante";
+  }
+  boton.style.display = "inline-grid";
+  //nomVid.style.display = "inline-grid";
+  boton.style.width = "100px";
+  boton.textContent = "📥 Descargar";
+  boton.style.position = "absolute";
+  //nomVid.style.position = "absolute";
+  //nomVid.style.color = "#fff";
+  //nomVid.style.zIndex = "9999";
+  boton.style.padding = "5px 5px";
+  //boton.style.background = "#1DA1F2";
+  boton.style.background = "rgb(7 112 177)";
+  boton.style.color = "#fff";
+  boton.style.border = "none";
+  boton.style.borderRadius = "8px";
+  boton.style.zIndex = "9999";
+  boton.style.cursor = "pointer";
+  //boton.innerHTML = '<img src="' + logo + '" style="width:100%;vertical-align:middle;opacity:0.5;margin:0"> 📥 Descargar';
+  boton.innerHTML = `<img src="${logo}" style="width:100%;vertical-align:middle;opacity:0.5;margin:0"> 📥 Descargar`;
+  boton.onmouseover = function () {
+    boton.title = `Click para descargar: ${urlImg}.!`;
+  };
+  boton.dataset.url = urlImg;
+
+  boton.onclick = () => {
+    if (fullUrl.includes("loyalfans")) {
+      if (mensajeTodos === "Todos") {
+        //const todos = document.querySelectorAll("body > app-root > div > div.app-container_left > app-model-public > div > div > div.left-content-wrapper > div > app-videos > div > div");
+        (async () => {
+          //console.log(userId);
+          //console.log(boton.id);
+          //console.log(idBoto);
+          idBoto = boton.id.split("-")[3];
+          const urlFetch = `https://www.loyalfans.com/api/v2/social/videos/${userId}?ngsw-bypass=true`;
+          enlace = await obtieneLinkLoyalFans(urlFetch, idBoto);
+          //console.log(enlace);
+          chrome.runtime.sendMessage({
+            action: "inject_main_script",
+            url: enlace,
+          });
+        })();
+      }
+      if (mensajeUno === "Uno") {
+        chrome.runtime.sendMessage({
+          action: "inject_main_script",
+          url: urlImg,
+        });
+      }
+    } else if (domain.includes("redgifs")) {
+      if (fullUrl.includes("redgifs.com/watch")) {
+        if (extension === ".jpg") {
+          chrome.runtime.sendMessage({
+            action: "inject_main_script",
+            url: urlImg,
+          });
+        } else {
+          enlace = urlImg;
+          guardarDescargado(enlace);
+          chrome.runtime.sendMessage({
+            action: "inject_main_script",
+            url: enlace,
+          });
+          //console.log("hola");
+        }
+      } else {
+        enlace = urlImg;
+        guardarDescargado(enlace);
+        //console.log(nombreFinal);
+        (async () => {
+          nombreFinal = urlImg.split("/").pop().replace(".mp4", "");
+          idDelBoton = boton.id;
+          //const nombrew = urlImagen.match(/\/([^\/]+)\.mp4/i)?.[1];
+          await descargarVideo(enlace, `${nombreFinal}.mp4`);
+        })();
+        //chrome.runtime.sendMessage({ action: "inject_main_script", url: enlace });
+        contenedor.dataset.botonCreado = "false";
+        //alert(`enlace linea 124: ${enlace}`);
+      }
+    } else if (fullUrl.includes("pornhub.com/gif")) {
+      (async () => {
+        const nombrew2 = urlImg.match(/\/([^\/]+)\.mp4/i)?.[1];
+        //const elTexto = document.querySelector("#gifImageSection > div.gifTitle > h1").textContent;
+        const titulo = document.querySelector("title").textContent;
+        const nono = titulo
+          .split("|")[0]
+          .replace(/\b(Gif|Porno|Porn)\b/gi, "")
+          .replace(/\s+/g, " ")
+          .trim();
+        //console.log(nono);
+        const nombrew = `${nombrew2} - ${nono}`;
+        await descargarVideo(urlImg, `${nombrew}.mp4`);
+      })();
+    } else if (fullUrl.includes("pornhub.com/view_video")) {
+      const nombrew22 = document.querySelector(
+        ".title-container > h1 > span",
+      ).textContent;
+      navigator.clipboard.writeText(`${fullUrl}.-.${nombrew22}`);
+      window.open("https://downix.org", "_blank");
+    } else if (fullUrl.includes("porn4fans.com/video")) {
+      (async () => {
+        const noombre = document.querySelector(
+          "body > div.wrapper.AR > main > div.section.player > div > div > div.video-holder.trailer-wrap > div.video-info > div.video-title > h1",
+        );
+        await descargarVideo(urlImg, `${noombre.textContent}.mp4`);
+      })();
+    } else if (fullUrl.includes("viralxxxporn.com/es/video")) {
+      (async () => {
+        const noombre = document.querySelector(
+          "body > div.vx-wrapper > main > div:nth-child(6) > div > div > div:nth-child(1) > div.vx-player-tools > div:nth-child(1) > h1",
+        );
+        await descargarVideo(urlImg, `${noombre.textContent}.mp4`);
+      })();
+    } else if (fullUrl.includes("onlyfans")) {
+      if (fullUrl.includes(`/${userId}`)) {
+        (async () => {
+          const nombreee = document.querySelector(
+            "div.b-post__content.js-post__content.m-type-post.m-post-has-media.m-post-has-text > div.b-post__text.m-break-word > div > div > div > div > p",
+          ).textContent;
+          await descargarVideo(urlImg, `${nombreee}.mp4`);
+        })();
+      }
+    } else {
+      chrome.runtime.sendMessage({ action: "inject_main_script", url: urlImg });
+    }
+    boton.remove();
+  };
+  contenedor.appendChild(boton);
+  //contenedor.appendChild(nomVid);
+  if (domain.includes("pornhub")) {
+    boton.style.left = "0";
+    boton.style.margin = "5px";
+    boton.style.background = "rgb(7 112 177 / 57%)";
+    boton.style.color = "rgb(255, 144, 0)";
+    boton.innerHTML = `<img src="${logo}" style="width:100%;vertical-align:middle;opacity:0.8;margin:0"> 📥 Descargar`;
+  } else if (domain.includes("onlyfans")) {
+    boton.innerHTML = `<img src="${logo}" style="width:50%;vertical-align:middle;opacity:0.8;margin:auto"> 📥 Descargar`;
+    boton.style.justifyContent = "center";
+    boton.style.background = "#0770b182";
+  } else if (domain.includes("porn4fans")) {
+    boton.style.background = "#131313";
+    boton.style.display = "unset";
+    boton.innerHTML = `<img src="${logo}" style="width:100%; position:relative; vertical-align:middle;opacity:0.8;margin:0"> 📥 Descargar`;
+  } else if (domain.includes("viralxxxporn")) {
+    boton.style.background = "#3b1a2f";
+    boton.style.display = "unset";
+    boton.style.left = "5px";
+    boton.style.top = "5px";
+    boton.innerHTML = `<img src="${logo}" style="width:100%; position:relative; vertical-align:middle;opacity:0.8;margin:0"> 📥 Descargar`;
+  } else if (domain.includes("redgifs")) {
+    boton.style.left = "0";
+    boton.style.right = "0";
+    boton.style.margin = "auto";
+    //nomVid.textContent = nombreVid;
+    //nomVid.style.left = "0";
+    //nomVid.style.right = "0";
+    //nomVid.style.top = "50px";
+    //nomVid.style.margin = "auto";
+    //nomVid.style.textAlign = "center";
+    //nomVid.style.padding = "5px 5px";
+    //nomVid.style.borderRadius = "8px";
+    //nomVid.style.background = "rgb(7 112 177)";
+    //nomVid.style.width = "fit-content";
+    //nomVid.style.fontSize = "14px";
+    //nomVid.style.fontWeight = "bold";
+    //nomVid.style.wordBreak = "break-word";
+    //nomVid.style.opacity = "0.5";
+    setTimeout(() => {
+      //contenedor.appendChild(//nomVid);
+    }, 1000);
+    if (fullUrl.includes("redgifs.com/watch/")) {
+      boton.style.top = "0";
+      //} else if (domain.includes('redgifs')) {
+
+      ////nomVid.textContent = nombreVid;
+    }
+  } else if (domain.includes("twpornstars")) {
+    boton.style.left = "0";
+    boton.style.top = "0";
+    boton.style.justifyItems = "center";
+    boton.style.justifyContent = "center";
+    boton.innerHTML =
+      '<img src="' +
+      logo +
+      '" style="width:50%;vertical-align:middle;opacity:0.5;margin:0">📥 Descargar';
+    contenedor.appendChild(boton);
+  } else if (fullUrl.includes("manyvids.com/Video")) {
+    boton.style.justifyItems = "center";
+    boton.style.left = "0";
+    boton.innerHTML =
+      '<img src="' +
+      logo +
+      '" style="vertical-align:middle;opacity:0.5;margin:0">📥 Descargar';
+  } else if (
+    fullUrl.includes("fapello.com") &&
+    !fullUrl.includes("fapello.com/content")
+  ) {
+    boton.style.left = "150px";
+    boton.style.right = "0";
+    boton.style.margin = "auto";
+    //agregarDatosFap(fullUrl, userId, userId, idFoto, urlImg);
+    // Llamar a la función del background
+    chrome.runtime.sendMessage(
+      {
+        action: "agregarParametro",
+        payload: {
+          url: fullUrl,
+          name: userId,
+          id: userId,
+          foto: idFoto,
+          URL: urlImg,
+        },
+      },
+      (response) => {
+        console.log("Respuesta del background:", response);
+      },
+    );
+  } else if (
+    fullUrl.includes("fapello.com/content") ||
+    fullUrl.includes("cdni.pornpics.com")
+  ) {
+    boton.style.left = "0";
+    boton.style.right = "0";
+    boton.style.margin = "auto";
+  } else if (fullUrl.includes("loyalfans")) {
+    if (mensajeTodos === "Todos") {
+      //boton.id = `mi-boton-flotante-${idBoto}`;
+      boton.style.zIndex = "10";
+      boton.style.left = "0";
+      boton.style.right = "0";
+      boton.style.bottom = "0";
+      boton.style.margin = "auto";
+      contenedor.style.position = "relative";
+    }
+  }
+}
+
+function crearBotonFlotantePorImagen(contenedor) {
+  //console.log(contenedor);
+  contenedor.forEach((img, index) => {
+    //console.log(index);
+    if (fullUrl.includes("fapello")) {
+      selector = document.querySelector(
+        `#content > div:nth-child(${index + 1}) > a > div > img`,
+      )?.src;
+    } else if (fullUrl.includes("twpornstars.com")) {
+      //console.log(img);
+      selector = document.querySelector(
+        `body > div.block.block-thumbs.js-thumbs > div:nth-child(${index + 1}) > div.thumb__inner > a`,
+      )?.href;
+    } else if (fullUrl.includes(`x.com/${userId}/media`)) {
+      const urls = [
+        ...document.querySelectorAll('li > div > div > div > a[href*="video"]'),
+      ].map((a) => a.href);
+
+      //console.log(urls);
+      selector = urls[index];
+    } else if (fullUrl.includes("pornhub.com/gifs/")) {
+      const linkssss = document.querySelectorAll(
+        `body > div.wrapper > div.container > div.nf-videos > div > div.gifsWrapper.hideLastItemLarge > ul > li > a`,
+      );
+      selector = linkssss[index]?.querySelector("video").dataset.mp4;
+    } else if (
+      fullUrl.includes(`pornhub.com/model/${userId}/gifs/video`) ||
+      fullUrl.includes(`pornhub.com/pornstar/${userId}/gifs/video`)
+    ) {
+      //console.log(userId);
+      //console.log(index);
+      const linkssss = document.querySelectorAll(
+        `#profileContent > div > section > div > div.profileVids > div.gifsWrapperProfile > ul > li > a`,
+      );
+      const hihi = linkssss[index]?.querySelector(`img`)?.dataset?.gifUrl;
+      //console.log(hihi);
+      //console.log(linkssss[index]?.querySelector("img").dataset.gifUrl);
+      let nummmm = linkssss[index]?.href.split("/")[4];
+      const str = "0" + nummmm;
+      const partes = str.match(/.{1,3}/g);
+      //const ellink = `https://el.phncdn.com/pics/gifs/${partes[0]}/${partes[1]}/${partes[2]}/${nummmm}a.webm`;
+      //const ellink = `https://el2.phncdn.com/pics/gifs/${partes[0]}/${partes[1]}/${partes[2]}/${nummmm}a.mp4`;
+      const ellink = hihi.replace(".gif", ".mp4");
+      selector = ellink;
+    } else if (
+      fullUrl.includes("pornhub.com/pornstar/") ||
+      fullUrl.includes("pornhub.com/model/")
+    ) {
+      //console.log(index);
+      //console.log(userId);
+      document.querySelector(
+        "#profileContent > div > section > div > div.profileVids.gifsOutterWrapperProfile > div.gifsWrapperProfile.clearfix",
+      );
+      const linkssss = document.querySelectorAll(
+        `#profileContent > div > section > div > div.profileVids.gifsOutterWrapperProfile > div.gifsWrapperProfile.clearfix > ul > li > a`,
+      );
+      let nummmm = linkssss[index]?.href.split("/")[4];
+      const str = "0" + nummmm;
+      const partes = str.match(/.{1,3}/g);
+      const ellink = `https://el.phncdn.com/pics/gifs/${partes[0]}/${partes[1]}/${partes[2]}/${nummmm}a.webm`;
+      selector = ellink;
+    } else if (fullUrl.includes("redgifs.com/users")) {
+      //const listaDo = document.querySelectorAll(todos);
+      //const nummmm = listaDo[index]?;
+      //listaDo.forEach((r, index) => {
+      //console.log(r.dataset.feedItemId);
+      //});
+      const Titulos = document.querySelectorAll(
+        "#root > div > div.Wrapper > div > div.creatorPage > div.skyWrapper > div.middle > div > div.gifList.ProfileGifList > div > div.tileFeed > div.tileItem > img",
+      );
+      const elNom = Titulos[index]?.src;
+      //console.log(elNom);
+      const nombreX = elNom.split("/").pop().replace("-mobile.jpg", "");
+      nombreFinal = nombreX;
+      //console.log(nombreX);
+      //const losLink = `https://media.redgifs.com/${img.dataset.feedItemId}.mp4`;
+      const losLink = `https://media.redgifs.com/${nombreX}.mp4`;
+      selector = losLink;
+      //selector = img?.href;
+      //console.log(img);
+    } else if (fullUrl.includes("pornpics.com/galleries")) {
+      const linkssss = document.querySelectorAll(`#tiles > li`);
+      selector = linkssss[index]?.querySelector("a")?.href;
+    } else if (fullUrl.includes(`onlyfans.com/${userId}/videos`)) {
+      const linkssss = document.querySelectorAll(
+        ".vue-recycle-scroller__item-wrapper > div > .dynamic-scroller-item > a",
+      );
+      selector = linkssss[index]?.href;
+    } else if (fullUrl.includes("loyalfans")) {
+      const linkssss = document.querySelectorAll(
+        `body > app-root > div > div.app-container_left > app-model-public > div > div > div.left-content-wrapper > div > app-videos > div > div`,
+      );
+      selector = linkssss[index]?.querySelector("div > img")?.src;
+      //console.log('selector linea 99: ' + selector);
+      //console.log(linkssss);
+    }
+    //console.log(selector);
+    // Evita inyectar varias veces en la misma imagen
+    //if (img.parentElement.querySelector(".mi-boton-flotante")) return;
+    if (img.parentElement.querySelector(`.mi-boton-flotante-${index}`)) return;
+    if (img.dataset.botonCreado) return;
+    img.dataset.botonCreado = "true";
+    const nodos = selector;
+    const contenedor2 = img;
+    if (fullUrl.includes("pornpics.com/galleries")) {
+      contenedor2.style.position = "";
+    } else {
+      contenedor2.style.position = "relative";
+    }
+
+    const boton = document.createElement("button");
+    boton.id = `mi-boton-flotante-${index}`;
     boton.style.display = "inline-grid";
     boton.style.width = "100px";
-    boton.textContent = "⬇ Descargar";
-    boton.style.position = "absolute";    
-    boton.style.padding = "5px 5px";
+    boton.textContent = "📥 Descargar";
+    boton.style.position = "absolute";
+    boton.style.padding = "2px";
     //boton.style.background = "#1DA1F2";
     boton.style.background = "rgb(7 112 177)";
     boton.style.color = "#fff";
     boton.style.border = "none";
     boton.style.borderRadius = "8px";
     boton.style.zIndex = "9999";
-    boton.style.cursor = "pointer";    
-    //boton.innerHTML = '<img src="' + logo + '" style="width:100%;vertical-align:middle;opacity:0.5;margin:0"> 📥 Descargar';
-    boton.innerHTML = `<img src="${logo}" style="width:100%;vertical-align:middle;opacity:0.5;margin:0"> 📥 Descargar`;
-    boton.onmouseover = function() {boton.title = `Click para descargar: ${urlImg}.!`;};
-    boton.dataset.url = urlImg;
-  
-    boton.onclick = () => {
-      if (fullUrl.includes('loyalfans')) {
-        if (mensajeTodos === 'Todos') {
-          //const todos = document.querySelectorAll("body > app-root > div > div.app-container_left > app-model-public > div > div > div.left-content-wrapper > div > app-videos > div > div");
-          (async () => {
-            //console.log(userId);
-            console.log(boton.id);
-            //console.log(idBoto);
-            idBoto = boton.id.split('-')[3];
-            const urlFetch = `https://www.loyalfans.com/api/v2/social/videos/${userId}?ngsw-bypass=true`;
-            enlace = await obtieneLinkLoyalFans(urlFetch, idBoto);
-            console.log(enlace);
-            chrome.runtime.sendMessage({ action: "inject_main_script", url: enlace });
-          })();
-        }
-        if (mensajeUno === 'Uno') {
-          chrome.runtime.sendMessage({ action: "inject_main_script", url: urlImg });
-        }
-      } else if (domain.includes('redgifs')) {
-        if (fullUrl.includes('redgifs.com/watch')) {
-          if (extension === '.jpg') {
-            chrome.runtime.sendMessage({ action: "inject_main_script", url: urlImg });
-          } else {
-            chrome.runtime.sendMessage({ action: "inject_main_script" });
-          }
-        }
-      } else {
-        chrome.runtime.sendMessage({ action: "inject_main_script" });
-      }
-      boton.remove();
-    };    
-    contenedor.appendChild(boton);
-    if (domain.includes('pornhub')) {
-        boton.style.left = "0";
-        boton.style.margin = "5px";
-        boton.style.background = "rgb(7 112 177 / 57%)";
-        boton.style.color = "rgb(255, 144, 0)";
-        boton.innerHTML = `<img src="${logo}" style="width:100%;vertical-align:middle;opacity:0.8;margin:0"> 📥 Descargar`;
-    } else if (domain.includes('redgifs')) {
-        contenedor.appendChild(boton);
-    } else if (domain.includes('twpornstars')) {
-        boton.style.left = "0";
-        boton.style.top = "0";
-        boton.style.justifyItems = "center";
-        boton.style.justifyContent = "center";        
-        boton.innerHTML = '<img src="' + logo + '" style="width:50%;vertical-align:middle;opacity:0.5;margin:0"> ⬇ Descargar';
-        contenedor.appendChild(boton);
-    } else if (fullUrl.includes('manyvids.com/Video')) {
-        boton.style.justifyItems = "center";
-        boton.style.left = "0";
-        boton.innerHTML = '<img src="' + logo + '" style="vertical-align:middle;opacity:0.5;margin:0"> ⬇ Descargar';
-    } else if (fullUrl.includes('fapello.com') && !fullUrl.includes('fapello.com/content')) {      
-      boton.style.left = "150px";
-      boton.style.right = "0";
-      boton.style.margin = "auto";
-      //agregarDatosFap(fullUrl, userId, userId, idFoto, urlImg);
-      // Llamar a la función del background
-      chrome.runtime.sendMessage(
-        {
-          action: "agregarParametro",
-          payload: {
-            url: fullUrl,
-            name: userId,
-            id: userId,
-            foto: idFoto,
-            URL: urlImg
-          }
-        },
-        (response) => {
-          console.log("Respuesta del background:", response);
-        }
-      );
-    } else if (fullUrl.includes('fapello.com/content') || fullUrl.includes('cdni.pornpics.com')) {
-      boton.style.left = "0";
-      boton.style.right = "0";
-      boton.style.margin = "auto";
-    } else if (fullUrl.includes('loyalfans')) {
-      if (mensajeTodos === 'Todos') {
-        //boton.id = `mi-boton-flotante-${idBoto}`;
-        boton.style.zIndex = "10";
-        boton.style.left = "0";
-        boton.style.right = "0";
-        boton.style.bottom = "0";
-        boton.style.margin = "auto";
-        contenedor.style.position = "relative";
-      }
-    }
-  }
+    boton.style.cursor = "pointer";
+    boton.style.left = "0";
+    boton.style.right = "0";
+    boton.style.bottom = "0";
+    boton.style.margin = "auto";
+    boton.style.fontSize = "10px";
+    enlaces = nodos;
+    limpio = enlaces?.replace(/_300px(?=\.[a-z]+$)/i, "");
+    const enlacesLimpios = limpio;
+    //boton.innerHTML = '<img src="' + logo + '" style="width:80%;vertical-align:middle;opacity:0.5;margin:auto"> 📥 Descargar';
+    boton.innerHTML = `<img src="${logo}" style="width:80%;vertical-align:middle;opacity:0.5;margin:auto"> 📥 Descargar`;
+    boton.onmouseover = function () {
+      boton.title = `Click para descargar: ${enlacesLimpios}.!`;
+    };
+    boton.dataset.url = enlacesLimpios;
 
-function crearBotonFlotantePorImagen(contenedor) {
-  //console.log(contenedor);
-    contenedor.forEach((img, index) => {
-        if (fullUrl.includes('fapello')) {
-            selector = document.querySelector(`#content > div:nth-child(${index +1}) > a > div > img`)?.src;
-        } else if (fullUrl.includes('twpornstars.com')) {
-          //console.log(img);
-            selector = document.querySelector(`body > div.block.block-thumbs.js-thumbs > div:nth-child(${index + 1}) > div.thumb__inner > a`)?.href;
-        } else if (fullUrl.includes('pornhub.com/gifs/')) {
-            const linkssss = document.querySelectorAll(`body > div.wrapper > div.container > div.nf-videos > div > div.gifsWrapper.hideLastItemLarge > ul > li > a`);
-            selector = linkssss[index]?.querySelector('video').dataset.webm;
-        } else if (fullUrl.includes(`pornhub.com/model/${userId}/gifs/video`) || fullUrl.includes(`pornhub.com/pornstar/${userId}/gifs/video`)) {
+    boton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const urlImagen = e.currentTarget.dataset.url;
+      e.currentTarget.remove();
+      if (fullUrl.includes("twpornstars.com")) {
+        (async () => {
+          enlace = await ObtenemosLinkTwpornstar(urlImagen);
+          chrome.runtime.sendMessage({
+            action: "inject_main_script",
+            url: enlace,
+          });
+        })();
+      } else if (fullUrl.includes(`x.com/${userId}/media`)) {
+        (async () => {
+          await navigator.clipboard.writeText(urlImagen);
+          //abrir_xdownloader
+          //chrome.runtime.sendMessage({ action: "inject_main_script-twitter", url: window.location.href });
+          chrome.runtime.sendMessage({
+            action: "inject_main_script-twitter",
+            url: enlaces,
+          });
+        })();
+      } else if (fullUrl.includes("redgifs.com/users/")) {
+        //console.log(nombreFinal);
+        (async () => {
+          //const nombrew = urlImagen.match(/\/([^\/]+)\.mp4/i)?.[1];
+          await descargarVideo(urlImagen, `${nombreFinal}.mp4`);
+        })();
+      } else if (fullUrl.includes("loyalfans.com")) {
+        (async () => {
           //console.log(userId);
-          //console.log(index);
-          const linkssss = document.querySelectorAll(`#profileContent > div > section > div > div.profileVids > div.gifsWrapperProfile > ul > li > a`);
-          let nummmm = linkssss[index]?.href.split('/')[4];
-          const str = '0' + nummmm;
-          const partes = str.match(/.{1,3}/g);
-          const ellink = `https://el.phncdn.com/pics/gifs/${partes[0]}/${partes[1]}/${partes[2]}/${nummmm}a.webm`;
-          selector = ellink;
-         } else if (fullUrl.includes('pornhub.com/pornstar/') || fullUrl.includes('pornhub.com/model/')) {
-            //console.log(index);
-            //console.log(userId);
-            document.querySelector("#profileContent > div > section > div > div.profileVids.gifsOutterWrapperProfile > div.gifsWrapperProfile.clearfix")
-            const linkssss = document.querySelectorAll(`#profileContent > div > section > div > div.profileVids.gifsOutterWrapperProfile > div.gifsWrapperProfile.clearfix > ul > li > a`);
-            let nummmm = linkssss[index]?.href.split('/')[4];
-            const str = '0' + nummmm;
-            const partes = str.match(/.{1,3}/g);
-            const ellink = `https://el.phncdn.com/pics/gifs/${partes[0]}/${partes[1]}/${partes[2]}/${nummmm}a.webm`;
-            selector = ellink;
-            
-        } else if (fullUrl.includes('redgifs.com/users')) {
-          selector = img?.href;
-        } else if (fullUrl.includes('pornpics.com/galleries')) {
-          const linkssss = document.querySelectorAll(`#tiles > li`);
-          selector = linkssss[index]?.querySelector('a')?.href;
-        } else if (fullUrl.includes('loyalfans')) {
-          const linkssss = document.querySelectorAll(`body > app-root > div > div.app-container_left > app-model-public > div > div > div.left-content-wrapper > div > app-videos > div > div`);
-          selector = linkssss[index]?.querySelector('div > img')?.src;
-          //console.log('selector linea 99: ' + selector);
-          //console.log(linkssss);
-        }
-        //console.log(selector);
-        // Evita inyectar varias veces en la misma imagen
-        //if (img.parentElement.querySelector(".mi-boton-flotante")) return;
-        if (img.parentElement.querySelector(`.mi-boton-flotante-${index}`)) return;
-        if (img.dataset.botonCreado) return;
-        img.dataset.botonCreado = "true";
-        const nodos = selector;
-        const contenedor2 = img;
-        if (fullUrl.includes('pornpics.com/galleries')) {
-          contenedor2.style.position = "";
-        } else {
-          contenedor2.style.position = "relative";
-        }
-        
-        const boton = document.createElement("button");
-        boton.id = `mi-boton-flotante-${index}`;
-        boton.style.display = "inline-grid";
-        boton.style.width = "100px";
-        boton.textContent = "⬇ Descargar";
-        boton.style.position = "absolute";    
-        boton.style.padding = "2px";
-        //boton.style.background = "#1DA1F2";
-        boton.style.background = "rgb(7 112 177)";
-        boton.style.color = "#fff";
-        boton.style.border = "none";
-        boton.style.borderRadius = "8px";
-        boton.style.zIndex = "9999";
-        boton.style.cursor = "pointer";
-        boton.style.left = "0";
-        boton.style.right = "0";
-        boton.style.bottom = "0";
-        boton.style.margin = "auto";
-        boton.style.fontSize = "10px";
-        enlaces = nodos;
-        limpio = enlaces?.replace(/_300px(?=\.[a-z]+$)/i, "");
-        const enlacesLimpios = limpio;
-        //boton.innerHTML = '<img src="' + logo + '" style="width:80%;vertical-align:middle;opacity:0.5;margin:auto"> 📥 Descargar';      
-        boton.innerHTML = `<img src="${logo}" style="width:80%;vertical-align:middle;opacity:0.5;margin:auto"> 📥 Descargar`;
-        boton.onmouseover = function() {boton.title = `Click para descargar: ${enlacesLimpios}.!`;};
-        boton.dataset.url = enlacesLimpios;
-        
-        boton.addEventListener("click", (e) => {
-            e.stopPropagation();
-            const urlImagen = e.currentTarget.dataset.url;
-            e.currentTarget.remove();
-            if (fullUrl.includes('twpornstars.com')) {
-                (async () => {
-                    enlace = await ObtenemosLinkTwpornstar(urlImagen);
-                    chrome.runtime.sendMessage({ action: "inject_main_script", url: enlace });
-                })();
-            } else if (fullUrl.includes('loyalfans.com')) {
-              (async () => {
-                //console.log(userId);
-                const urlFetch = `https://www.loyalfans.com/api/v2/social/videos/${userId}?ngsw-bypass=true`;
-                enlace = await obtieneLinkLoyalFans(urlFetch, index);
-                //console.log(enlace);
-                chrome.runtime.sendMessage({ action: "inject_main_script", url: enlace });
-              })();
-            } else {
-                enlace = urlImagen;
-                chrome.runtime.sendMessage({ action: "inject_main_script", url: enlace });
-                //alert(`enlace linea 124: ${enlace}`);
-            }
+          const urlFetch = `https://www.loyalfans.com/api/v2/social/videos/${userId}?ngsw-bypass=true`;
+          enlace = await obtieneLinkLoyalFans(urlFetch, index);
+          //console.log(enlace);
+          chrome.runtime.sendMessage({
+            action: "inject_main_script",
+            url: enlace,
+          });
+        })();
+      } else if (fullUrl.includes(`onlyfans.com/${userId}/videos`)) {
+        // const nombrew22 = document.querySelector(
+        //   ".title-container > h1 > span",
+        // ).textContent;
+        // navigator.clipboard.writeText(fullUrl);
+        window.open(`${enlacesLimpios}`, "_blank");
+      } else if (
+        fullUrl.includes(`pornhub.com/model/${userId}/gifs/video`) ||
+        fullUrl.includes(`pornhub.com/pornstar/${userId}/gifs/video`)
+      ) {
+        (async () => {
+          const nombrew = urlImagen.match(/\/([^\/]+)\.mp4/i)?.[1];
+          await descargarVideo(urlImagen, nombrew);
+        })();
+      } else if (fullUrl.includes("pornhub.com/gifs/")) {
+        (async () => {
+          const eltuti = document.querySelectorAll(
+            "body > div.wrapper > div.container > div.nf-videos > div > div.gifsWrapper.hideLastItemLarge > ul > li > a > .title",
+          );
+          console.log(eltuti[index].textContent);
+          const nombreTemp = eltuti[index].textContent;
+          const nombreTemp1 = urlImagen.match(/\/([^\/]+)\.mp4/i)?.[1];
+          const nombrew = `${nombreTemp1} - ${nombreTemp}`;
+          //eltuti.forEach((img) => {
+          //const nombrew = urlImagen.match(/\/([^\/]+)\.mp4/i)?.[1];
+          await descargarVideo(urlImagen, `${nombrew}.mp4`);
+        })();
+      } else {
+        enlace = urlImagen;
+        chrome.runtime.sendMessage({
+          action: "inject_main_script",
+          url: enlace,
         });
-        
-        if (fullUrl.includes('redgifs.com/users')) {
-          const nuevoDiv = document.createElement('div');
-          nuevoDiv.style.position = "relative";
-          nuevoDiv.classList.add(`mi-contenedor-${index}`);
-          const contenedorRedgifs = document.querySelector('.tileFeed');          
-          nuevoDiv.appendChild(img);
-          nuevoDiv.prepend(boton);
-          contenedorRedgifs.appendChild(nuevoDiv);
-        } else {
-          contenedor2.appendChild(boton);
-        }
-        if (fullUrl.includes('pornhub.com/gif/')) {
-            //boton.style.left = "0";
-            boton.style.margin = "5px";
-        } else if (fullUrl.includes('pornhub.com/gifs/')) {
-            boton.style.top = "5px";
-            boton.style.margin = "0";
-            boton.style.height = "fit-content";
-            boton.innerHTML = '<img src="' + logo1 + '" style="width:80%;vertical-align:middle;opacity:0.5;margin:auto; position:relative"> 📥 Descargar';
-        } else if (fullUrl.includes('pornhub.com/model/') || fullUrl.includes('pornhub.com/pornstar/')) {
-          //boton.style.width = "70px";
-          boton.style.width = "45%";
-          boton.style.left = "";
-          boton.style.bottom = "";
-          boton.style.margin = "2px";
-          boton.style.color = "#ff9000";
-          //boton.style.background = "rgb(0 0 0 / 43%)";
-          boton.style.background = "rgb(0 0 0 / 65%)";
-          boton.style.borderRadius = "5px";
-          boton.style.fontSize = "12px";
-          boton.innerHTML = '<img src="' + logo + '" style="width:80%;vertical-align:middle;opacity:0.8;margin:auto; position:relative"> 📥 Descargar';
-        } else if (domain.includes('redgifs')) {
-          if (fullUrl.includes('redgifs.com/users')) {
-            boton.style.bottom = "";
-          }
-            //contenedor2.appendChild(boton);
-        } else if (fullUrl.includes('twpornstars.com') && fullUrl.includes('/videos')) {
-            boton.style.width = "fit-content";
-            boton.style.height = "fit-content";
-            boton.style.left = "5px";
-            boton.style.top = "5px";
-            boton.style.margin = "";
-            boton.style.justifyItems = "center";
-            boton.innerHTML = '<img src="' + logo + '" style="vertical-align:middle;opacity:0.5;margin:0"> 📥 Descargar';
-        } else if (fullUrl.includes('twpornstars.com') && !fullUrl.includes('/videos')) {
-            boton.style.left = "0";
-            boton.style.top = "0";
-            boton.style.justifyItems = "center";
-            boton.style.justifyContent = "center";          
-            boton.innerHTML = '<img src="' + logo + '" style="width:50%;vertical-align:middle;opacity:0.5;margin:0"> 📥 Descargar';
-            //contenedor2.appendChild(boton);
-        } else if (fullUrl.includes('fapello.com') && !fullUrl.includes('fapello.com/content')) {
-            //boton.style.top = "80%";
-        } else if (fullUrl.includes('fapello.com/content')) {
-            //
-        } else if (fullUrl.includes('pornpics.com/galleries')) {
-          boton.style.opacity = "0.9";
-          boton.style.background = "rgb(7 112 177)";
-          boton.style.color = "#e00083";
-          boton.style.fontWeight = "bold";
-          boton.style.fontSize = "";
-          boton.style.justifyItems = "center"
-          boton.innerHTML = `<img src="${logo}" style="width:80%;vertical-align:middle;opacity:1;margin:0"> 📥 Descargar`;
-        } else if (fullUrl.includes('loyalfans')) {
-          boton.style.zIndex = "10";
-          boton.innerHTML = `<img src="${logo1}" style="width:80%;vertical-align:middle;opacity:0.5;margin:auto"> 📥 Descargar`;
-        }
+        //alert(`enlace linea 124: ${enlace}`);
+      }
     });
-    ContadorFunciones++;
-    cuentaVeces('Funcion crearbotonximagen', ContadorFunciones);
-  }
 
-async function ObtenemosLinkTwpornstar (enlace){
-  console.log(enlace);
-    try {
-        const respuesta = await fetch(enlace, {
-        method: 'GET',
-        headers: {
-            'User-Agent': 'MiAgente/1.0', // algunos sitios requieren un agente válido
-        }
-        });
-    
-        if (!respuesta.ok) throw new Error('Error al cargar la página');
-        const html = await respuesta.text();
-    
-        // Crear un DOM temporal para buscar enlaces
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-    
-        // Ejemplo: buscar un enlace <video> o <source>
-        const enlaceVideo = doc.querySelector('video source')?.src;
-    
-        console.log('Enlace encontrado:', enlaceVideo);
-        return enlaceVideo;
-    } catch (err) {
-        console.error(err);
+    if (fullUrl.includes("redgifs.com/usersssss")) {
+      const nuevoDiv = document.createElement("div");
+      nuevoDiv.style.position = "relative";
+      nuevoDiv.classList.add(`mi-contenedor-${index}`);
+      const contenedorRedgifs = document.querySelector(".tileFeed");
+      nuevoDiv.appendChild(img);
+      nuevoDiv.prepend(boton);
+      contenedorRedgifs.appendChild(nuevoDiv);
+      // } else if (fullUrl.includes(`onlyfans.com/${userId}/videos`)) {
+      //   const nuevoDiv = document.createElement("div");
+      //   nuevoDiv.style.position = "relative";
+      //   nuevoDiv.classList.add(`mi-contenedor-${index}`);
+      //   const contenedorRedgifs = document.querySelector(
+      //     ".vue-recycle-scroller__item-wrapper > div > .dynamic-scroller-item",
+      //   );
+      //nuevoDiv.appendChild(img);
+      //nuevoDiv.prepend(boton);
+      //contenedor2.appendChild(nuevoDiv);
+      //contenedorRedgifs.appendChild(nuevoDiv);
+    } else {
+      //console.log(contenedor2);
+      contenedor2.prepend(boton);
     }
+    if (fullUrl.includes("pornhub.com/gif/")) {
+      //boton.style.left = "0";
+      boton.style.margin = "5px";
+    } else if (fullUrl.includes("pornhub.com/gifs/")) {
+      boton.style.top = "5px";
+      boton.style.margin = "0";
+      boton.style.height = "fit-content";
+      boton.innerHTML =
+        '<img src="' +
+        logo1 +
+        '" style="width:80%;vertical-align:middle;opacity:0.5;margin:auto; position:relative"> 📥 Descargar';
+    } else if (fullUrl.includes(`x.com/${userId}/media`)) {
+      boton.innerHTML =
+        '<img src="' +
+        logo +
+        '" style="width:20%;vertical-align:middle;opacity:0.8;margin:auto"> 📥 Descargar';
+    } else if (fullUrl.includes(`x.com/search`)) {
+      boton.innerHTML =
+        '<img src="' +
+        logo +
+        '" style="width:30%;vertical-align:middle;opacity:0.8;margin:auto"> 📥 Descargar';
+    } else if (domain.includes("onlyfans")) {
+      boton.innerHTML = `<img src="${logo}" style="width:50%;vertical-align:middle;opacity:0.8;margin:auto"> 📥 Descargar`;
+      boton.style.justifyContent = "center";
+      boton.style.background = "#0770b182";
+      boton.style.zIndex = "99";
+    } else if (
+      fullUrl.includes("pornhub.com/model/") ||
+      fullUrl.includes("pornhub.com/pornstar/")
+    ) {
+      //boton.style.width = "70px";
+      boton.style.width = "45%";
+      boton.style.left = "";
+      boton.style.bottom = "";
+      boton.style.margin = "2px";
+      boton.style.color = "#ff9000";
+      //boton.style.background = "rgb(0 0 0 / 43%)";
+      boton.style.background = "rgb(0 0 0 / 65%)";
+      boton.style.borderRadius = "5px";
+      boton.style.fontSize = "12px";
+      boton.innerHTML =
+        '<img src="' +
+        logo +
+        '" style="width:80%;vertical-align:middle;opacity:0.8;margin:auto; position:relative"> 📥 Descargar';
+    } else if (domain.includes("redgifs")) {
+      if (fullUrl.includes("redgifs.com/users")) {
+        boton.style.bottom = "";
+      }
+      //contenedor2.appendChild(boton);
+    } else if (
+      fullUrl.includes("twpornstars.com") &&
+      fullUrl.includes("/videos")
+    ) {
+      boton.style.width = "fit-content";
+      boton.style.height = "fit-content";
+      boton.style.left = "5px";
+      boton.style.top = "5px";
+      boton.style.margin = "";
+      boton.style.justifyItems = "center";
+      boton.innerHTML =
+        '<img src="' +
+        logo +
+        '" style="vertical-align:middle;opacity:0.5;margin:0"> 📥 Descargar';
+    } else if (
+      fullUrl.includes("twpornstars.com") &&
+      !fullUrl.includes("/videos")
+    ) {
+      boton.style.left = "0";
+      boton.style.top = "0";
+      boton.style.justifyItems = "center";
+      boton.style.justifyContent = "center";
+      boton.innerHTML =
+        '<img src="' +
+        logo +
+        '" style="width:50%;vertical-align:middle;opacity:0.5;margin:0"> 📥 Descargar';
+      //contenedor2.appendChild(boton);
+    } else if (
+      fullUrl.includes("fapello.com") &&
+      !fullUrl.includes("fapello.com/content")
+    ) {
+      //boton.style.top = "80%";
+    } else if (fullUrl.includes("fapello.com/content")) {
+      //
+    } else if (fullUrl.includes("pornpics.com/galleries")) {
+      boton.style.opacity = "0.9";
+      boton.style.background = "rgb(7 112 177)";
+      boton.style.color = "#e00083";
+      boton.style.fontWeight = "bold";
+      boton.style.fontSize = "";
+      boton.style.justifyItems = "center";
+      boton.innerHTML = `<img src="${logo}" style="width:80%;vertical-align:middle;opacity:1;margin:0"> 📥 Descargar`;
+    } else if (fullUrl.includes("loyalfans")) {
+      boton.style.zIndex = "10";
+      boton.innerHTML = `<img src="${logo1}" style="width:80%;vertical-align:middle;opacity:0.5;margin:auto"> 📥 Descargar`;
+    }
+  });
+  ContadorFunciones++;
+  cuentaVeces("Funcion crearbotonximagen", ContadorFunciones);
+}
+
+async function ObtenemosLinkTwpornstar(enlace) {
+  //console.log(enlace);
+  try {
+    const respuesta = await fetch(enlace, {
+      method: "GET",
+      headers: {
+        "User-Agent": "MiAgente/1.0", // algunos sitios requieren un agente válido
+      },
+    });
+
+    if (!respuesta.ok) throw new Error("Error al cargar la página");
+    const html = await respuesta.text();
+
+    // Crear un DOM temporal para buscar enlaces
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+
+    // Ejemplo: buscar un enlace <video> o <source>
+    const enlaceVideo = doc.querySelector("video source")?.src;
+
+    //console.log('Enlace encontrado:', enlaceVideo);
+    return enlaceVideo;
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 // const descargarArchivoSimple = (url, nombre) => {
 //     //console.log('linea 202 descargarArchivosimple');
 //     let segundos = 5;
-  
+
 //     const modal = document.createElement("div");
 //     modal.style = `
 //       position: fixed; top: 50%; left: 50%;
@@ -389,12 +1234,12 @@ async function ObtenemosLinkTwpornstar (enlace){
 //       font-size: 18px; text-align: center;
 //       color: black; z-index: 9999;
 //     `;
-  
+
 //     const mensaje = document.createElement("p");
 //     mensaje.textContent = `La descarga de: ${url} comienza en ${segundos} segundos...`;
 //     modal.appendChild(mensaje);
 //     document.body.appendChild(modal);
-  
+
 //     const intervalo = setInterval(() => {
 //       segundos--;
 //       if (segundos > 0) {
@@ -408,13 +1253,13 @@ async function ObtenemosLinkTwpornstar (enlace){
 //         document.body.appendChild(link);
 //         link.click();
 //         link.remove();
-  
+
 //         mensaje.textContent = "Descarga iniciada...";
 //         setTimeout(() => modal.remove(), 2000);
 //       }
 //     }, 1000);
 //   };
-  
+
 // let datos = new Map();
 // function CallChrome2 (host, urlssss, nombre) {
 //   chrome.runtime.sendMessage({
@@ -487,7 +1332,7 @@ async function ObtenemosLinkTwpornstar (enlace){
 //       btnCancelar.disabled = true;
 
 //       try {
-//         const respuesta = await fetch(url);          
+//         const respuesta = await fetch(url);
 //         const blob = await respuesta.blob();
 //         const blobUrl = URL.createObjectURL(blob);
 
@@ -531,7 +1376,7 @@ async function ObtenemosLinkTwpornstar (enlace){
 //       }
 //     };
 //     document.addEventListener("keydown", teclaEnterListener);
-    
+
 //     // Limpiar listener al cerrar modal
 //     const limpiarListener = () => {
 //       document.removeEventListener("keydown", teclaEnterListener);
@@ -557,9 +1402,9 @@ async function ObtenemosLinkTwpornstar (enlace){
 // };
 
 const CallChrome = (host, urlssss, nombre) => {
-  console.log(nombre);
-  console.log(urlssss);
-//const descargarArchivo = (urlssss, nombre) => {
+  //console.log(nombre);
+  //console.log(urlssss);
+  //const descargarArchivo = (urlssss, nombre) => {
   try {
     let segundos = 5;
     let intervalo;
@@ -623,13 +1468,13 @@ const CallChrome = (host, urlssss, nombre) => {
               action: "updateCookie",
               cookieName: "lastdir",
               cookieValue: ulti,
-              url: location.href
+              url: location.href,
             });
           }, 500);
 
           mensaje.textContent = "Solicitud enviada ✔";
           setTimeout(() => modal.remove(), 1500);
-        }
+        },
       );
     };
 
@@ -677,7 +1522,6 @@ const CallChrome = (host, urlssss, nombre) => {
         iniciarDescarga();
       }
     }, 1000);
-
   } catch (err) {
     console.error("Error al iniciar descarga:", err);
   }
@@ -687,34 +1531,36 @@ const CallChrome = (host, urlssss, nombre) => {
 const obtieneLinkLoyalFans = async (src, id) => {
   try {
     const response = await fetch(src, {
-      "headers": {
-        "accept": "application/json, text/plain, */*",
+      headers: {
+        accept: "application/json, text/plain, */*",
         "accept-language": "es-ES,es;q=0.9,en-US;q=0.8,en;q=0.7",
-        "authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vc2xfdTI0X2FybXI4XzA4LmxveWFsZmFucy5pbnRlcm5hbDoxMDA4MS9hcGkvdjIvYXV0aC9sb2dpbiIsImlhdCI6MTc1ODIwNzY4NiwiZXhwIjoxNzU4Mjk0MDg2LCJuYmYiOjE3NTgyMDc2ODYsImp0aSI6IkxCRXlLcGRpd3NaWmJrYk4iLCJzdWIiOiIzNTQ5MzQ2IiwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.LA1AjR2DR2gSvzA8841gg3poXgmblwpH8A0-Uuf46HE",
+        authorization:
+          "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vc2xfdTI0X2FybXI4XzA4LmxveWFsZmFucy5pbnRlcm5hbDoxMDA4MS9hcGkvdjIvYXV0aC9sb2dpbiIsImlhdCI6MTc1ODIwNzY4NiwiZXhwIjoxNzU4Mjk0MDg2LCJuYmYiOjE3NTgyMDc2ODYsImp0aSI6IkxCRXlLcGRpd3NaWmJrYk4iLCJzdWIiOiIzNTQ5MzQ2IiwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.LA1AjR2DR2gSvzA8841gg3poXgmblwpH8A0-Uuf46HE",
         "content-type": "application/json",
-        "sec-ch-ua": "\"Opera\";v=\"95\", \"Chromium\";v=\"109\", \"Not;A=Brand\";v=\"24\"",
+        "sec-ch-ua": '"Opera";v="95", "Chromium";v="109", "Not;A=Brand";v="24"',
         "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": "\"Windows\"",
+        "sec-ch-ua-platform": '"Windows"',
         "sec-fetch-dest": "empty",
         "sec-fetch-mode": "cors",
         "sec-fetch-site": "same-origin",
         "x-api-version": "3.4.4",
-        "x-xsrf-token": "eyJpdiI6InNwSUFydFhoNWdZYjdrSjMxODN2N1E9PSIsInZhbHVlIjoiUFZJekt3UCtoWktwKzZMOGdMbTVHUDAwRldCNmV2N25Edmc1OEcyVWlIU1JydkJ1Mzgxd2Q1WWliU2szTHhmRHlUTnducWxvc2o5MXEwU0hHNXNKNkFyVk1ScVRKRXNYeUdyZGVuNk02UTlrcFR1TUswZll1akJyaEFDRTMrTTEiLCJtYWMiOiJkY2U5N2NiYzUwNGU5NzI1NDQxYzRkNDQyZTA0NjE0OGI1NTUzMDdmMWQzYWNmOTkwNjg1YTNlZjkyODBlMDhkIiwidGFnIjoiIn0="
+        "x-xsrf-token":
+          "eyJpdiI6InNwSUFydFhoNWdZYjdrSjMxODN2N1E9PSIsInZhbHVlIjoiUFZJekt3UCtoWktwKzZMOGdMbTVHUDAwRldCNmV2N25Edmc1OEcyVWlIU1JydkJ1Mzgxd2Q1WWliU2szTHhmRHlUTnducWxvc2o5MXEwU0hHNXNKNkFyVk1ScVRKRXNYeUdyZGVuNk02UTlrcFR1TUswZll1akJyaEFDRTMrTTEiLCJtYWMiOiJkY2U5N2NiYzUwNGU5NzI1NDQxYzRkNDQyZTA0NjE0OGI1NTUzMDdmMWQzYWNmOTkwNjg1YTNlZjkyODBlMDhkIiwidGFnIjoiIn0=",
       },
-      "referrer": `https://www.loyalfans.com/${userId}/videos`,
-      "referrerPolicy": "strict-origin-when-cross-origin",
-      "body": null,//"{\"limit\":15}",
-      "method": "POST",
-      "mode": "cors",
-      "credentials": "include"
+      referrer: `https://www.loyalfans.com/${userId}/videos`,
+      referrerPolicy: "strict-origin-when-cross-origin",
+      body: null, //"{\"limit\":15}",
+      method: "POST",
+      mode: "cors",
+      credentials: "include",
     });
     if (!response.ok) throw new Error(`Error ${response.status}`);
     const datoss = await response.json();
     const urrrll = datoss.videos[id].video_object.video_url;
     return urrrll;
-    } catch(error) {
+  } catch (error) {
     // Capturamos errores durante la solicitud
-    console.error('Error durante la solicitud:', error);
+    console.error("Error durante la solicitud:", error);
   }
 };
 
@@ -739,21 +1585,22 @@ const obtieneLinkLoyalFans = async (src, id) => {
 // }
 
 function checkUrl(fullUrl, rules) {
-  const domain = Object.keys(rules).find(d => fullUrl.includes(d));
+  const domain = Object.keys(rules).find((d) => fullUrl.includes(d));
   if (!domain) return null;
 
   for (const rule of rules[domain]) {
-    const includesMatch = rule.include?.some(part => fullUrl.includes(part));
-    const excludesMatch = rule.exclude?.some(part => fullUrl.includes(part)) || false;
+    const includesMatch = rule.include?.some((part) => fullUrl.includes(part));
+    const excludesMatch =
+      rule.exclude?.some((part) => fullUrl.includes(part)) || false;
     if (includesMatch && !excludesMatch) {
       return rule.result;
     }
   }
   return null;
-};
+}
 
 function GetHosts(url) {
-  if (domain.includes('redgifs')) {
+  if (domain.includes("redgifs")) {
     // const link2 = fullUrl.split("/watch/")[1].split("#")[0];
     // const link1 = "https://api.redgifs.com/v2/gifs/" + link2 + "?views=yes&users=yes&niches=yes";
     // obtieneredgifs(link1).then(urlssss => {
@@ -765,16 +1612,16 @@ function GetHosts(url) {
     //const nombreTemporal = obtenerNombre(url);
     //nombre = nombreTemporal.split("#")[0];
     //enlace = `https://media.redgifs.com/${nombre}.mp4`;
-  } else if (domain.includes('pornhub')) {
-    if (fullUrl.includes('/gif')) {
-      const nummmm = fullUrl.split('/')[4];
-      const str = '0' + nummmm;
+  } else if (domain.includes("pornhub")) {
+    if (fullUrl.includes("/gif")) {
+      const nummmm = fullUrl.split("/")[4];
+      const str = "0" + nummmm;
       const partes = str.match(/.{1,3}/g);
       enlace = `https://el.phncdn.com/pics/gifs/${partes[0]}/${partes[1]}/${partes[2]}/${nummmm}a.webm`;
     }
   }
   return enlace;
-};
+}
 
 // function cuentaRegresiva(segundos, mensaje, elemento) {
 //   segundos = segundos;
@@ -789,7 +1636,15 @@ function GetHosts(url) {
 //   }, 100);
 // };
 
-function iniciarCuentaRegresiva(elemento, msTotales, mensaje, mensaje2, estado, domain, onFinish) {
+function iniciarCuentaRegresiva(
+  elemento,
+  msTotales,
+  mensaje,
+  mensaje2,
+  estado,
+  domain,
+  onFinish,
+) {
   let restante = msTotales;
   //console.log(mensaje, mensaje2, domain, msTotales, restante);
 
@@ -827,7 +1682,7 @@ function iniciarCuentaRegresiva(elemento, msTotales, mensaje, mensaje2, estado, 
       }
     }
   }, 100);
-};
+}
 
 // function obtenerEstadoExtension(url, name, callback) {
 //   chrome.cookies.get({ url: url, name: name }, (cookie) => {
@@ -846,7 +1701,7 @@ function iniciarCuentaRegresiva(elemento, msTotales, mensaje, mensaje2, estado, 
 // }
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.action === "iniciarCuentaRegresiva") {
-    console.log("Iniciando cuenta regresiva con:", msg);
+    //console.log("Iniciando cuenta regresiva con:", msg);
     const elemento = document.getElementById(msg.idElemento);
     if (!elemento) {
       console.warn("⚠️ No se encontró #contador para mostrar el progreso.");
@@ -862,7 +1717,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       msg.domain,
       () => {
         console.log("⏱ Cuenta regresiva finalizada correctamente");
-      }
+      },
     );
 
     sendResponse({ ok: true });
