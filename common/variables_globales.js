@@ -64,6 +64,7 @@ let descargado;
 let observers = [];
 let inactivityTimer = null;
 let idDelBoton = null;
+let idPubli;
 let backgroundColor = null;
 const INACTIVITY_TIME = 3000;
 const imagenes = {

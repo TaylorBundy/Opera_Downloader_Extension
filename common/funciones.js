@@ -1170,7 +1170,7 @@ const obtieneTwitter = async (src, refer) => {
         "x-twitter-client-language": "es",
         cookie:
           'guest_id_marketing=v1%3A179127159700384310; guest_id_ads=v1%3A179127159700384310; guest_id=v1%3A179127159700384310; __cuid=8fa43bf1-34dc-43f3-8a34-9f8b70fcee8c; __cuid=8fa43bf1-34dc-43f3-8a34-9f8b70fcee8c; g_state={"i_l":0,"i_ll":1791271613687,"i_b":"O65S1Qq/1MnnZK37mBieYTOVPxYB9HF7rQNfPRn0bZs","i_e":{"enable_itp_optimization":24},"i_et":1791271613687}; twid=u%3D1675697010622582784; auth_token=a74d1daed954b5551f78a4bfe492470b7e35fc1c; ct0=e6b250bd724fdce3a90a527ee656fdedac7421a90f0740e5100a4e93155f429ccfec1323baacdad7e745f4025f73f8710cdaea7bdd1f769583fb73d57871a63156e5659a769d2d933d6ba6ebc09a2af3; lang=es; personalization_id="v1_EBg64yLV5XdiQ/rNnM4+tA=="; cf_clearance=bfQWHA04uqYnzFkvUqwKo7CDARuD6le6.6SxS9mAcoA-1792910375-1.2.1.1-Y6_y7iUs0UrbEqoqVgPSjdhRvDHyphjCGyPeUDDVAQG6AqOQjmKXCNVQIQpxPdzCWG1M1ds4GoIF8mGjBjYjh6GXf02p7ygzrH9fuFKIP9UIWs5ibWdC98ROnn7ZQetqyinlwK2P49t0qGJBaVRguuZ7coa9teehpo3QQPIQuPjvqIdgrDIq.weExRrjOwHo1IOBMGfKcDZgv2xjvmDTjWzOQCAd1Lj7dwVvgfvQx4ojSg5CMcltTWMMMUecbEd6Bp24JQdZcbxG_c0ffF63BUVv.GCKZqRblNRMuWByzYGyQlnJLr6AodkB7ADlsMXy.iHcm7WPTxwIIvzxyHkmVGH6T4YrCHRNNozrQ2k7D2Y; __cf_bm=zXzFaeq6UKW5OqsH_e4hwgbrFsxQCE6_7f0NTSBltpU-1792910375.966505-1.0.1.1-p_29Q7b0og2aQmEu1HofZpv4F60T6JTdnTOwXU3OImQ9YyKc_FIBBMfxnTQfvGeJ26yFldVseYWirYGgfx4aUqZY89zBORkPvgYlZpPyT8CTD4V2kR2BLw_yH0v_sumu',
-        Referer: "https://x.com/SacanaDuTT/status/2095478421392421157/video/1",
+        Referer: `${refer}`, //"https://x.com/SacanaDuTT/status/2095478421392421157/video/1",
       },
       body: null,
       method: "GET",
@@ -1197,6 +1197,7 @@ const obtieneTwitter = async (src, refer) => {
 
 function crearBotonFlotantePorImagen(contenedor) {
   console.log(contenedor);
+
   contenedor.forEach((img, index) => {
     //console.log(index);
     if (fullUrl.includes("fapello")) {
@@ -1217,7 +1218,7 @@ function crearBotonFlotantePorImagen(contenedor) {
       ].map((a) => a.href);
 
       //console.log(enlaces);
-      userId = enlaces
+      idPubli = enlaces
         .map((url) => url.match(/\/status\/(\d+)/)?.[1])
         .filter(Boolean);
       selector = enlaces[index];
@@ -1232,6 +1233,9 @@ function crearBotonFlotantePorImagen(contenedor) {
         ),
       ].map((a) => a.href);
       //console.log(urls);
+      idPubli = urls
+        .map((url) => url.match(/\/status\/(\d+)/)?.[1])
+        .filter(Boolean);
       selector = urls[index];
     } else if (fullUrl.includes("pornhub.com/gifs/")) {
       const linkssss = document.querySelectorAll(
@@ -1326,6 +1330,45 @@ function crearBotonFlotantePorImagen(contenedor) {
 
     const boton = document.createElement("button");
     boton.id = `mi-boton-flotante-${index}`;
+    if (fullUrl.includes(`x.com/${userId}/media`)) {
+      document
+        .querySelectorAll('article[data-testid="tweet"]')
+        .forEach((publicacion) => {
+          //const enlace = publicacion.querySelector('a[href*="/status/"]');
+
+          //const idPublicacion = enlace?.href.match(/\/status\/(\d+)/)?.[1];
+          const idsPublicaciones = [
+            ...publicacion.querySelectorAll(
+              'div[data-testid="User-Name"] > div > div > div:nth-child(3) > a',
+            ),
+          ]
+            .map((a) => a.href.match(/\/status\/(\d+)/)?.[1])
+            .filter(Boolean);
+
+          const boton = publicacion.querySelector('[id^="mi-boton-flotante"]');
+
+          if (idsPublicaciones && boton) {
+            boton.id = `mi-boton-flotante-${idsPublicaciones}`;
+          }
+        });
+    } else {
+      document.querySelectorAll("li").forEach((publicacion) => {
+        //const enlace = publicacion.querySelector('a[href*="/status/"]');
+
+        //const idPublicacion = enlace?.href.match(/\/status\/(\d+)/)?.[1];
+        const idsPublicaciones = [
+          ...publicacion.querySelectorAll('div > div > div > a[href*="video"]'),
+        ]
+          .map((a) => a.href.match(/\/status\/(\d+)/)?.[1])
+          .filter(Boolean);
+
+        const boton = publicacion.querySelector('[id^="mi-boton-flotante"]');
+
+        if (idsPublicaciones && boton) {
+          boton.id = `mi-boton-flotante-${idsPublicaciones}`;
+        }
+      });
+    }
     boton.style.display = "inline-grid";
     boton.style.width = "100px";
     boton.textContent = "📥 Descargar";
@@ -1376,6 +1419,7 @@ function crearBotonFlotantePorImagen(contenedor) {
           // });
         })();
       } else if (fullUrl.includes(`x.com/${userId}/media`)) {
+        console.log(userId);
         // (async () => {
         //   await navigator.clipboard.writeText(urlImagen);
         //   //abrir_xdownloader
@@ -1387,6 +1431,7 @@ function crearBotonFlotantePorImagen(contenedor) {
         // })();
         const tata = boton.dataset.url;
         const ids = tata.match(/\/status\/(\d+)/)?.[1];
+        //alert(ids);
         (async () => {
           try {
             const variables = {
@@ -1697,6 +1742,16 @@ function crearBotonFlotantePorImagen(contenedor) {
         logo1 +
         '" style="width:80%;vertical-align:middle;opacity:0.5;margin:auto; position:relative"> 📥 Descargar';
     } else if (fullUrl.includes(`x.com/${userId}/media`)) {
+      // const idsPublicaciones = [
+      //   ...document.querySelectorAll(
+      //     'div[data-testid="User-Name"] > div > div > div:nth-child(3) > a',
+      //   ),
+      // ]
+      //   .map((a) => a.href.match(/\/status\/(\d+)/)?.[1])
+      //   .filter(Boolean);
+
+      // console.log(idsPublicaciones);
+
       boton.style.top = "40px";
       boton.style.right = "10px";
       boton.style.left = "unset";
