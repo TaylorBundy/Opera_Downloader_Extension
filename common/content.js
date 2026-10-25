@@ -218,47 +218,47 @@ if (!window.listenerProcesarUrl) {
   };
   // Funcion para obtener twitter
   // const obtienetwitter = async (src, refer, idn) => {
-  //   try {
-  //     const response = await fetch(src, {
-  //       "headers": {
-  //         "accept": "*/*",
-  //         "accept-language": "es-ES,es;q=0.9,en-US;q=0.8,en;q=0.7",
-  //         "authorization": "Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA",
-  //         "content-type": "application/json",
-  //         "sec-ch-ua": "\"Opera\";v=\"95\", \"Chromium\";v=\"109\", \"Not;A=Brand\";v=\"24\"",
-  //         "sec-ch-ua-arch": "\"x86\"",
-  //         "sec-ch-ua-bitness": "\"64\"",
-  //         "sec-ch-ua-full-version": "\"109.0.5414.149\"",
-  //         "sec-ch-ua-full-version-list": "\"Not_A Brand\";v=\"99.0.0.0\", \"Opera\";v=\"109.0.5414.149\", \"Chromium\";v=\"109.0.5414.149\"",
-  //         "sec-ch-ua-mobile": "?0",
-  //         "sec-ch-ua-model": "",
-  //         "sec-ch-ua-platform": "\"Windows\"",
-  //         "sec-ch-ua-platform-version": "\"0.3.0\"",
-  //         "sec-fetch-dest": "empty",
-  //         "sec-fetch-mode": "cors",
-  //         "sec-fetch-site": "same-origin",
-  //         "x-client-transaction-id": "ATxbzDg8MuCq4QKoh2Xnl42iOhaS4q5S4QOe326FzHu+O6C6Ltkc5LLypxOUcIQUUtRPVgVfJWPIBYGFEwKymT972f7KAg",
-  //         "x-csrf-token": "b14576f5ef7c0ee04e646c69d54050028a561a3eb5b615894c8f4d72d03398ebeb8f6050b9925c7759c1216763d43e7fcc2d4cb87c5188986b77611283c504fcee99506f17f553ff6849cba0c5af1425",
-  //         "x-twitter-active-user": "yes",
-  //         "x-twitter-auth-type": "OAuth2Session",
-  //         "x-twitter-client-language": "es",
-  //         "x-xp-forwarded-for": "3be126c826e04aff3ca997cb698e576e68118a26265551763840848d839fbfedbd08315e66a18798dfffb2a41897376a904fdaddd61d867bf544c600af1e66700f58ced7dc05d2c575773db71a05d5f8f72a80b3ecc918bc6ccff1c83f9640bd35c1e6ba646fa75d5eeb578591a3edea738a42b3123607cc02d41701916a7cd1b9f8f222b24eccde81d21c45b373577717457a37d570251b775e9b1826e33cb0efb9a8a49d91aeac1b98fa9af67859178e25afa3aa6045b352e0e86e25c6395ce436331603225d4b2935f0a33742838d2f578e539907f5eb773515e7aa6287f0aa4063ca8bbf0026a16ecac9d4cb7493af0a7da0d885181b5ec05d1404cc105dd17ee88657135a",
-  //         "cookie": "__cuid=610fb8b474884f33b3a355ce808ea764; g_state={\"i_l\":0}; personalization_id=\"v1_hFOfWMb2kRgiGx6lt/IhAQ==\"; kdt=dBPNUoqr5HBbnnvs6vMUs3Q1fopgkbXe57aM6YRB; night_mode=2; lang=es; cf_clearance=MvoYxgY6KXfN7PUWw63pDMkWVBvf0r9SXbSUQ2UWtwo-1755653097-1.2.1.1-ilVrYmYrPGJU3cHA6ATHS49GNTUhgC2dm_koBHYq_GNMNW.K4JsyhGjXViMI.IJwrCrarxLmS2QKmXXXv0N8rJf.qqGxqRWbJli9w5n7JbTXWyCiFDQBwrG_gUYuQBpGAeuv6ObcPtUYq5watrK7clMxcLZQbz89jCByOy64p3lVg2OzsM353qIniRbGyjiBmepHsRRnykOG4y6F3Pdznh3pBd0jb26UIDnjokdE8fI; dnt=1; auth_multi=\"1548537639707578370:adb7cec2235bb728bf9094310a77e28f05ed8ca3\"; auth_token=db5a3b1ae812e169916953bf3ce7f485f9e3d3b0; guest_id_ads=v1%3A175565329147778654; guest_id_marketing=v1%3A175565329147778654; guest_id=v1%3A175565329147778654; twid=u%3D1675697010622582784; ct0=b14576f5ef7c0ee04e646c69d54050028a561a3eb5b615894c8f4d72d03398ebeb8f6050b9925c7759c1216763d43e7fcc2d4cb87c5188986b77611283c504fcee99506f17f553ff6849cba0c5af1425; __cf_bm=__QDzj.57tgcq7Di_u7lRLmp6gN7Doyq116xreN5lpI-1755754948-1.0.1.1-MacQw6ZKyeVax7iMIoP5TC06mzrTMclQ0y3zS.OwF4OE9SjSDiM1b_loalc7RiNBERPW7a3TjAhgdGwApTaL6CEzLTxuJv_w6KXqsu5fEJA",
-  //         //"Referer": "https://x.com/Camileprosa__/status/1958201459314463217",
-  //         "Referer": `${refer}`,
-  //         "Referrer-Policy": "strict-origin-when-cross-origin"
-  //       },
-  //       "body": null,
-  //       "method": "GET"
-  //     });
-  //     if (!response.ok) throw new Error(`Error ${response.status}`);
-  //     const datoss = await response.json();
-  //     const lolo = datoss.data.threaded_conversation_with_injections_v2.instructions[1].entries[0].content.itemContent.tweet_results.result.legacy.entities.media[idn].video_info.variants[3];
-  //     return lolo.url;
-  //     } catch(error) {
-  //     // Capturamos errores durante la solicitud
-  //     console.error('Error durante la solicitud:', error);
-  //   }
+  // try {
+  //   const response = await fetch(src, {
+  //     "headers": {
+  //       "accept": "*/*",
+  //       "accept-language": "es-ES,es;q=0.9,en-US;q=0.8,en;q=0.7",
+  //       "authorization": "Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA",
+  //       "content-type": "application/json",
+  //       "sec-ch-ua": "\"Opera\";v=\"95\", \"Chromium\";v=\"109\", \"Not;A=Brand\";v=\"24\"",
+  //       "sec-ch-ua-arch": "\"x86\"",
+  //       "sec-ch-ua-bitness": "\"64\"",
+  //       "sec-ch-ua-full-version": "\"109.0.5414.149\"",
+  //       "sec-ch-ua-full-version-list": "\"Not_A Brand\";v=\"99.0.0.0\", \"Opera\";v=\"109.0.5414.149\", \"Chromium\";v=\"109.0.5414.149\"",
+  //       "sec-ch-ua-mobile": "?0",
+  //       "sec-ch-ua-model": "",
+  //       "sec-ch-ua-platform": "\"Windows\"",
+  //       "sec-ch-ua-platform-version": "\"0.3.0\"",
+  //       "sec-fetch-dest": "empty",
+  //       "sec-fetch-mode": "cors",
+  //       "sec-fetch-site": "same-origin",
+  //       "x-client-transaction-id": "ATxbzDg8MuCq4QKoh2Xnl42iOhaS4q5S4QOe326FzHu+O6C6Ltkc5LLypxOUcIQUUtRPVgVfJWPIBYGFEwKymT972f7KAg",
+  //       "x-csrf-token": "b14576f5ef7c0ee04e646c69d54050028a561a3eb5b615894c8f4d72d03398ebeb8f6050b9925c7759c1216763d43e7fcc2d4cb87c5188986b77611283c504fcee99506f17f553ff6849cba0c5af1425",
+  //       "x-twitter-active-user": "yes",
+  //       "x-twitter-auth-type": "OAuth2Session",
+  //       "x-twitter-client-language": "es",
+  //       "x-xp-forwarded-for": "3be126c826e04aff3ca997cb698e576e68118a26265551763840848d839fbfedbd08315e66a18798dfffb2a41897376a904fdaddd61d867bf544c600af1e66700f58ced7dc05d2c575773db71a05d5f8f72a80b3ecc918bc6ccff1c83f9640bd35c1e6ba646fa75d5eeb578591a3edea738a42b3123607cc02d41701916a7cd1b9f8f222b24eccde81d21c45b373577717457a37d570251b775e9b1826e33cb0efb9a8a49d91aeac1b98fa9af67859178e25afa3aa6045b352e0e86e25c6395ce436331603225d4b2935f0a33742838d2f578e539907f5eb773515e7aa6287f0aa4063ca8bbf0026a16ecac9d4cb7493af0a7da0d885181b5ec05d1404cc105dd17ee88657135a",
+  //       "cookie": "__cuid=610fb8b474884f33b3a355ce808ea764; g_state={\"i_l\":0}; personalization_id=\"v1_hFOfWMb2kRgiGx6lt/IhAQ==\"; kdt=dBPNUoqr5HBbnnvs6vMUs3Q1fopgkbXe57aM6YRB; night_mode=2; lang=es; cf_clearance=MvoYxgY6KXfN7PUWw63pDMkWVBvf0r9SXbSUQ2UWtwo-1755653097-1.2.1.1-ilVrYmYrPGJU3cHA6ATHS49GNTUhgC2dm_koBHYq_GNMNW.K4JsyhGjXViMI.IJwrCrarxLmS2QKmXXXv0N8rJf.qqGxqRWbJli9w5n7JbTXWyCiFDQBwrG_gUYuQBpGAeuv6ObcPtUYq5watrK7clMxcLZQbz89jCByOy64p3lVg2OzsM353qIniRbGyjiBmepHsRRnykOG4y6F3Pdznh3pBd0jb26UIDnjokdE8fI; dnt=1; auth_multi=\"1548537639707578370:adb7cec2235bb728bf9094310a77e28f05ed8ca3\"; auth_token=db5a3b1ae812e169916953bf3ce7f485f9e3d3b0; guest_id_ads=v1%3A175565329147778654; guest_id_marketing=v1%3A175565329147778654; guest_id=v1%3A175565329147778654; twid=u%3D1675697010622582784; ct0=b14576f5ef7c0ee04e646c69d54050028a561a3eb5b615894c8f4d72d03398ebeb8f6050b9925c7759c1216763d43e7fcc2d4cb87c5188986b77611283c504fcee99506f17f553ff6849cba0c5af1425; __cf_bm=__QDzj.57tgcq7Di_u7lRLmp6gN7Doyq116xreN5lpI-1755754948-1.0.1.1-MacQw6ZKyeVax7iMIoP5TC06mzrTMclQ0y3zS.OwF4OE9SjSDiM1b_loalc7RiNBERPW7a3TjAhgdGwApTaL6CEzLTxuJv_w6KXqsu5fEJA",
+  //       //"Referer": "https://x.com/Camileprosa__/status/1958201459314463217",
+  //       "Referer": `${refer}`,
+  //       "Referrer-Policy": "strict-origin-when-cross-origin"
+  //     },
+  //     "body": null,
+  //     "method": "GET"
+  //   });
+  //   if (!response.ok) throw new Error(`Error ${response.status}`);
+  //   const datoss = await response.json();
+  //   const lolo = datoss.data.threaded_conversation_with_injections_v2.instructions[1].entries[0].content.itemContent.tweet_results.result.legacy.entities.media[idn].video_info.variants[3];
+  //   return lolo.url;
+  //   } catch(error) {
+  //   // Capturamos errores durante la solicitud
+  //   console.error('Error durante la solicitud:', error);
+  // }
   // };
   // Funcion que descarga erome desde proxy local
   function descargar(url) {
@@ -774,3 +774,9 @@ if (!window.listenerProcesarUrl) {
     console.warn("No se encontró recurso válido.");
   }
 })();
+
+const urlObj = new URL(window.location.toString());
+const domain = urlObj.hostname;
+const fullUrl = urlObj.href;
+const src = `https://x.com/i/api/graphql/gJoREC4Bspo4kJ0ax9C3sQ/TweetDetail?variables=%7B%22focalTweetId%22%3A%222095478421392421157%22%2C%22rankingMode%22%3A%22Relevance%22%2C%22includePromotedContent%22%3Atrue%2C%22withCommunity%22%3Atrue%2C%22withQuickPromoteEligibilityTweetFields%22%3Atrue%2C%22withBirdwatchNotes%22%3Atrue%2C%22withVoice%22%3Atrue%7D&features=%7B%22rweb_video_screen_enabled%22%3Afalse%2C%22rweb_cashtags_enabled%22%3Atrue%2C%22profile_label_improvements_pcf_label_in_post_enabled%22%3Atrue%2C%22responsive_web_profile_redirect_enabled%22%3Atrue%2C%22rweb_tipjar_consumption_enabled%22%3Afalse%2C%22verified_phone_label_enabled%22%3Afalse%2C%22creator_subscriptions_tweet_preview_api_enabled%22%3Atrue%2C%22responsive_web_graphql_timeline_navigation_enabled%22%3Atrue%2C%22premium_content_api_read_enabled%22%3Afalse%2C%22communities_web_enable_tweet_community_results_fetch%22%3Atrue%2C%22c9s_tweet_anatomy_moderator_badge_enabled%22%3Atrue%2C%22responsive_web_grok_analyze_button_fetch_trends_enabled%22%3Afalse%2C%22responsive_web_grok_analyze_post_followups_enabled%22%3Atrue%2C%22rweb_cashtags_composer_attachment_enabled%22%3Atrue%2C%22responsive_web_jetfuel_frame%22%3Atrue%2C%22rweb_sports_post_context_enabled%22%3Atrue%2C%22responsive_web_grok_share_attachment_enabled%22%3Atrue%2C%22responsive_web_grok_annotations_enabled%22%3Atrue%2C%22articles_preview_enabled%22%3Atrue%2C%22responsive_web_edit_tweet_api_enabled%22%3Atrue%2C%22rweb_conversational_replies_downvote_enabled%22%3Afalse%2C%22graphql_is_translatable_rweb_tweet_is_translatable_enabled%22%3Atrue%2C%22view_counts_everywhere_api_enabled%22%3Atrue%2C%22longform_notetweets_consumption_enabled%22%3Atrue%2C%22responsive_web_twitter_article_tweet_consumption_enabled%22%3Atrue%2C%22content_disclosure_indicator_enabled%22%3Atrue%2C%22content_disclosure_ai_generated_indicator_enabled%22%3Atrue%2C%22responsive_web_grok_show_grok_translated_post%22%3Atrue%2C%22responsive_web_grok_analysis_button_from_backend%22%3Atrue%2C%22post_ctas_fetch_enabled%22%3Afalse%2C%22freedom_of_speech_not_reach_fetch_enabled%22%3Atrue%2C%22standardized_nudges_misinfo%22%3Atrue%2C%22tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled%22%3Atrue%2C%22longform_notetweets_rich_text_read_enabled%22%3Atrue%2C%22longform_notetweets_inline_media_enabled%22%3Afalse%2C%22responsive_web_nested_quote_preview_enabled%22%3Atrue%2C%22responsive_web_grok_image_annotation_enabled%22%3Atrue%2C%22responsive_web_grok_imagine_annotation_enabled%22%3Atrue%2C%22responsive_web_made_on_x_label_enabled%22%3Afalse%2C%22responsive_web_grok_community_note_auto_translation_is_enabled%22%3Atrue%2C%22responsive_web_enhance_cards_enabled%22%3Afalse%7D&fieldToggles=%7B%22withPayments%22%3Afalse%2C%22withDmBlocks%22%3Afalse%2C%22withArticleRichContentState%22%3Atrue%2C%22withArticlePlainText%22%3Afalse%2C%22withArticleSummaryText%22%3Atrue%2C%22withArticleVoiceOver%22%3Atrue%2C%22withGrokAnalyze%22%3Afalse%2C%22withDisallowedReplyControls%22%3Afalse%7D`;
+const refer = fullUrl;

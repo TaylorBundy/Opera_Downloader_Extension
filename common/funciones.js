@@ -311,6 +311,257 @@ async function descargarVideoFuncionando(url, nombre = "video.mp4") {
   }
 }
 
+async function descargarImagen(url, nombre = "imagen") {
+  //console.log("URL:", url);
+
+  // ========================================
+  // Modal
+  // ========================================
+
+  const modal = document.createElement("div");
+
+  modal.style.cssText = `
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
+    font-family: Arial, sans-serif;
+  `;
+
+  const contenido = document.createElement("div");
+
+  contenido.style.cssText = `
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    width: 370px;
+    max-width: 90vw;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,.3);
+    color: black;
+  `;
+
+  // ========================================
+  // Preview
+  // ========================================
+
+  const previewContainer = document.createElement("div");
+
+  previewContainer.style.cssText = `
+    width: 100%;
+    min-height: 120px;
+    max-height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: ${backgroundColor};
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 15px;
+  `;
+
+  const preview = document.createElement("img");
+
+  preview.src = url;
+
+  preview.style.cssText = `
+    max-width: 100%;
+    max-height: 330px;
+    object-fit: contain;
+    display: block;
+  `;
+
+  previewContainer.appendChild(preview);
+
+  // ========================================
+  // Título
+  // ========================================
+
+  const titulo = document.createElement("div");
+
+  titulo.style.cssText = `
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    word-break: break-word;
+  `;
+
+  titulo.textContent = nombre;
+
+  // ========================================
+  // Estado
+  // ========================================
+
+  const estado = document.createElement("div");
+
+  estado.style.cssText = `
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 15px;
+  `;
+
+  estado.textContent = "Vista previa";
+
+  // ========================================
+  // Botón descargar
+  // ========================================
+
+  const botonDescargar = document.createElement("button");
+
+  botonDescargar.textContent = "📥 Descargar";
+
+  botonDescargar.style.cssText = `
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background: #4caf50;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-right: 8px;
+  `;
+
+  // ========================================
+  // Botón cerrar
+  // ========================================
+
+  const botonCerrar = document.createElement("button");
+
+  botonCerrar.textContent = "Cancelar";
+
+  botonCerrar.style.cssText = `
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background: #e53935;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+  `;
+
+  // ========================================
+  // Agregar
+  // ========================================
+
+  contenido.append(
+    previewContainer,
+    titulo,
+    estado,
+    botonDescargar,
+    botonCerrar,
+  );
+
+  modal.appendChild(contenido);
+
+  document.body.appendChild(modal);
+
+  // ========================================
+  // Verificar que la imagen cargó
+  // ========================================
+
+  preview.onload = () => {
+    estado.textContent = "Vista previa lista";
+  };
+
+  preview.onerror = () => {
+    estado.textContent = "❌ No se pudo cargar la imagen";
+
+    botonDescargar.disabled = true;
+
+    botonDescargar.style.opacity = "0.5";
+    botonDescargar.style.cursor = "default";
+  };
+
+  // ========================================
+  // Cerrar
+  // ========================================
+
+  botonCerrar.onclick = () => {
+    modal.remove();
+  };
+
+  // ========================================
+  // Descargar
+  // ========================================
+
+  botonDescargar.onclick = async () => {
+    botonDescargar.disabled = true;
+
+    botonDescargar.style.opacity = "0.6";
+
+    estado.textContent = "📥 Descargando...";
+
+    try {
+      const res = await fetch(url);
+
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+
+      const blob = await res.blob();
+
+      // ====================================
+      // Detectar extensión
+      // ====================================
+
+      if (!/\.[a-z0-9]+$/i.test(nombre)) {
+        const extensiones = {
+          "image/jpeg": ".jpg",
+          "image/png": ".png",
+          "image/webp": ".webp",
+          "image/gif": ".gif",
+          "image/avif": ".avif",
+          "image/bmp": ".bmp",
+          "image/svg+xml": ".svg",
+        };
+
+        nombre += extensiones[blob.type] || ".jpg";
+      }
+
+      // ====================================
+      // Crear descarga
+      // ====================================
+
+      const blobUrl = URL.createObjectURL(blob);
+
+      const enlace = document.createElement("a");
+
+      enlace.href = blobUrl;
+
+      enlace.download = nombre;
+
+      document.body.appendChild(enlace);
+
+      enlace.click();
+
+      enlace.remove();
+
+      URL.revokeObjectURL(blobUrl);
+
+      estado.textContent = "✅ Descarga completada";
+
+      botonDescargar.remove();
+
+      setTimeout(() => {
+        modal.remove();
+      }, 1200);
+    } catch (error) {
+      console.error("Error descargando imagen:", error);
+
+      estado.textContent = "❌ No se pudo descargar la imagen";
+
+      botonDescargar.disabled = false;
+
+      botonDescargar.style.opacity = "1";
+    }
+  };
+}
+
 async function descargarVideo(url, nombre = "video.mp4") {
   // Modal
   const modal = document.createElement("div");
@@ -591,7 +842,7 @@ function crearNombreFlotante(contenedor, urlImg, retrasos) {
 }
 
 function crearBotonFlotante(contenedor, urlImg, retrasos) {
-  console.log(contenedor);
+  //console.log(contenedor);
   if (document.getElementById("mi-boton-flotante")) return;
   if (contenedor.dataset.botonCreado) return;
   if (yaDescargado(urlImg)) return;
@@ -668,6 +919,19 @@ function crearBotonFlotante(contenedor, urlImg, retrasos) {
           url: urlImg,
         });
       }
+    } else if (
+      fullUrl.includes("twpornstars.com") &&
+      !fullUrl.includes("/videos")
+    ) {
+      (async () => {
+        enlace = urlImg; //await ObtenemosLinkTwpornstar(urlImagen);
+        nombreFinal = urlImg.split("/").pop().replace(".jpg", "");
+        await descargarImagen(enlace, nombreFinal);
+        // chrome.runtime.sendMessage({
+        //   action: "inject_main_script",
+        //   url: enlace,
+        // });
+      })();
     } else if (domain.includes("redgifs")) {
       if (fullUrl.includes("redgifs.com/watch")) {
         if (extension === ".jpg") {
@@ -795,7 +1059,11 @@ function crearBotonFlotante(contenedor, urlImg, retrasos) {
 
       ////nomVid.textContent = nombreVid;
     }
-  } else if (domain.includes("twpornstars")) {
+  } else if (
+    fullUrl.includes("twpornstars.com") &&
+    !fullUrl.includes("/videos")
+  ) {
+    boton.style.fontSize = "12px";
     boton.style.left = "0";
     boton.style.top = "0";
     boton.style.justifyItems = "center";
@@ -804,6 +1072,25 @@ function crearBotonFlotante(contenedor, urlImg, retrasos) {
       '<img src="' +
       logo +
       '" style="width:50%;vertical-align:middle;opacity:0.5;margin:0">📥 Descargar';
+  } else if (domain.includes("twpornstars")) {
+    boton.style.width = "fit-content";
+    boton.style.height = "fit-content";
+    boton.style.left = "5px";
+    boton.style.top = "5px";
+    boton.style.margin = "";
+    boton.style.justifyItems = "center";
+    // boton.style.left = "0";
+    // boton.style.top = "0";
+    // boton.style.justifyItems = "center";
+    // boton.style.justifyContent = "center";
+    // boton.innerHTML =
+    //   '<img src="' +
+    //   logo +
+    //   '" style="width:50%;vertical-align:middle;opacity:0.5;margin:0">📥 Descargar';
+    boton.innerHTML =
+      '<img src="' +
+      logo +
+      '" style="vertical-align:middle;opacity:0.5;margin:0"> 📥 Descargar';
     contenedor.appendChild(boton);
   } else if (fullUrl.includes("manyvids.com/Video")) {
     boton.style.justifyItems = "center";
@@ -856,6 +1143,58 @@ function crearBotonFlotante(contenedor, urlImg, retrasos) {
   }
 }
 
+const obtieneredgifs = async (src, refer) => {
+  try {
+    //const token = await getToken();
+    const response = await fetch(src, {
+      headers: {
+        accept: "*/*",
+        "accept-language": "es-ES,es;q=0.9,en-US;q=0.8,en;q=0.7",
+        authorization:
+          "Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA",
+        "content-type": "application/json",
+        priority: "u=1, i",
+        "sec-ch-ua":
+          '"Opera";v="133", "Chromium";v="149", "Not)A;Brand";v="24"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Windows"',
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "x-client-transaction-id":
+          "OVC3zIpjYhWK5YgVj9Ar+ooK4Pq2vGKc/b0RcKD8phMdDoV8RIoFUNXOHxuwPbM5ael5tz/Rd9mro2eWzZ2w2glnh0MeOg",
+        "x-csrf-token":
+          "e6b250bd724fdce3a90a527ee656fdedac7421a90f0740e5100a4e93155f429ccfec1323baacdad7e745f4025f73f8710cdaea7bdd1f769583fb73d57871a63156e5659a769d2d933d6ba6ebc09a2af3",
+        "x-twitter-active-user": "yes",
+        "x-twitter-auth-type": "OAuth2Session",
+        "x-twitter-client-language": "es",
+        cookie:
+          'guest_id_marketing=v1%3A179127159700384310; guest_id_ads=v1%3A179127159700384310; guest_id=v1%3A179127159700384310; __cuid=8fa43bf1-34dc-43f3-8a34-9f8b70fcee8c; __cuid=8fa43bf1-34dc-43f3-8a34-9f8b70fcee8c; g_state={"i_l":0,"i_ll":1791271613687,"i_b":"O65S1Qq/1MnnZK37mBieYTOVPxYB9HF7rQNfPRn0bZs","i_e":{"enable_itp_optimization":24},"i_et":1791271613687}; twid=u%3D1675697010622582784; auth_token=a74d1daed954b5551f78a4bfe492470b7e35fc1c; ct0=e6b250bd724fdce3a90a527ee656fdedac7421a90f0740e5100a4e93155f429ccfec1323baacdad7e745f4025f73f8710cdaea7bdd1f769583fb73d57871a63156e5659a769d2d933d6ba6ebc09a2af3; lang=es; personalization_id="v1_EBg64yLV5XdiQ/rNnM4+tA=="; cf_clearance=bfQWHA04uqYnzFkvUqwKo7CDARuD6le6.6SxS9mAcoA-1792910375-1.2.1.1-Y6_y7iUs0UrbEqoqVgPSjdhRvDHyphjCGyPeUDDVAQG6AqOQjmKXCNVQIQpxPdzCWG1M1ds4GoIF8mGjBjYjh6GXf02p7ygzrH9fuFKIP9UIWs5ibWdC98ROnn7ZQetqyinlwK2P49t0qGJBaVRguuZ7coa9teehpo3QQPIQuPjvqIdgrDIq.weExRrjOwHo1IOBMGfKcDZgv2xjvmDTjWzOQCAd1Lj7dwVvgfvQx4ojSg5CMcltTWMMMUecbEd6Bp24JQdZcbxG_c0ffF63BUVv.GCKZqRblNRMuWByzYGyQlnJLr6AodkB7ADlsMXy.iHcm7WPTxwIIvzxyHkmVGH6T4YrCHRNNozrQ2k7D2Y; __cf_bm=zXzFaeq6UKW5OqsH_e4hwgbrFsxQCE6_7f0NTSBltpU-1792910375.966505-1.0.1.1-p_29Q7b0og2aQmEu1HofZpv4F60T6JTdnTOwXU3OImQ9YyKc_FIBBMfxnTQfvGeJ26yFldVseYWirYGgfx4aUqZY89zBORkPvgYlZpPyT8CTD4V2kR2BLw_yH0v_sumu',
+        Referer: "https://x.com/SacanaDuTT/status/2095478421392421157/video/1",
+      },
+      body: null,
+      method: "GET",
+    });
+    if (!response.ok) throw new Error(`Error ${response.status}`);
+    const datoss = await response.json();
+    const variantes =
+      datoss.data.threaded_conversation_with_injections_v2.instructions[1]
+        .entries[0].content.itemContent.tweet_results.result.legacy
+        .extended_entities.media[0].video_info.variants;
+    //console.log(variantes.at(-1).url);
+    // console.log(
+    //   datoss.data.threaded_conversation_with_injections_v2.instructions[1]
+    //     .entries[0].content.itemContent.tweet_results.result.legacy
+    //     .extended_entities.media[0].video_info.variants[3],
+    // );
+    //elputoUrl = variantes.at(-1).url;
+    return variantes.at(-1).url;
+  } catch (error) {
+    // Capturamos errores durante la solicitud
+    console.error("Error durante la solicitud:", error);
+  }
+};
+
 function crearBotonFlotantePorImagen(contenedor) {
   //console.log(contenedor);
   contenedor.forEach((img, index) => {
@@ -869,11 +1208,29 @@ function crearBotonFlotantePorImagen(contenedor) {
       selector = document.querySelector(
         `body > div.block.block-thumbs.js-thumbs > div:nth-child(${index + 1}) > div.thumb__inner > a`,
       )?.href;
-    } else if (fullUrl.includes(`x.com/${userId}/media`)) {
-      const urls = [
+    } else if (
+      fullUrl.includes(`=media`) &&
+      !fullUrl.includes(`x.com/${userId}/media`)
+    ) {
+      enlaces = [
         ...document.querySelectorAll('li > div > div > div > a[href*="video"]'),
       ].map((a) => a.href);
 
+      //console.log(enlaces);
+      userId = enlaces
+        .map((url) => url.match(/\/status\/(\d+)/)?.[1])
+        .filter(Boolean);
+      selector = enlaces[index];
+    } else if (fullUrl.includes(`x.com/${userId}/media`)) {
+      // const urls = [
+      //   ...document.querySelectorAll('li > div > div > div > a[href*="video"]'),
+      // ].map((a) => a.href);
+      // document.querySelectorAll('div[data-testid="User-Name"] > div > div > div:nth-child(3)')
+      const urls = [
+        ...document.querySelectorAll(
+          'div[data-testid="User-Name"] > div > div > div:nth-child(3) > a',
+        ),
+      ].map((a) => a.href);
       //console.log(urls);
       selector = urls[index];
     } else if (fullUrl.includes("pornhub.com/gifs/")) {
@@ -1008,14 +1365,237 @@ function crearBotonFlotantePorImagen(contenedor) {
           });
         })();
       } else if (fullUrl.includes(`x.com/${userId}/media`)) {
+        // (async () => {
+        //   await navigator.clipboard.writeText(urlImagen);
+        //   //abrir_xdownloader
+        //   //chrome.runtime.sendMessage({ action: "inject_main_script-twitter", url: window.location.href });
+        //   chrome.runtime.sendMessage({
+        //     action: "inject_main_script-twitter",
+        //     url: enlaces,
+        //   });
+        // })();
+        const tata = boton.dataset.url;
+        const ids = tata.match(/\/status\/(\d+)/)?.[1];
         (async () => {
-          await navigator.clipboard.writeText(urlImagen);
-          //abrir_xdownloader
-          //chrome.runtime.sendMessage({ action: "inject_main_script-twitter", url: window.location.href });
-          chrome.runtime.sendMessage({
-            action: "inject_main_script-twitter",
-            url: enlaces,
-          });
+          try {
+            const variables = {
+              focalTweetId: ids,
+              rankingMode: "Relevance",
+              includePromotedContent: true,
+              withCommunity: true,
+              withQuickPromoteEligibilityTweetFields: true,
+              withBirdwatchNotes: true,
+              withVoice: true,
+            };
+
+            const url = new URL(
+              "https://x.com/i/api/graphql/gJoREC4Bspo4kJ0ax9C3sQ/TweetDetail",
+            );
+
+            url.searchParams.set("variables", JSON.stringify(variables));
+
+            // Mantener las features que ya utiliza tu extensión
+            url.searchParams.set(
+              "features",
+              JSON.stringify({
+                rweb_video_screen_enabled: false,
+                rweb_cashtags_enabled: true,
+                profile_label_improvements_pcf_label_in_post_enabled: true,
+                responsive_web_profile_redirect_enabled: true,
+                rweb_tipjar_consumption_enabled: false,
+                verified_phone_label_enabled: false,
+                creator_subscriptions_tweet_preview_api_enabled: true,
+                responsive_web_graphql_timeline_navigation_enabled: true,
+                premium_content_api_read_enabled: false,
+                communities_web_enable_tweet_community_results_fetch: true,
+                c9s_tweet_anatomy_moderator_badge_enabled: true,
+                responsive_web_grok_analyze_button_fetch_trends_enabled: false,
+                responsive_web_grok_analyze_post_followups_enabled: true,
+                rweb_cashtags_composer_attachment_enabled: true,
+                responsive_web_jetfuel_frame: true,
+                rweb_sports_post_context_enabled: true,
+                responsive_web_grok_share_attachment_enabled: true,
+                responsive_web_grok_annotations_enabled: true,
+                articles_preview_enabled: true,
+                responsive_web_edit_tweet_api_enabled: true,
+                view_counts_everywhere_api_enabled: true,
+                longform_notetweets_consumption_enabled: true,
+                responsive_web_twitter_article_tweet_consumption_enabled: true,
+              }),
+            );
+
+            url.searchParams.set(
+              "fieldToggles",
+              JSON.stringify({
+                withPayments: false,
+                withDmBlocks: false,
+                withArticleRichContentState: true,
+                withArticlePlainText: false,
+                withArticleSummaryText: true,
+                withArticleVoiceOver: true,
+                withGrokAnalyze: false,
+                withDisallowedReplyControls: false,
+              }),
+            );
+
+            // Tu función existente consulta el endpoint de X
+            const enlaceVideo = await obtieneredgifs(
+              url.toString(),
+              typeof refer !== "undefined" ? refer : undefined,
+            );
+
+            if (!enlaceVideo) {
+              console.warn("No se encontró un enlace multimedia");
+              return;
+            }
+
+            console.log("Enlace obtenido:", enlaceVideo);
+            const nombrew = enlaceVideo
+              .split("/")
+              .pop()
+              .replace(/\?tag=\d+$/, "");
+            await descargarVideo(enlaceVideo, nombrew);
+
+            // // Buscar primero el contenedor del visor
+            // const contenedor =
+            //   media.closest('div[aria-label="Video insertado"]') ||
+            //   document.querySelector('div[aria-label="Video insertado"]') ||
+            //   media.parentElement?.parentElement;
+
+            // if (!contenedor) {
+            //   console.warn("No se encontró el contenedor para el botón");
+            //   return;
+            // }
+
+            // // Evitar duplicar el botón
+            // if (contenedor.querySelector(".boton-descarga-multisitio")) {
+            //   return;
+            // }
+
+            // const mensaje = `Click para descargar: ${enlaceVideo}`;
+
+            // crearBotonFlotante(contenedor, mensaje, enlaceVideo);
+
+            // Si crearBotonFlotante permite configurar clases,
+            // asignale "boton-descarga-multisitio" al botón creado.
+          } catch (error) {
+            console.error("Error procesando el multimedia de X:", error);
+            media.__seen = false;
+          }
+        })();
+      } else if (
+        fullUrl.includes(`=media`) &&
+        !fullUrl.includes(`x.com/${userId}/media`)
+      ) {
+        const tata = boton.dataset.url;
+        const ids = tata.match(/\/status\/(\d+)/)?.[1];
+        //console.log(ids);
+        (async () => {
+          try {
+            const variables = {
+              focalTweetId: ids,
+              rankingMode: "Relevance",
+              includePromotedContent: true,
+              withCommunity: true,
+              withQuickPromoteEligibilityTweetFields: true,
+              withBirdwatchNotes: true,
+              withVoice: true,
+            };
+
+            const url = new URL(
+              "https://x.com/i/api/graphql/gJoREC4Bspo4kJ0ax9C3sQ/TweetDetail",
+            );
+
+            url.searchParams.set("variables", JSON.stringify(variables));
+
+            // Mantener las features que ya utiliza tu extensión
+            url.searchParams.set(
+              "features",
+              JSON.stringify({
+                rweb_video_screen_enabled: false,
+                rweb_cashtags_enabled: true,
+                profile_label_improvements_pcf_label_in_post_enabled: true,
+                responsive_web_profile_redirect_enabled: true,
+                rweb_tipjar_consumption_enabled: false,
+                verified_phone_label_enabled: false,
+                creator_subscriptions_tweet_preview_api_enabled: true,
+                responsive_web_graphql_timeline_navigation_enabled: true,
+                premium_content_api_read_enabled: false,
+                communities_web_enable_tweet_community_results_fetch: true,
+                c9s_tweet_anatomy_moderator_badge_enabled: true,
+                responsive_web_grok_analyze_button_fetch_trends_enabled: false,
+                responsive_web_grok_analyze_post_followups_enabled: true,
+                rweb_cashtags_composer_attachment_enabled: true,
+                responsive_web_jetfuel_frame: true,
+                rweb_sports_post_context_enabled: true,
+                responsive_web_grok_share_attachment_enabled: true,
+                responsive_web_grok_annotations_enabled: true,
+                articles_preview_enabled: true,
+                responsive_web_edit_tweet_api_enabled: true,
+                view_counts_everywhere_api_enabled: true,
+                longform_notetweets_consumption_enabled: true,
+                responsive_web_twitter_article_tweet_consumption_enabled: true,
+              }),
+            );
+
+            url.searchParams.set(
+              "fieldToggles",
+              JSON.stringify({
+                withPayments: false,
+                withDmBlocks: false,
+                withArticleRichContentState: true,
+                withArticlePlainText: false,
+                withArticleSummaryText: true,
+                withArticleVoiceOver: true,
+                withGrokAnalyze: false,
+                withDisallowedReplyControls: false,
+              }),
+            );
+
+            // Tu función existente consulta el endpoint de X
+            const enlaceVideo = await obtieneredgifs(
+              url.toString(),
+              typeof refer !== "undefined" ? refer : undefined,
+            );
+
+            if (!enlaceVideo) {
+              console.warn("No se encontró un enlace multimedia");
+              return;
+            }
+
+            console.log("Enlace obtenido:", enlaceVideo);
+            const nombrew = enlaceVideo
+              .split("/")
+              .pop()
+              .replace(/\?tag=\d+$/, "");
+            await descargarVideo(enlaceVideo, nombrew);
+
+            // // Buscar primero el contenedor del visor
+            // const contenedor =
+            //   media.closest('div[aria-label="Video insertado"]') ||
+            //   document.querySelector('div[aria-label="Video insertado"]') ||
+            //   media.parentElement?.parentElement;
+
+            // if (!contenedor) {
+            //   console.warn("No se encontró el contenedor para el botón");
+            //   return;
+            // }
+
+            // // Evitar duplicar el botón
+            // if (contenedor.querySelector(".boton-descarga-multisitio")) {
+            //   return;
+            // }
+
+            // const mensaje = `Click para descargar: ${enlaceVideo}`;
+
+            // crearBotonFlotante(contenedor, mensaje, enlaceVideo);
+
+            // Si crearBotonFlotante permite configurar clases,
+            // asignale "boton-descarga-multisitio" al botón creado.
+          } catch (error) {
+            console.error("Error procesando el multimedia de X:", error);
+            media.__seen = false;
+          }
         })();
       } else if (fullUrl.includes("redgifs.com/users/")) {
         //console.log(nombreFinal);
@@ -1053,7 +1633,7 @@ function crearBotonFlotantePorImagen(contenedor) {
           const eltuti = document.querySelectorAll(
             "body > div.wrapper > div.container > div.nf-videos > div > div.gifsWrapper.hideLastItemLarge > ul > li > a > .title",
           );
-          console.log(eltuti[index].textContent);
+          //console.log(eltuti[index].textContent);
           const nombreTemp = eltuti[index].textContent;
           const nombreTemp1 = urlImagen.match(/\/([^\/]+)\.mp4/i)?.[1];
           const nombrew = `${nombreTemp1} - ${nombreTemp}`;

@@ -502,6 +502,11 @@ if (domain.includes("pornhub")) {
 } else if (domain.includes("twpornstars") || domain.includes("pornpics")) {
   tiempo = 2000;
   if (domain.includes("twpornstars")) {
+    if (domain.includes("twpornstars") && !fullUrl.includes("/videos")) {
+      selector = document.querySelector(
+        "body > div:nth-child(8) > div > div > div.content-wrapper > a > img",
+      );
+    }
     selector = document.querySelector(
       "body > div.block.block-thumbs.js-thumbs > div.thumb > div.thumb__inner",
     );
@@ -1130,6 +1135,17 @@ async function BuscaContenedores() {
         );
         crearBotonFlotantePorImagen(todos);
         return;
+      } else if (
+        fullUrl.includes("twpornstars.com") &&
+        !fullUrl.includes("/videos")
+      ) {
+        //selector = document.querySelector("div.content-wrapper > a > img");
+        selector = "div.content-wrapper";
+        let nombbTemp = document.querySelector(`${selector} > a > img`).src;
+        enlace = nombbTemp.replace(":large", ""); //document.querySelector(`${selector} > img`).src;
+        //enlace = selector.src;
+        console.log(enlace);
+        //crearBotonFlotante(selector, enlace);
       } else {
         //selector = "#video_tag";
         selector = "#video_tag";
