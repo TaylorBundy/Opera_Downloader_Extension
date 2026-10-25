@@ -1196,7 +1196,7 @@ const obtieneTwitter = async (src, refer) => {
 };
 
 function crearBotonFlotantePorImagen(contenedor) {
-  //console.log(contenedor);
+  console.log(contenedor);
   contenedor.forEach((img, index) => {
     //console.log(index);
     if (fullUrl.includes("fapello")) {
@@ -1365,16 +1365,16 @@ function crearBotonFlotantePorImagen(contenedor) {
             url: enlace,
           });
         })();
-        } else if (fullUrl.includes(`pornpics.com/es/galleries`)) {
+      } else if (fullUrl.includes(`pornpics.com/es/galleries`)) {
         (async () => {
-        enlace = urlImagen; //await ObtenemosLinkTwpornstar(urlImagen);
-        nombreFinal = urlImagen.split("/").pop().replace(".jpg", "");
-        await descargarImagen(enlace, nombreFinal);
-        // chrome.runtime.sendMessage({
-        //   action: "inject_main_script",
-        //   url: enlace,
-        // });
-      })();
+          enlace = urlImagen; //await ObtenemosLinkTwpornstar(urlImagen);
+          nombreFinal = urlImagen.split("/").pop().replace(".jpg", "");
+          await descargarImagen(enlace, nombreFinal);
+          // chrome.runtime.sendMessage({
+          //   action: "inject_main_script",
+          //   url: enlace,
+          // });
+        })();
       } else if (fullUrl.includes(`x.com/${userId}/media`)) {
         // (async () => {
         //   await navigator.clipboard.writeText(urlImagen);
@@ -1491,7 +1491,7 @@ function crearBotonFlotantePorImagen(contenedor) {
             // asignale "boton-descarga-multisitio" al botón creado.
           } catch (error) {
             console.error("Error procesando el multimedia de X:", error);
-            media.__seen = false;
+            //media.__seen = false;
           }
         })();
       } else if (
@@ -1605,7 +1605,7 @@ function crearBotonFlotantePorImagen(contenedor) {
             // asignale "boton-descarga-multisitio" al botón creado.
           } catch (error) {
             console.error("Error procesando el multimedia de X:", error);
-            media.__seen = false;
+            //media.__seen = false;
           }
         })();
       } else if (fullUrl.includes("redgifs.com/users/")) {

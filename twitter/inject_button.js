@@ -10,6 +10,8 @@
 let elputoUrl;
 let src2;
 let id;
+const esRutaMedia = /\/media(?:[/?#]|$)/.test(fullUrl);
+const esParametroMedia = /=media(?:[&#]|$)/.test(fullUrl);
 
 function esperarElemento(selector, callback) {
   const elem = document.querySelector(selector);
@@ -241,15 +243,26 @@ function iniciarExtension() {
     } else if (fullUrl.includes("media")) {
       userId = fullUrl.split("/")[3];
       let urls;
-      if (fullUrl.includes(`${userId}/media`)) {
+      if (esRutaMedia) {
         urls = [...document.querySelectorAll("article")];
-      } else if (!fullUrl.includes(`${userId}/media`)) {
+      } else if (esParametroMedia) {
         urls = [
           ...document.querySelectorAll(
             'li > div > div > div > a[href*="video"]',
           ),
-        ].map((a) => a.closest("li"));
+        ]
+          .map((a) => a.closest("li"))
+          .filter(Boolean);
       }
+      // if (fullUrl.includes(`${userId}/media`)) {
+      //   urls = [...document.querySelectorAll("article")];
+      // } else if (!fullUrl.includes(`${userId}/media`)) {
+      //   urls = [
+      //     ...document.querySelectorAll(
+      //       'li > div > div > div > a[href*="video"]',
+      //     ),
+      //   ].map((a) => a.closest("li"));
+      // }
       // const urls2 = [
       //   ...document.querySelectorAll('li > div > div > div > a[href*="video"]'),
       // ].map((a) => a.closest("li"));
@@ -516,8 +529,7 @@ function iniciarObservers2() {
 function iniciarObservers() {
   const url = new URL(location.href);
   const partes = url.pathname.split("/").filter(Boolean);
-  const esRutaMedia = /\/media(?:[/?#]|$)/.test(fullUrl);
-  const esParametroMedia = /=media(?:[&#]|$)/.test(fullUrl);
+
   //console.log({ esRutaMedia, esParametroMedia });
 
   let urls = [];
@@ -526,12 +538,11 @@ function iniciarObservers() {
   if (esRutaMedia) {
     // Perfil de usuario: /usuario/media
     urls = [...document.querySelectorAll("article")];
-  } else if (esParametroMedia) {//if (partes.includes("media")) {
+  } else if (esParametroMedia) {
+    //if (partes.includes("media")) {
     // Otras vistas que incluyan /media
     urls = [
-      ...document.querySelectorAll(
-        'li > div > div > div > a[href*="video"]'
-      ),
+      ...document.querySelectorAll('li > div > div > div > a[href*="video"]'),
     ]
       .map((a) => a.closest("li"))
       .filter(Boolean);
